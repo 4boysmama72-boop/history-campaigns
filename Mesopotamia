@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Mesopotamia — The Story of Us</title>
+<style>
+  :root {
+    --sand: #F5ECD7;
+    --sand-dark: #E8D5B0;
+    --clay: #8B5E3C;
+    --clay-light: #C4956A;
+    --river: #2E6B8A;
+    --river-light: #D4EAF5;
+    --gold: #B8860B;
+    --gold-light: #FFF8DC;
+    --green: #4A7C59;
+    --green-light: #DCF0E3;
+    --red: #8B2A2A;
+    --red-light: #F5DCDC;
+    --stone: #5A5A5A;
+    --stone-light: #F0EFED;
+    --ink: #1A1208;
+    --border: #C4956A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: var(--sand);
+    color: var(--ink);
+    min-height: 100vh;
+  }
+
+  #app {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 3rem;
+  }
+
+  /* ── Header bar ── */
+  .site-header {
+    text-align: center;
+    padding: 1.5rem 1rem 1rem;
+    border-bottom: 2px solid var(--clay-light);
+    margin-bottom: 1.5rem;
+  }
+  .site-header h1 {
+    font-size: 13px;
+    font-weight: normal;
+    letter-spacing: 0.12em;
+    color: var(--clay);
+    text-transform: uppercase;
+    margin-bottom: 4px;
+  }
+  .site-header h2 {
+    font-size: 26px;
+    font-weight: bold;
+    color: var(--clay);
+    letter-spacing: 0.02em;
+  }
+
+  /* ── Stats bar ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+  .stat-box {
+    background: var(--sand-dark);
+    border: 1px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    text-align: center;
+  }
+  .stat-icon { font-size: 16px; display: block; margin-bottom: 2px; }
+  .stat-label { font-size: 10px; color: var(--clay); letter-spacing: 0.05em; text-transform: uppercase; font-family: Arial, sans-serif; }
+  .stat-value { font-size: 18px; font-weight: bold; color: var(--ink); margin: 2px 0; }
+  .stat-track { height: 5px; background: #D4C4A8; border-radius: 3px; margin-top: 4px; }
+  .stat-fill { height: 5px; border-radius: 3px; transition: width 0.5s ease; }
+
+  /* ── Role badge ── */
+  .role-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: var(--sand-dark);
+    border: 1px solid var(--border);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 1.25rem;
+  }
+  .role-badge .role-icon { font-size: 24px; }
+  .role-badge .role-info { flex: 1; }
+  .role-badge .role-name { font-size: 15px; font-weight: bold; color: var(--clay); }
+  .role-badge .role-desc { font-size: 12px; color: var(--stone); font-family: Arial, sans-serif; }
+  .role-badge .chapter-tag { font-size: 11px; color: var(--clay); font-family: Arial, sans-serif; letter-spacing: 0.05em; text-transform: uppercase; }
+
+  /* ── Scene ── */
+  .scene-title {
+    font-size: 11px;
+    color: var(--clay);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: Arial, sans-serif;
+    margin-bottom: 6px;
+  }
+  .scene-heading {
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--clay);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+  .scene-text {
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--ink);
+    margin-bottom: 1rem;
+  }
+  .role-context {
+    background: var(--gold-light);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-style: italic;
+    color: #5A4010;
+    margin-bottom: 1.25rem;
+    line-height: 1.65;
+    font-family: Arial, sans-serif;
+  }
+  .history-note {
+    background: var(--river-light);
+    border-left: 3px solid var(--river);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #1A3A4A;
+    margin-bottom: 1.25rem;
+    line-height: 1.65;
+    font-family: Arial, sans-serif;
+  }
+  .history-note strong { font-weight: 600; }
+
+  /* ── Choices ── */
+  .choices-label {
+    font-size: 11px;
+    color: var(--stone);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: Arial, sans-serif;
+    margin-bottom: 8px;
+  }
+  .choices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+  .choice-btn {
+    background: white;
+    border: 1.5px solid var(--border);
+    border-radius: 8px;
+    padding: 12px 16px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: Georgia, serif;
+  }
+  .choice-btn:hover { background: var(--sand-dark); border-color: var(--clay); }
+  .choice-btn .choice-text { font-size: 14px; color: var(--ink); line-height: 1.5; }
+  .choice-btn .choice-hint { font-size: 11px; color: var(--stone); margin-top: 4px; font-family: Arial, sans-serif; font-style: italic; }
+
+  /* ── Outcome ── */
+  .outcome-box {
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 1.25rem;
+    font-size: 14px;
+    line-height: 1.7;
+    font-family: Arial, sans-serif;
+  }
+  .outcome-good { background: var(--green-light); border: 1.5px solid var(--green); color: #1A3A26; }
+  .outcome-bad { background: var(--red-light); border: 1.5px solid var(--red); color: #3A1010; }
+  .outcome-neutral { background: var(--stone-light); border: 1.5px solid #AAA; color: #2A2A2A; }
+  .outcome-label { font-size: 11px; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; }
+
+  /* ── Discussion timer ── */
+  .discussion-box {
+    background: var(--clay);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 1.25rem;
+    color: white;
+  }
+  .discussion-box .disc-header {
+    font-size: 11px;
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: Arial, sans-serif;
+    opacity: 0.8;
+    margin-bottom: 6px;
+  }
+  .discussion-box .disc-prompt {
+    font-size: 15px;
+    line-height: 1.6;
+    margin-bottom: 14px;
+    font-style: italic;
+  }
+  .timer-row { display: flex; align-items: center; gap: 14px; }
+  .timer-display {
+    font-size: 32px;
+    font-weight: bold;
+    font-family: Arial, sans-serif;
+    min-width: 60px;
+  }
+  .timer-track { flex: 1; height: 8px; background: rgba(255,255,255,0.3); border-radius: 4px; }
+  .timer-fill { height: 8px; background: white; border-radius: 4px; transition: width 1s linear; }
+  .continue-btn {
+    background: white;
+    color: var(--clay);
+    border: none;
+    border-radius: 6px;
+    padding: 8px 16px;
+    font-size: 13px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    opacity: 0;
+    transition: opacity 0.3s;
+    pointer-events: none;
+  }
+  .continue-btn.ready { opacity: 1; pointer-events: all; }
+
+  /* ── Art screen ── */
+  .art-screen { }
+  .art-frame {
+    background: #2A1A0A;
+    border-radius: 8px;
+    padding: 12px;
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+  .art-frame img {
+    max-width: 100%;
+    border-radius: 4px;
+    display: block;
+    margin: 0 auto;
+  }
+  .art-caption {
+    font-size: 12px;
+    color: #C4956A;
+    margin-top: 8px;
+    font-family: Arial, sans-serif;
+    font-style: italic;
+  }
+  .art-placeholder {
+    background: #3A2A15;
+    border-radius: 4px;
+    padding: 60px 20px;
+    color: #C4956A;
+    font-family: Arial, sans-serif;
+    font-size: 14px;
+    line-height: 1.6;
+  }
+  .art-prompts { display: flex; flex-direction: column; gap: 12px; margin-bottom: 1.25rem; }
+  .art-prompt label {
+    display: block;
+    font-size: 12px;
+    font-weight: bold;
+    color: var(--clay);
+    font-family: Arial, sans-serif;
+    text-transform: uppercase;
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .art-prompt textarea {
+    width: 100%;
+    border: 1.5px solid var(--border);
+    border-radius: 6px;
+    padding: 8px 10px;
+    font-size: 14px;
+    font-family: Georgia, serif;
+    background: white;
+    color: var(--ink);
+    resize: none;
+    height: 64px;
+  }
+  .art-prompt textarea:focus { outline: none; border-color: var(--clay); }
+
+  /* ── Role select ── */
+  .role-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1rem; }
+  .role-card {
+    background: white;
+    border: 2px solid var(--border);
+    border-radius: 10px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+    text-align: left;
+  }
+  .role-card:hover { background: var(--sand-dark); border-color: var(--clay); transform: translateY(-1px); }
+  .role-card .rc-icon { font-size: 28px; margin-bottom: 6px; display: block; }
+  .role-card .rc-name { font-size: 15px; font-weight: bold; color: var(--clay); margin-bottom: 4px; }
+  .role-card .rc-own { font-size: 12px; color: var(--stone); font-family: Arial, sans-serif; line-height: 1.5; margin-bottom: 6px; }
+  .role-card .rc-fear { font-size: 11px; color: var(--red); font-family: Arial, sans-serif; font-style: italic; }
+
+  /* ── Game over ── */
+  .gameover {
+    text-align: center;
+    padding: 2rem 1rem;
+  }
+  .gameover-icon { font-size: 48px; margin-bottom: 1rem; }
+  .gameover h2 { font-size: 22px; color: var(--clay); margin-bottom: 0.75rem; }
+  .gameover p { font-size: 14px; color: var(--stone); line-height: 1.75; margin-bottom: 1rem; font-family: Arial, sans-serif; }
+  .gameover .disc-q { background: var(--gold-light); border: 1px solid var(--gold); border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #5A4010; font-style: italic; font-family: Arial, sans-serif; line-height: 1.6; margin-bottom: 1.25rem; text-align: left; }
+
+  /* ── Ending ── */
+  .ending { }
+  .ending-verdict { font-size: 20px; font-weight: bold; color: var(--clay); margin-bottom: 0.75rem; }
+  .ending-text { font-size: 14px; color: var(--stone); line-height: 1.75; margin-bottom: 1rem; font-family: Arial, sans-serif; }
+  .standards-box { background: var(--river-light); border: 1px solid var(--river); border-radius: 8px; padding: 12px 16px; font-size: 13px; color: #1A3A4A; font-family: Arial, sans-serif; line-height: 1.7; margin-bottom: 1.25rem; }
+  .discussion-questions { background: var(--gold-light); border: 1px solid var(--gold); border-radius: 8px; padding: 14px 16px; margin-bottom: 1.25rem; }
+  .discussion-questions h4 { font-size: 12px; font-weight: bold; color: #5A4010; text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 8px; }
+  .discussion-questions p { font-size: 13px; color: #5A4010; line-height: 1.7; font-family: Arial, sans-serif; margin-bottom: 6px; }
+
+  /* ── Buttons ── */
+  .btn {
+    background: var(--clay);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 20px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    transition: background 0.15s;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+  .btn:hover { background: #6B4020; }
+  .btn-secondary {
+    background: white;
+    color: var(--clay);
+    border: 1.5px solid var(--clay);
+  }
+  .btn-secondary:hover { background: var(--sand-dark); }
+
+  .progress-dots { display: flex; gap: 6px; margin-bottom: 1rem; }
+  .dot { width: 8px; height: 8px; border-radius: 50%; background: var(--sand-dark); border: 1.5px solid var(--border); }
+  .dot.active { background: var(--clay); border-color: var(--clay); }
+  .dot.done { background: var(--clay-light); border-color: var(--clay-light); }
+
+  .divider { height: 1px; background: var(--border); margin: 1.25rem 0; opacity: 0.4; }
+
+  @media (max-width: 500px) {
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .role-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="site-header">
+    <h1>The Story of Us · Campaign 1</h1>
+    <h2>Ancient Mesopotamia</h2>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  DATA
+// ══════════════════════════════════════════════════════════════
+
+const ROLES = [
+  {
+    id: "farmer",
+    name: "The Farmer",
+    icon: "🌾",
+    desc: "Your family has worked this land near the Euphrates for three generations.",
+    own: "A small river-fed field. Two oxen. A family of five depending on your harvest.",
+    fear: "Losing your land to debt, drought, or a catastrophic flood.",
+    want: "A good harvest. Enough grain to pay the temple tithe and still feed your family."
+  },
+  {
+    id: "priest",
+    name: "The Priest",
+    icon: "⚡",
+    desc: "You serve Enlil, god of wind and storms, from the great ziggurat.",
+    own: "The temple storehouse. The power to bless — or curse. The people's fear and faith.",
+    fear: "A bad harvest that makes people question whether the gods are listening to you.",
+    want: "Order, obedience, and full tithes. To remind everyone who speaks for the gods."
+  },
+  {
+    id: "king",
+    name: "The King / Lugal",
+    icon: "👑",
+    desc: "You are the lugal — the 'big man' — chosen by the gods to lead your city-state.",
+    own: "The army. The city walls. The right to declare war and levy taxes.",
+    fear: "A rival king from Uruk or Lagash. A military defeat that costs you the throne.",
+    want: "To expand your city's power. To be remembered in the king-list for a thousand years."
+  },
+  {
+    id: "merchant",
+    name: "The Merchant",
+    icon: "⚖️",
+    desc: "You run a trading operation connecting your city to distant lands.",
+    own: "A donkey caravan. Silver contracts. Connections in three city-states.",
+    fear: "War disrupting your trade routes. A debt you cannot repay. Dishonest partners.",
+    want: "Safe roads, fair contracts, and access to cedar from Lebanon and tin from the east."
+  },
+  {
+    id: "scribe",
+    name: "The Scribe",
+    icon: "📜",
+    desc: "You are one of the few people in Mesopotamia who can read and write cuneiform.",
+    own: "Knowledge of writing. Access to temple records. A stylus and unlimited clay tablets.",
+    fear: "Becoming irrelevant. A ruler who doesn't value the power of written records.",
+    want: "To record history accurately. To be the person every important transaction depends on."
+  },
+  {
+    id: "artisan",
+    name: "The Artisan",
+    icon: "🏺",
+    desc: "You craft pottery, textiles, and tools in your workshop near the city market.",
+    own: "A workshop. Skilled hands. Temple contracts for ceremonial goods.",
+    fear: "Losing your temple contracts. Trade disruptions cutting off your raw materials.",
+    want: "Steady work, a wealthy patron, and to make something beautiful enough to outlast you."
+  }
+];
+
+const CHAPTERS = [
+  {
+    id: "flood",
+    title: "Chapter 1 — The Great Flood",
+    scene: "It is spring. The Euphrates river is swelling faster than anyone can remember. The priests say the gods are angry. The water is rising toward the city. The fields, the workshops, the storehouses — everything is at risk. People look to their leaders, their gods, and each other. What do you do?",
+    historyNote: "<strong>Real history:</strong> Mesopotamia's floods were unpredictable and deadly. The ancient story of a great flood — recorded on clay tablets centuries before the Bible — reflects how central flooding was to their world. Managing flood water was one of the main reasons Mesopotamia developed complex government and engineering.",
+    discussPrompt: "Turn to the table next to you. What role are they playing? What choice did they make — and could your role have made that same choice? Why or why not?",
+    choices: {
+      farmer: [
+        { text: "Move your family and grain to higher ground immediately — survival first", hint: "Protect what's yours", stats: { food: +15, standing: -10 }, type: "neutral", result: "Your grain survives. But your neighbors saw you leave without helping. In a community that depends on each other, that memory will cost you. Your field, however, is still yours — barely." },
+        { text: "Stay and help your neighbors build emergency mud-brick dikes", hint: "Community over self", stats: { food: -10, standing: +20 }, type: "good", result: "The dike holds — partially. You lose some grain but gain something more valuable: your neighbors owe you. When the next crisis comes, they'll be there. This is how Mesopotamian communities survived." },
+        { text: "Sacrifice your best lamb at the temple and pray the water recedes", hint: "Faith over action", stats: { food: -15, divine: +15 }, type: "neutral", result: "The flood recedes — though whether the gods or the dikes your neighbors built deserve credit is debated. Your sacrifice is noted by the priests. Your field is damaged but not destroyed." }
+      ],
+      priest: [
+        { text: "Declare the flood a divine punishment and demand immediate city-wide sacrifice", hint: "Assert religious authority", stats: { divine: +25, standing: +10, food: -10 }, type: "good", result: "The city scrambles to appease Enlil. Sacrifices pour into the temple. Your authority is reinforced — when people are afraid, they turn to the gods. And the gods speak through you." },
+        { text: "Open the temple storehouse and distribute emergency grain to flood victims", hint: "Use temple resources for relief", stats: { divine: +10, standing: +20, food: -20 }, type: "good", result: "The people call you merciful. The temple's reserves are depleted but its reputation grows. You've shown that the gods — through you — protect the city. That is worth more than grain." },
+        { text: "Retreat to the top of the ziggurat and wait — the gods will decide who survives", hint: "Divine indifference", stats: { divine: -10, standing: -25 }, type: "bad", result: "The people needed leadership. You offered silence. When the flood recedes, the whispers begin: where were the priests when the water rose? Your authority is shaken. The gods are only as powerful as their representatives." }
+      ],
+      king: [
+        { text: "Order the army to build emergency dikes immediately — mobilize every soldier", hint: "Military as engineering force", stats: { food: +10, standing: +25, divine: -5 }, type: "good", result: "The dikes hold. Your city survives while neighboring settlements flood. Your soldiers grumble about digging mud instead of fighting, but the people cheer. This is what a lugal is for." },
+        { text: "Evacuate the palace treasury and your family to higher ground first", hint: "Protect royal assets", stats: { food: +20, standing: -25 }, type: "bad", result: "The treasury is safe. Your family is safe. But the city watched their king flee while their fields flooded. In a city-state where loyalty is everything, this will not be forgotten easily." },
+        { text: "Declare a state of emergency — conscript all citizens to work the flood defenses", hint: "Compulsory labor for survival", stats: { food: +5, standing: +10, divine: +5 }, type: "neutral", result: "The forced labor works — mostly. The city survives. But you've just demonstrated something important: in a crisis, the king can demand labor from anyone. This power will be formalized into law someday." }
+      ],
+      merchant: [
+        { text: "Load your most valuable trade goods onto your donkeys and head for high ground", hint: "Protect your investment", stats: { wealth: +20, standing: -15 }, type: "neutral", result: "Your goods survive. You return to find your warehouse flooded and your partners furious you abandoned the city. You kept your assets but may have lost something harder to replace: trust." },
+        { text: "Use your caravan network to bring emergency supplies from upstream cities", hint: "Trade as crisis response", stats: { wealth: -10, standing: +25 }, type: "good", result: "You mobilize your network faster than the temple or the palace. Food and building materials arrive when the city needs them most. The king notices. The priests notice. You have just made yourself indispensable." },
+        { text: "Buy up flooded farmland from desperate farmers at emergency prices", hint: "Crisis as opportunity", stats: { wealth: +30, standing: -25, divine: -10 }, type: "bad", result: "You triple your landholdings in three days. Farmers who had no choice curse your name from their new positions as your tenant laborers. The priests say you have angered the gods. You are rich and reviled." }
+      ],
+      scribe: [
+        { text: "Climb to the top of the ziggurat and record exactly where the water reaches — measurement for the future", hint: "Knowledge as survival tool", stats: { standing: +20, divine: +10 }, type: "good", result: "Your flood markers become the city's most valuable document. Future engineers use your measurements to build better dikes. You have just invented flood management record-keeping. This is why writing matters." },
+        { text: "Protect the temple's clay tablet archives from the rising water", hint: "Preserve the records", stats: { standing: +15, divine: +15, food: -5 }, type: "good", result: "The records survive. Debt records, land deeds, trade contracts — all intact. Without these tablets, the city's entire economic system collapses. You saved more than clay. You saved civilization's memory." },
+        { text: "Write a dramatic account of the flood attributing it to divine anger — distribute it through the city", hint: "Narrative as power", stats: { divine: +20, standing: +5 }, type: "neutral", result: "Your account spreads. The people believe the flood was punishment. The priests thank you. The king eyes you carefully. You have discovered something powerful: whoever controls the story controls the people." }
+      ],
+      artisan: [
+        { text: "Offer to fire emergency clay bricks for flood barriers — your kiln is already hot", hint: "Skills as community contribution", stats: { standing: +25, wealth: -5 }, type: "good", result: "Your workshop becomes the city's emergency supply depot. Soldiers and farmers haul your bricks to the dike line. After the flood, the king gives you a permanent temple contract. Your skills saved the city." },
+        { text: "Seal your workshop and protect your most valuable finished goods", hint: "Protect your livelihood", stats: { wealth: +10, standing: -10 }, type: "neutral", result: "Your finished goods survive the flood. Your workshop is damaged but not destroyed. Your neighbors did the emergency work without you — and they remember. Business continues, but something in the community has shifted." },
+        { text: "Use the chaos to raid a competitor's flooded workshop for their best materials", hint: "Opportunistic survival", stats: { wealth: +20, standing: -30, divine: -15 }, type: "bad", result: "You have better materials now. But the city has laws — even unwritten ones — about property during disasters. The priests declare your act an offense against the gods. Your reputation in the market is destroyed." }
+      ]
+    }
+  },
+  {
+    id: "ziggurat",
+    title: "Chapter 2 — The Ziggurat Demands",
+    scene: "The flood has receded. Now the priests of the great ziggurat make their annual announcement: every family and business in the city must contribute one tenth of their income to the temple storehouse. The priests say this grain feeds the city's workers, soldiers, and the poor — and keeps the gods happy. But the flood already cost everyone dearly. The city is tense.",
+    historyNote: "<strong>Real history:</strong> The ziggurat was the center of both religious AND economic life. Temple storehouses redistributed food to workers and soldiers, making priests some of the most powerful administrators in the ancient world. This overlap of religion and government defined Mesopotamian civilization.",
+    discussPrompt: "Which table in your class had the most power to resist the tithe — and which had almost no choice? What does that tell you about how Mesopotamian society was organized?",
+    choices: {
+      farmer: [
+        { text: "Pay the full tithe — you can't afford to anger the priests on top of everything else", hint: "Compliance under pressure", stats: { food: -15, divine: +15 }, type: "neutral", result: "You pay. It hurts. But the priests acknowledge your contribution and your family receives temple protection during the next shortage. The system is unfair — but it is the system, and you are inside it." },
+        { text: "Offer to work on ziggurat construction instead of paying grain", hint: "Labor in place of tax", stats: { food: +5, standing: +10, divine: +5 }, type: "good", result: "The priests accept. You spend two weeks hauling mud bricks. While there, you see how thousands of workers are organized — and you understand for the first time why the ziggurat represents more than religion." },
+        { text: "Tell your neighbors the tithe is unjust and organize a quiet refusal", hint: "Community resistance", stats: { food: +10, divine: -30, standing: -20 }, type: "bad", result: "Three temple guards arrive before dawn. In a theocracy, challenging the priests is challenging the gods. Your family is forced to pay double and loses river-access land rights. The gods, it turns out, have very long memories." }
+      ],
+      priest: [
+        { text: "Enforce the tithe firmly — announce that non-payers will face divine consequences", hint: "Assert religious authority", stats: { divine: +20, food: +20, standing: -5 }, type: "good", result: "Collections are strong. The storehouse fills. Some families struggle, but the city's communal reserves are robust. You have demonstrated that religious authority and economic authority are the same thing." },
+        { text: "Announce a flood-relief reduction — collect only five percent this season", hint: "Mercy as strategy", stats: { divine: +15, standing: +25, food: -10 }, type: "good", result: "The city calls you merciful. Your reduced tithe generates more loyalty than a full collection would have generated in grain. The gods, the people say, are compassionate. And so their priests must be too." },
+        { text: "Keep the tithe at ten percent but secretly divert a portion to your own household", hint: "Corruption", stats: { divine: -25, food: +15, standing: -20 }, type: "bad", result: "The scribe's records don't lie. A discrepancy appears in the temple accounts. Word spreads quietly. In a city where the priests are the gods' representatives, a corrupt priest is the worst kind of crisis. Your authority crumbles." }
+      ],
+      king: [
+        { text: "Publicly support the tithe and contribute lavishly from the royal treasury", hint: "Demonstrate royal piety", stats: { divine: +20, standing: +15, food: -10 }, type: "good", result: "The priests praise you. The people see their king honoring the gods. Your gift to the temple buys you something the army cannot: divine legitimacy. In Mesopotamia, gods and kings need each other." },
+        { text: "Negotiate privately with the priests — reduce the tithe and share administrative power", hint: "Political compromise", stats: { divine: +10, standing: +10 }, type: "good", result: "You and the priests reach an understanding. The tithe is reduced. In exchange, the temple officially endorses your kingship as divinely sanctioned. This is the deal that holds Mesopotamian civilization together." },
+        { text: "Announce that the king — not the priests — will control this season's food distribution", hint: "Challenge priestly power", stats: { divine: -25, standing: +5, food: +10 }, type: "bad", result: "The priests are furious. They announce that the gods are displeased with your arrogance. Half the city believes them. In ancient Mesopotamia, you cannot rule against the priests — they were here before kings, and they remind everyone of it." }
+      ],
+      merchant: [
+        { text: "Pay the tithe on your declared income — but your records show less than you actually earned", hint: "Creative accounting", stats: { wealth: +15, divine: -10, standing: -5 }, type: "neutral", result: "The scribe's records are thorough. Not thorough enough to catch everything — but enough to make the priests suspicious. You pay less than you owe but live nervously. In a city where the temple keeps all the records, this is a dangerous game." },
+        { text: "Pay generously and publicly — more than required", hint: "Visible generosity as investment", stats: { wealth: -15, divine: +20, standing: +20 }, type: "good", result: "The priests announce your generosity at the temple ceremony. The king hears. Suddenly your trading licenses are renewed without the usual delays. Generosity in Mesopotamia is not charity — it is the highest form of commerce." },
+        { text: "Argue that trade goods should be taxed differently than grain — propose a new system", hint: "Innovate the tax code", stats: { standing: +15, wealth: +10, divine: -5 }, type: "good", result: "The priests are irritated by your logic but cannot immediately refute it. The king is intrigued. A scribe is summoned to record the debate on a clay tablet. You have just participated in the invention of commercial tax law." }
+      ],
+      scribe: [
+        { text: "Record all tithe payments meticulously — and note any discrepancies you observe", hint: "Integrity of the record", stats: { standing: +20, divine: +15 }, type: "good", result: "Your records catch two underpayments and one priestly diversion of funds. You report them carefully. The king trusts you. The priests fear you. The merchant whose discrepancy you caught never forgives you. You have power now." },
+        { text: "Offer to redesign the tithe recording system to make it harder to cheat", hint: "Administrative innovation", stats: { standing: +25, divine: +10, wealth: +10 }, type: "good", result: "Your new tablet system uses unique cylinder seal impressions for each transaction. It is nearly impossible to falsify. The temple adopts it. The king adopts it. Honest record-keeping just became the foundation of Mesopotamian commerce." },
+        { text: "Accept payment from a wealthy merchant to record his tithe as larger than it was", hint: "Corruption of the record", stats: { wealth: +20, divine: -20, standing: -25 }, type: "bad", result: "The entire value of writing rests on the assumption that records are true. You have broken that assumption. When the discrepancy is discovered — and it will be — your career as a scribe ends. In a civilization built on records, an untrustworthy scribe is nothing." }
+      ],
+      artisan: [
+        { text: "Offer to create ceremonial vessels for the temple in lieu of grain payment", hint: "Skill as currency", stats: { divine: +20, standing: +15, food: +5 }, type: "good", result: "The priests are delighted. Beautiful things honor the gods more than grain. Your ceremonial bowls are placed on the altar. Temple pilgrims see your work. Your reputation grows beyond the city market into something approaching fame." },
+        { text: "Pay the full grain tithe and absorb the cost", hint: "Straightforward compliance", stats: { food: -15, divine: +10 }, type: "neutral", result: "You pay. It is painful after the flood losses. But your compliance is noted and your temple contracts are renewed without question. Sometimes survival means absorbing unfair costs without complaint." },
+        { text: "Form a guild with other artisans to negotiate a collective tithe reduction", hint: "Collective bargaining", stats: { standing: +20, divine: -5, food: +10 }, type: "good", result: "The priests are annoyed but impressed by your organization. They reduce the artisan tithe slightly in exchange for guaranteed production quotas on temple goods. You have invented the trade guild. Other craftspeople will remember this." }
+      ]
+    }
+  },
+  {
+    id: "writing",
+    title: "Chapter 3 — The Debt Dispute",
+    scene: "A merchant arrives with a clay tablet claiming your city owes him silver — or that someone in your community does. Disputes over debts, land, and contracts are tearing neighborhoods apart. The city judge has more cases than he can handle. There is no written law — only custom, the judge's memory, and whoever has the most powerful friends. Something needs to change.",
+    historyNote: "<strong>Real history:</strong> Cuneiform writing was invented largely for record-keeping: debts, land sales, trade agreements. The Code of Hammurabi later formalized exactly these kinds of disputes into written law. Writing didn't just record civilization — it made a more complex civilization possible.",
+    discussPrompt: "Which role in this chapter had the most power in the dispute — and which had the least? What would change if every role could read and write?",
+    choices: {
+      farmer: [
+        { text: "Demand the tablet be read aloud in front of witnesses — challenge the merchant's claim publicly", hint: "Oral community justice", stats: { standing: +15, food: +10 }, type: "good", result: "Your neighbor was there when you repaid the debt. He testifies. The judge rules for you. You win — but the experience teaches you something: without your own written records, you were almost powerless. You begin saving to send your child to scribal school." },
+        { text: "Pay the disputed debt to avoid a powerful enemy", hint: "Pragmatic submission", stats: { food: -20, standing: +5 }, type: "neutral", result: "You pay. The merchant owes you a favor — and in a trade city, favors can be currency. But the deeper lesson lingers: you could not read the tablet that almost ruined you. In Mesopotamia, literacy is survival." },
+        { text: "Ask the temple priests to mediate — they keep records of religious transactions", hint: "Appeal to divine authority", stats: { divine: +15, food: +10 }, type: "good", result: "The temple records show a related payment. The priests rule in your favor. You now owe them a devotion — a small price. The experience shows you that the temple's record-keeping power extends into everyday commercial disputes." }
+      ],
+      priest: [
+        { text: "Establish a temple court to adjudicate all commercial disputes using temple records", hint: "Religious authority over commerce", stats: { divine: +25, standing: +20, food: +10 }, type: "good", result: "Merchants, farmers, and artisans line up outside the temple. You are now the judge, the record-keeper, and the enforcer. The temple has just become the city's courthouse. Your power has expanded beyond religion into law itself." },
+        { text: "Declare that all debts must be recorded on clay tablets and registered with the temple", hint: "Mandatory record-keeping", stats: { divine: +20, standing: +15 }, type: "good", result: "Within a year, the disputes slow. Recorded debts are clear. Unrecorded claims are dismissed. You have inadvertently formalized commercial law. The scribes are very busy. So are you. The temple now sits at the center of every transaction in the city." },
+        { text: "Accept payment from the wealthier party to rule in their favor", hint: "Corruption of justice", stats: { wealth: +20, divine: -30, standing: -25 }, type: "bad", result: "Three rulings later, people stop coming to the temple court. Word has spread that justice is for sale. When the gods' representatives sell verdicts, people stop believing in the gods. Your authority dissolves faster than clay in the river." }
+      ],
+      king: [
+        { text: "Commission the scribes to write down the city's laws — all of them — on a public monument", hint: "Codify the law", stats: { standing: +30, divine: +10 }, type: "good", result: "The stone monument stands in the city center. Every citizen can point to it — even those who cannot read. The message is clear: the law exists, it is permanent, and the king put it there. You have just invented the legal code. Hammurabi will do this in a few centuries. You got there first." },
+        { text: "Appoint a royal judge with authority over all commercial disputes", hint: "Centralize judicial power", stats: { standing: +20, food: +10, divine: -5 }, type: "good", result: "The disputes slow. People trust a royal judge more than custom and memory. The priests are slightly annoyed that commercial justice now flows through the palace rather than the temple. But the city functions better. That is enough." },
+        { text: "Declare that the strongest argument wins — trial by combat for serious disputes", hint: "Might as justice", stats: { standing: -15, divine: -10 }, type: "bad", result: "The strongest people in the city win every dispute regardless of the truth. Merchants move their operations to Ur, where the law is more predictable. Farmers lose land they legally own. A city where justice is random cannot build anything that lasts." }
+      ],
+      merchant: [
+        { text: "Propose a standardized contract tablet — same format for every trade deal in the city", hint: "Standardize commercial records", stats: { wealth: +20, standing: +25 }, type: "good", result: "The scribes adopt your format. The judges thank you. Other merchants thank you. When everyone uses the same contract structure, disputes are resolved faster and trade flows more smoothly. You have just invented the standard commercial contract." },
+        { text: "Hire a personal scribe to accompany all your transactions", hint: "Private record-keeping", stats: { wealth: -10, standing: +15 }, type: "good", result: "Every deal is recorded the moment it closes. You never lose a dispute again. Other merchants notice and do the same. The demand for scribes doubles. Literacy, it turns out, is the merchant's best investment." },
+        { text: "Falsify a clay tablet to win a disputed trade claim", hint: "Fraud", stats: { wealth: +20, divine: -20, standing: -30 }, type: "bad", result: "The scribe who made the original tablet is still alive. He recognizes the forgery immediately. In a city where trade depends entirely on trust in written records, a merchant who falsifies documents is finished. Your trading network collapses overnight." }
+      ],
+      scribe: [
+        { text: "Propose a city-wide archive — every significant transaction recorded and stored in the temple", hint: "Institutionalize record-keeping", stats: { standing: +30, divine: +15 }, type: "good", result: "The archive becomes the most important building in the city after the ziggurat. Scribes are suddenly the most valuable professionals in Mesopotamia. You have made your entire profession indispensable. Generations of scribal students will thank you." },
+        { text: "Offer free literacy training to farmers and artisans who cannot afford scribal fees", hint: "Democratize literacy", stats: { standing: +20, divine: +5, wealth: -10 }, type: "good", result: "Within a generation, more people can read and write. Disputes that once required a scribe to mediate are resolved by the parties themselves. Some wealthy scribes resent you for reducing their monopoly. History will call you visionary." },
+        { text: "Charge exorbitant fees to record contracts — knowing most people have no alternative", hint: "Exploit the literacy monopoly", stats: { wealth: +25, standing: -20, divine: -10 }, type: "bad", result: "You grow wealthy. The merchant class grows resentful. The king, who needs commerce to flow, notices that your fees are strangling trade. A royal edict standardizes scribal fees. Your monopoly — and your windfall — is over." }
+      ],
+      artisan: [
+        { text: "Commission a scribe to document all your workshop contracts going forward", hint: "Protect your business with records", stats: { wealth: +15, standing: +10 }, type: "good", result: "The investment pays off the first time a buyer disputes a delivery. You produce the tablet. The judge rules for you in minutes. You tell every artisan you know: get a scribe. Written records are the craftsperson's best tool." },
+        { text: "Carve your maker's mark on all your goods — a visual record that can't be disputed", hint: "Visual identity as proof", stats: { standing: +15, wealth: +10 }, type: "good", result: "Your distinctive mark becomes known across the market. Forgeries are immediately obvious. Buyers seek your marked goods specifically because they trust them. You have invented the brand — and cornered your corner of the market." },
+        { text: "Refuse to deal with any merchant who won't settle disputes by handshake alone", hint: "Reject the new system", stats: { standing: -15, wealth: -15 }, type: "bad", result: "The market moves to written contracts because they are more reliable. Merchants who want certainty stop working with you. You are honest and skilled — but in a city increasingly organized around written records, a handshake is no longer enough." }
+      ]
+    }
+  },
+  {
+    id: "law",
+    title: "Chapter 4 — Someone Stole the Grain",
+    scene: "A crime has rocked the city. A large amount of grain was stolen from the temple storehouse — and stolen again from a farmer's private store. The city is arguing loudly about punishment. Some demand the thief's hand be cut off. Some say death. Some say forced labor to repay the debt. There is no written law. This is the moment one gets written.",
+    historyNote: "<strong>Real history:</strong> The Code of Hammurabi — one of history's oldest written law codes — established specific punishments for specific crimes, including theft. Its famous principle of proportional justice (an eye for an eye) was revolutionary: it meant punishments had to match the crime, not the whim of whoever held power.",
+    discussPrompt: "Did your role want the punishment to be harsh or lenient — and why? Would your role's preferred punishment protect people like you, or protect people above you?",
+    choices: {
+      farmer: [
+        { text: "Demand harsh punishment — you cannot afford to lose grain to thieves", hint: "Protect the vulnerable through fear", stats: { food: +15, standing: +10 }, type: "good", result: "The punishment deters future theft. Your stores are safer. But you notice later that the harsh law also applies when a desperate farmer steals to feed his family — someone exactly like you in a bad year. The law protects property. It does not ask why someone stole." },
+        { text: "Argue that the thief should repay triple the stolen amount through labor", hint: "Restorative justice", stats: { standing: +15, divine: +10 }, type: "good", result: "The judge adopts your proposal. The thief works off the debt. You get your grain back over time. The city gets a useful laborer instead of a maimed criminal. Hammurabi's code will include this exact principle centuries later." },
+        { text: "Forgive the theft — the thief was clearly desperate after the flood", hint: "Mercy over justice", stats: { divine: +10, food: -10, standing: -5 }, type: "neutral", result: "The priests praise your mercy. The merchant class is furious — without consequences, theft becomes a rational choice for desperate people. Your grain is stolen again within the month. Mercy without enforcement is not justice. It is just loss." }
+      ],
+      priest: [
+        { text: "Declare theft from the temple a religious crime — punishable by death", hint: "Divine property is sacred", stats: { divine: +25, standing: +10 }, type: "good", result: "Temple theft becomes the most feared crime in the city. The storehouse is never robbed again. Whether death was proportionate to the crime is a question philosophers will debate for centuries. For now, the grain is safe." },
+        { text: "Use this crisis to push for a written law code with the king's endorsement", hint: "Institutionalize justice", stats: { divine: +20, standing: +20 }, type: "good", result: "The king agrees. The scribes are summoned. Within months, the city has a written law code endorsed by both the palace and the temple. Future generations will call this a turning point in human civilization. You were in the room where it happened." },
+        { text: "Privately determine the thief's punishment without involving the king or judge", hint: "Priestly jurisdiction over justice", stats: { divine: +15, standing: -15 }, type: "neutral", result: "You handle it. The punishment is swift and severe. The king is annoyed that you acted without him. A quiet power struggle begins over who controls justice in the city — the temple or the palace. This tension will define Mesopotamian politics for centuries." }
+      ],
+      king: [
+        { text: "Commission a written law code — publicly displayed, applying equally to everyone", hint: "Rule of law over rule of men", stats: { standing: +30, divine: +15 }, type: "good", result: "The stele goes up in the city center. Rich and poor, priest and farmer, can all point to the same law. You have just made the single greatest political innovation in Mesopotamian history. Your name will be in the king-list. The gods approve." },
+        { text: "Execute the thief publicly as a warning — let the punishment be memorable", hint: "Fear as deterrence", stats: { standing: +10, divine: -5 }, type: "neutral", result: "The execution works as deterrence — in the short term. But without a written law, the next king may decide any crime deserves death. You have solved this theft without solving the problem that produced it. The city needs law, not just punishment." },
+        { text: "Pardon the thief in exchange for military service — you need soldiers", hint: "Practical mercy", stats: { standing: +5, food: -5 }, type: "neutral", result: "You get a soldier. The priests are displeased. The merchant class is nervous. The message sent to the city is ambiguous: theft is punishable unless the king needs you. That is not justice. That is politics. But sometimes politics is what you have." }
+      ],
+      merchant: [
+        { text: "Fund the writing of the law code in exchange for provisions protecting trade contracts", hint: "Buy your way into lawmaking", stats: { wealth: -10, standing: +20 }, type: "good", result: "The law code includes specific protections for commercial contracts and trade disputes. You paid for it — and it will pay you back for generations. Commerce just became legally protected. Every merchant in the city owes you something." },
+        { text: "Organize the merchant class to pressure the king for consistent commercial law", hint: "Collective commercial interest", stats: { wealth: +15, standing: +20, divine: -5 }, type: "good", result: "The merchants speak with one voice. The king listens — he needs their taxes. Commercial law is strengthened. You have discovered something important: organized economic power can influence political power. This lesson will echo through history." },
+        { text: "Hire private guards for your warehouses and stop relying on city justice", hint: "Private security over public law", stats: { wealth: -15, standing: -10 }, type: "bad", result: "Your warehouses are safe. The city's public spaces become more dangerous as wealthy merchants withdraw their support from public security. When only the rich have guards, justice becomes a product. That is a city beginning to unravel." }
+      ],
+      scribe: [
+        { text: "Draft the law code yourself — you are the only one who can write it clearly enough", hint: "Scribal authorship of law", stats: { standing: +30, divine: +10 }, type: "good", result: "You write it. The king seals it. The priests bless it. Your words, carved in stone, become the law of the land. Generations of scribal students will copy your text as a writing exercise. You have authored civilization's rules." },
+        { text: "Record every argument made in the public dispute — create a legal precedent document", hint: "Case law through record-keeping", stats: { standing: +20, divine: +10 }, type: "good", result: "Your record of the debate becomes the city's first legal precedent document. Future judges consult it when similar cases arise. You have invented case law — the principle that past decisions guide future ones — two thousand years before Rome does the same." },
+        { text: "Sell copies of the proposed law code to wealthy citizens before it is officially enacted", hint: "Profit from exclusive information", stats: { wealth: +20, standing: -20 }, type: "bad", result: "Wealthy citizens who buy your copies shape the law to protect their interests before the public ever sees it. When this is discovered, the city is furious. You have shown that information, like grain, can be hoarded — and that hoarding it has the same effect on justice as hoarding food has on the poor." }
+      ],
+      artisan: [
+        { text: "Volunteer to carve the law code into the stone stele — your best work for the city", hint: "Craft in service of civilization", stats: { standing: +25, divine: +15 }, type: "good", result: "The law stele is your masterpiece. It stands in the city center for centuries. Your chisel marks outlast your name, your workshop, and your city. The Code of Hammurabi — when it comes — will be carved by artisans just like you. You are part of how civilization looks." },
+        { text: "Argue that artisans need specific protections in any new law — shoddy work standards, payment guarantees", hint: "Advocate for your trade", stats: { standing: +15, wealth: +15 }, type: "good", result: "The law code includes provisions for construction quality and payment disputes involving craftspeople. Hammurabi's actual code contains exactly these provisions. You fought for them — and won. Every artisan who comes after you benefits." },
+        { text: "Stay out of it — laws are for the priests and kings to argue about", hint: "Disengage from politics", stats: { standing: -10 }, type: "bad", result: "The law code passes without any protections for artisans. When a wealthy patron refuses to pay you for completed work, there is no legal remedy. You have learned the hard way: those who don't participate in making the rules live under rules made by others." }
+      ]
+    }
+  },
+  {
+    id: "trade",
+    title: "Chapter 5 — What the River Cannot Provide",
+    scene: "Mesopotamia has everything a civilization needs — rich soil, water, thousands of skilled people. But it has almost no stone, no wood, and no metal. To build temples and weapons and ships, the city must trade. A caravan has arrived from the mountains with cedar wood and tin. The price they are asking is steep. And a rival city-state is also negotiating with them.",
+    historyNote: "<strong>Real history:</strong> Mesopotamia's lack of natural resources was one of the primary drivers of trade, diplomacy, and eventually empire. The need for cedar from Lebanon, tin from Afghanistan, and copper from Anatolia created some of the ancient world's first long-distance trade networks — and the political relationships that went with them.",
+    discussPrompt: "Which roles benefited most from trade — and which roles were most affected by what trade could not provide? How does resource scarcity shape what a civilization becomes?",
+    choices: {
+      farmer: [
+        { text: "Offer surplus grain from a good harvest as trade goods — your land produces what others need", hint: "Agricultural surplus as trade currency", stats: { food: -10, wealth: +20, standing: +10 }, type: "good", result: "Your grain feeds the caravan's families in distant mountains. Their cedar builds the city's temple. Trade turns your field into a connection to the entire ancient world. A good harvest, you realize, is not just survival — it is power." },
+        { text: "Push the city leaders to prioritize agricultural tools in the trade deal — iron plows over luxury goods", hint: "Practical over prestige", stats: { food: +20, standing: +5 }, type: "good", result: "The better tools double your harvest within two years. The city eats well. The priests, who wanted cedar for a new temple wing, are slightly annoyed. But a well-fed city is a stable city — and stable cities build temples eventually." },
+        { text: "Ignore the trade negotiations — it doesn't affect your field directly", hint: "Disengage from larger forces", stats: { standing: -10 }, type: "bad", result: "The trade deal happens without your input. The resources purchased go to the palace and the temple. Three seasons later, when a flood damages your irrigation canal, there is no stone to repair it — the stone went to a temple wall. What happens far away reaches you eventually." }
+      ],
+      priest: [
+        { text: "Demand cedar for the new temple wing — the gods deserve the finest materials", hint: "Divine priority in resource allocation", stats: { divine: +25, standing: +10, food: -10 }, type: "good", result: "The cedar temple wing is magnificent. Pilgrims come from distant cities to see it. The temple's reputation grows beyond your walls. Resources spent on beauty, you discover, return as influence — which is its own kind of wealth." },
+        { text: "Bless the trade caravan and offer the temple as neutral ground for negotiations", hint: "Religious authority as diplomatic tool", stats: { divine: +20, standing: +20 }, type: "good", result: "Both cities negotiate in the temple under divine witness. The deal is sealed with a religious oath. You have invented the neutral diplomatic space — and positioned the temple at the center of international relations. The gods, apparently, are good for business." },
+        { text: "Tax the incoming caravan on behalf of the gods — all trade passing through the city owes tribute", hint: "Religious tariff", stats: { divine: +10, wealth: +20, standing: -15 }, type: "neutral", result: "The temple grows wealthy from caravan taxes. The merchant is furious. The king is intrigued — he wants the same arrangement for the palace. A fight over who collects trade taxes begins. In Mesopotamia, this argument will never fully be resolved." }
+      ],
+      king: [
+        { text: "Negotiate directly with the caravan — offer military protection of their route in exchange for favorable prices", hint: "Security as trade currency", stats: { standing: +25, wealth: +15 }, type: "good", result: "The caravan accepts. Your soldiers escort the route. The rival city is frozen out. You have traded military power for economic advantage — and created an alliance that benefits both sides. This is the beginning of trade diplomacy." },
+        { text: "Outbid the rival city at any price — the resources must not go to an enemy", hint: "Strategic acquisition", stats: { food: -20, wealth: -10, standing: +15 }, type: "neutral", result: "You win the resources. The rival city is denied. But the price was steep and the city's granaries are thinner than you'd like. Military strategy and economic strategy, you're learning, are the same strategy." },
+        { text: "Send a military force to intercept the caravan before it reaches the rival city", hint: "Force over trade", stats: { standing: -20, divine: -15, wealth: +10 }, type: "bad", result: "You seize the resources. The caravan owner tells every trading partner in the region what happened. Within a season, no caravan will approach your city. You have gained cedar and lost your reputation as a trading partner. Wood is finite. Trade networks are not." }
+      ],
+      merchant: [
+        { text: "Position yourself as the exclusive broker between the caravan and your city — take a commission on both sides", hint: "The middleman strategy", stats: { wealth: +30, standing: +15 }, type: "good", result: "You make money on every unit of cedar and tin that enters the city. Both the caravan and the city leaders are slightly annoyed by your commission — but they need you. The middleman who knows everyone is indispensable. This is the merchant's oldest insight." },
+        { text: "Propose a long-term trade agreement — stable prices in exchange for exclusivity", hint: "Long-term contract over one-time deal", stats: { wealth: +20, standing: +20 }, type: "good", result: "The caravan accepts a five-year agreement. Your city has a guaranteed resource supply. The rival city is locked out for five years. Long-term contracts stabilize entire economies — and make the merchant who arranges them very, very wealthy." },
+        { text: "Secretly share the caravan's price information with the rival city to start a bidding war", hint: "Manufactured competition", stats: { wealth: +15, standing: -25, divine: -10 }, type: "bad", result: "Prices spike. Your city overpays. The caravan is delighted. When your role in creating the bidding war is discovered, the king's trust in you evaporates. A merchant who manipulates his own city's negotiations is not a merchant — he is a liability." }
+      ],
+      scribe: [
+        { text: "Create a standardized trade agreement template — same terms for all caravans, enforceable by the temple", hint: "Institutionalize trade law", stats: { standing: +25, wealth: +10 }, type: "good", result: "The template becomes the standard trade contract across three city-states within a decade. Your format creates predictability — and predictability creates trust — and trust creates trade. The volume of commerce through your city doubles. You did that with clay tablets." },
+        { text: "Record the full negotiation — prices, quantities, terms — creating a permanent trade record", hint: "Documentation of commerce", stats: { standing: +20, divine: +5 }, type: "good", result: "Your record prevents future disputes about the agreement's terms. The merchant cites it twice in the next year alone. The king uses it as a template for future negotiations. Good records make everything work better — and everyone knows who made the records." },
+        { text: "Record false quantities to skim a portion of the trade goods for yourself", hint: "Fraud through record manipulation", stats: { wealth: +20, divine: -25, standing: -30 }, type: "bad", result: "The physical goods don't match the tablet. The caravan owner's own records tell the real story. You are the scribe — the person the entire system trusted with the truth. You have broken the one thing that made your role valuable. There is no recovering from this." }
+      ],
+      artisan: [
+        { text: "Negotiate directly for cedar and tin — you'll pay in finished goods the caravan can trade elsewhere", hint: "Barter of manufactured goods", stats: { wealth: +20, standing: +15 }, type: "good", result: "The caravan takes your finest bronze vessels and ceramic wares. Your crafted goods travel farther than you ever will — appearing in homes three weeks' journey away. Trade carries culture. Your work is now Mesopotamia's ambassador to the ancient world." },
+        { text: "Propose a craft export strategy to the king — Mesopotamian artisan goods for raw materials", hint: "Manufactured exports as trade policy", stats: { standing: +25, wealth: +15 }, type: "good", result: "The king adopts your idea. Artisan workshops expand. Finished goods flow out; raw materials flow in. You have proposed what economists will one day call comparative advantage — trade what you make best for what you cannot make at all." },
+        { text: "Stockpile raw materials for yourself before the city negotiates its official allocation", hint: "Self-interested hoarding", stats: { wealth: +15, standing: -20, divine: -10 }, type: "bad", result: "You have more copper than your workshop can use. The city's builders lack the metal they need for repairs. The priests say your hoarding dishonors the gods who provided the flood-rich soil that made all this possible. Your stocks are confiscated. The city's needs, it turns out, outrank your convenience." }
+      ]
+    }
+  }
+];
+
+// ══════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════
+
+let state = {
+  screen: "art_open",   // art_open | role_select | chapter | discussion | outcome | art_close | ending | gameover
+  role: null,
+  chapterIndex: 0,
+  stats: { food: 50, divine: 50, wealth: 50, standing: 50 },
+  pendingOutcome: null,
+  timerInterval: null,
+  timerSeconds: 90,
+  artResponses: { open: ["", "", ""], close: ["", "", ""] }
+};
+
+// ══════════════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════════════
+
+function clamp(v) { return Math.max(0, Math.min(100, v)); }
+
+function applyStats(changes) {
+  for (let k in changes) {
+    if (state.stats[k] !== undefined) {
+      state.stats[k] = clamp(state.stats[k] + changes[k]);
+    }
+  }
+}
+
+function statColor(v) {
+  if (v >= 60) return "#4A7C59";
+  if (v >= 35) return "#B8860B";
+  return "#8B2A2A";
+}
+
+function isDead() {
+  return state.stats.food <= 0 || state.stats.divine <= 0;
+}
+
+function renderStats() {
+  const defs = [
+    { key: "food", label: "Food Stores", icon: "🌾" },
+    { key: "divine", label: "Divine Favor", icon: "⚡" },
+    { key: "wealth", label: "Trade Wealth", icon: "⚖️" },
+    { key: "standing", label: "Social Standing", icon: "🏛️" },
+  ];
+  return `<div class="stats-row">${defs.map(d => {
+    const v = state.stats[d.key];
+    return `<div class="stat-box">
+      <span class="stat-icon">${d.icon}</span>
+      <div class="stat-label">${d.label}</div>
+      <div class="stat-value" style="color:${statColor(v)}">${Math.round(v)}</div>
+      <div class="stat-track"><div class="stat-fill" style="width:${v}%;background:${statColor(v)}"></div></div>
+    </div>`;
+  }).join("")}</div>`;
+}
+
+function renderRoleBadge(chapter) {
+  if (!state.role) return "";
+  const r = ROLES.find(x => x.id === state.role);
+  const chIdx = state.chapterIndex;
+  const prog = Array.from({length: CHAPTERS.length}, (_, i) =>
+    `<div class="dot ${i < chIdx ? 'done' : i === chIdx ? 'active' : ''}"></div>`).join("");
+  return `<div class="role-badge">
+    <div class="role-icon">${r.icon}</div>
+    <div class="role-info">
+      <div class="role-name">${r.name}</div>
+      <div class="role-desc">${r.desc}</div>
+    </div>
+    <div>
+      <div class="chapter-tag">${chapter || ""}</div>
+      <div class="progress-dots" style="margin-top:6px;margin-bottom:0">${prog}</div>
+    </div>
+  </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  SCREENS
+// ══════════════════════════════════════════════════════════════
+
+function screenArtOpen() {
+  return `
+    <div class="art-screen">
+      <div class="scene-title">Before we begin — look closely</div>
+      <div class="scene-heading">The Standard of Ur</div>
+      <div class="art-frame">
+        <div class="art-placeholder">
+          <strong>🏺 The Standard of Ur — circa 2600 BCE</strong><br><br>
+          This mosaic panel was found in a royal tomb in the city of Ur. It shows two sides of Mesopotamian life: one side depicts war — soldiers, chariots, prisoners. The other shows peace — feasting, musicians, animals being led to a celebration.<br><br>
+          <em>Your teacher will display this image on the board, or search: "Standard of Ur British Museum"</em>
+        </div>
+        <div class="art-caption">Standard of Ur · Royal Cemetery of Ur · c. 2600 BCE · British Museum · Public Domain</div>
+      </div>
+      <div class="scene-text">Before you begin your story, examine this object. It was made by people who lived in Mesopotamia nearly 5,000 years ago. Use your three prompts:</div>
+      <div class="art-prompts">
+        <div class="art-prompt">
+          <label>One thing I find interesting...</label>
+          <textarea id="a1" placeholder="Write your observation here..." oninput="saveArt('open',0,this.value)">${state.artResponses.open[0]}</textarea>
+        </div>
+        <div class="art-prompt">
+          <label>One thing that puzzles me...</label>
+          <textarea id="a2" placeholder="Write your observation here..." oninput="saveArt('open',1,this.value)">${state.artResponses.open[1]}</textarea>
+        </div>
+        <div class="art-prompt">
+          <label>One question I have for the creator...</label>
+          <textarea id="a3" placeholder="Write your question here..." oninput="saveArt('open',2,this.value)">${state.artResponses.open[2]}</textarea>
+        </div>
+      </div>
+      <button class="btn" onclick="go('role_select')">I'm ready to begin my story →</button>
+    </div>`;
+}
+
+function screenRoleSelect() {
+  return `
+    <div class="scene-title">Choose your role — your table decides together</div>
+    <div class="scene-heading">Who are you in ancient Mesopotamia?</div>
+    <div class="scene-text">Your entire table plays as the same role. Read the cards below and decide together. Each role faces the same crises — but with completely different options for how to respond.</div>
+    <div class="role-grid">
+      ${ROLES.map(r => `
+        <div class="role-card" onclick="selectRole('${r.id}')">
+          <span class="rc-icon">${r.icon}</span>
+          <div class="rc-name">${r.name}</div>
+          <div class="rc-own"><strong>You control:</strong> ${r.own}</div>
+          <div class="rc-fear">⚠ You fear: ${r.fear}</div>
+        </div>`).join("")}
+    </div>`;
+}
+
+function screenChapter() {
+  const ch = CHAPTERS[state.chapterIndex];
+  const r = ROLES.find(x => x.id === state.role);
+  const choices = ch.choices[state.role];
+  return `
+    ${renderRoleBadge(ch.title)}
+    ${renderStats()}
+    <div class="scene-title">${ch.title}</div>
+    <div class="scene-text">${ch.scene}</div>
+    <div class="role-context">As ${r.name}: ${getRoleContext(ch.id, state.role)}</div>
+    <div class="history-note">${ch.historyNote}</div>
+    <div class="choices-label">Your table's options — discuss before you choose:</div>
+    <div class="choices">
+      ${choices.map((c, i) => `
+        <button class="choice-btn" onclick="makeChoice(${i})">
+          <div class="choice-text">${c.text}</div>
+          <div class="choice-hint">${c.hint}</div>
+        </button>`).join("")}
+    </div>`;
+}
+
+function getRoleContext(chapterId, roleId) {
+  const contexts = {
+    flood: {
+      farmer: "The flood threatens everything your family has worked for. You have almost no political power — but you have neighbors, and you have choices.",
+      priest: "The people are looking to you for answers. Is this flood a divine punishment — or a natural disaster? How you answer shapes everything that happens next.",
+      king: "This is exactly the crisis a lugal exists for. You have an army and the authority to mobilize the entire city. What you do now defines your reign.",
+      merchant: "Your goods are at risk — but so is your network. The contacts you maintain during a crisis are often more valuable than what you save.",
+      scribe: "You cannot stop the water with a clay tablet. But you can record it — and whoever documents a crisis shapes how it is remembered and prevented next time.",
+      artisan: "Your kiln, your tools, your finished work — all at risk. But your skills may be exactly what the city needs right now."
+    },
+    ziggurat: {
+      farmer: "Ten percent of your harvest after a flood season may mean your family goes hungry this winter. But refusing the priests is not a small thing.",
+      priest: "This is your moment to demonstrate that the temple serves the community — or to demonstrate that the community serves the temple.",
+      king: "Your relationship with the priests defines your legitimacy. But you also answer to the farmers and merchants who pay the taxes that pay the army.",
+      merchant: "A tithe on trade income is calculated differently than a grain tithe. You have options a farmer does not. Use them carefully.",
+      scribe: "You keep the records that make the tithe system work. That makes you powerful — and it also makes you responsible for its honesty.",
+      artisan: "Your income is irregular — a tithe on a good month looks very different from a tithe on a slow month. The priests may not understand your business model."
+    },
+    writing: {
+      farmer: "You cannot read the clay tablet being waved in your face. That powerlessness is the whole problem — and the whole lesson.",
+      priest: "Disputes that go unresolved corrode the social order you depend on. The temple's record-keeping power could be the solution — if you choose to use it that way.",
+      king: "A city without consistent law is a city that cannot grow. Every dispute that goes unresolved is a crack in the foundation of your reign.",
+      merchant: "Commerce runs on trust. Trust requires reliable records. This dispute is personal — but the systemic problem affects every deal you make.",
+      scribe: "You are the only person in this dispute who fully understands what written records can do. That makes your choices here more consequential than anyone else's.",
+      artisan: "You work with your hands, not with clay tablets. But the dispute system affects whether you get paid, whether your contracts hold, whether your work is protected."
+    },
+    law: {
+      farmer: "The law that gets written will govern your field, your harvest, and your family's security for generations. Your voice in this moment matters more than you think.",
+      priest: "Law and religion are not separate things in Mesopotamia. The law code that emerges from this crisis will either reinforce your authority or begin to undermine it.",
+      king: "Written law is your greatest potential legacy — and your greatest potential constraint. A law that applies to everyone applies to you too.",
+      merchant: "Commerce needs predictable law more than almost anything else. The law code written today will determine whether your contracts are worth the clay they're written on.",
+      scribe: "Someone has to write the law. That person shapes what the law says. You are that person — if you choose to be.",
+      artisan: "Laws about property, theft, and contracts directly affect your workshop, your tools, and your ability to be paid for your work. This is not abstract."
+    },
+    trade: {
+      farmer: "Your grain surplus is Mesopotamia's most tradeable resource. You have more leverage in this negotiation than you probably realize.",
+      priest: "The gods provided this land's fertility. Does that mean the gods are owed a portion of what trade brings in? The caravan's leaders are watching how you answer.",
+      king: "Trade is not just commerce — it is foreign policy. The deal you make with this caravan signals your city's relationship with the world beyond your walls.",
+      merchant: "This is your moment. You know these routes, these traders, these prices better than any priest or king. Knowledge is your inventory. Use it.",
+      scribe: "Trade agreements that aren't recorded are trade agreements that will be disputed. Your role in this negotiation may be the most important role in the room.",
+      artisan: "The raw materials coming in on that caravan are your future work. What you make from cedar and tin will outlast every document in the temple archive."
+    }
+  };
+  return contexts[chapterId]?.[roleId] || "";
+}
+
+function screenOutcome() {
+  const o = state.pendingOutcome;
+  const ch = CHAPTERS[state.chapterIndex];
+  return `
+    ${renderRoleBadge(ch.title)}
+    ${renderStats()}
+    <div class="outcome-box outcome-${o.type}">
+      <div class="outcome-label">${o.type === 'good' ? '✓ What happened' : o.type === 'bad' ? '✗ What happened' : '→ What happened'}</div>
+      ${o.result}
+    </div>
+    <div class="history-note">${ch.historyNote}</div>
+    <button class="btn" onclick="startDiscussion()">Continue to table discussion →</button>`;
+}
+
+function screenDiscussion() {
+  const ch = CHAPTERS[state.chapterIndex];
+  clearInterval(state.timerInterval);
+  state.timerSeconds = 90;
+
+  setTimeout(() => {
+    let secs = 90;
+    const totalTime = 90;
+    state.timerInterval = setInterval(() => {
+      secs--;
+      state.timerSeconds = secs;
+      const el = document.getElementById("timer-display");
+      const fill = document.getElementById("timer-fill");
+      const btn = document.getElementById("cont-btn");
+      if (el) el.textContent = secs > 0 ? `${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')}` : "0:00";
+      if (fill) fill.style.width = `${(secs/totalTime)*100}%`;
+      if (secs <= 0) {
+        clearInterval(state.timerInterval);
+        if (btn) btn.classList.add("ready");
+      }
+    }, 1000);
+  }, 100);
+
+  return `
+    ${renderRoleBadge("")}
+    <div class="discussion-box">
+      <div class="disc-header">⏱ Table Discussion — 90 seconds</div>
+      <div class="disc-prompt">${ch.discussPrompt}</div>
+      <div class="timer-row">
+        <div class="timer-display" id="timer-display">1:30</div>
+        <div class="timer-track"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+        <button class="continue-btn" id="cont-btn" onclick="advanceChapter()">Next chapter →</button>
+      </div>
+    </div>
+    <div class="scene-text" style="font-size:13px;color:#5A5A5A;font-family:Arial,sans-serif">The button unlocks when the timer ends. Use this time to compare your table's experience with the table next to you.</div>`;
+}
+
+function screenArtClose() {
+  return `
+    <div class="art-screen">
+      ${renderStats()}
+      <div class="scene-title">Closing reflection — look again</div>
+      <div class="scene-heading">The Ziggurat of Ur</div>
+      <div class="art-frame">
+        <div class="art-placeholder">
+          <strong>🏛️ The Ziggurat of Ur — circa 2100 BCE</strong><br><br>
+          Built by King Ur-Nammu, this massive stepped temple rose 30 meters above the flat Mesopotamian plain. It was visible for miles in every direction. The ziggurat was not just a temple — it was the city's economic center, administrative headquarters, and most powerful symbol of divine authority.<br><br>
+          <em>Your teacher will display this image on the board, or search: "Ziggurat of Ur reconstruction"</em>
+        </div>
+        <div class="art-caption">Ziggurat of Ur · Tell el-Muqayyar, Iraq · c. 2100 BCE · Reconstruction image · Public Domain</div>
+      </div>
+      <div class="scene-text">You've just lived through five chapters of Mesopotamian history. Now look at this building with everything you know. Use your three prompts one more time:</div>
+      <div class="art-prompts">
+        <div class="art-prompt">
+          <label>One thing I find interesting...</label>
+          <textarea placeholder="Write your observation here..." oninput="saveArt('close',0,this.value)">${state.artResponses.close[0]}</textarea>
+        </div>
+        <div class="art-prompt">
+          <label>One thing that puzzles me...</label>
+          <textarea placeholder="Write your observation here..." oninput="saveArt('close',1,this.value)">${state.artResponses.close[1]}</textarea>
+        </div>
+        <div class="art-prompt">
+          <label>One question I have for the creator...</label>
+          <textarea placeholder="Write your question here..." oninput="saveArt('close',2,this.value)">${state.artResponses.close[2]}</textarea>
+        </div>
+      </div>
+      <div class="history-note"><strong>Year-long comparison question:</strong> Think back to the Lascaux cave paintings you'll see at the start of the year. How does this ziggurat feel different from those cave paintings — and what does that difference tell you about what changed between the Stone Age and Mesopotamia?</div>
+      <button class="btn" onclick="go('ending')">See how your story ends →</button>
+    </div>`;
+}
+
+function screenEnding() {
+  const r = ROLES.find(x => x.id === state.role);
+  const avg = Math.round(Object.values(state.stats).reduce((a,b)=>a+b,0)/4);
+  let verdict, verdictText;
+  if (avg >= 65) {
+    verdict = `${r.name} — Your civilization flourishes`;
+    verdictText = "Your choices aligned with the values and systems of Mesopotamian civilization. You understood that survival meant balancing religious obligation, community ties, and smart resource management. Historians would call your family 'successful urban citizens of the ancient world.'";
+  } else if (avg >= 45) {
+    verdict = `${r.name} — Your civilization endures`;
+    verdictText = "You made some costly decisions, but you endured. Life in ancient Mesopotamia was precarious for most people. Your story is actually typical: not triumph, not catastrophe, but the grinding daily survival that most ordinary families experienced across every social role.";
+  } else {
+    verdict = `${r.name} — Your civilization struggles`;
+    verdictText = "The ancient world was unforgiving to those who worked against its systems — or were failed by them. But your story raises the most important questions: who designed those systems, who benefited from them, and who paid the price?";
+  }
+
+  return `
+    <div class="ending">
+      ${renderStats()}
+      <div class="ending-verdict">${verdict}</div>
+      <p class="ending-text">${verdictText}</p>
+      <div class="standards-box">
+        <strong>Your campaign covered these concepts:</strong><br>
+        Mesopotamian geography and flooding · The role of irrigation in civilization · Ziggurats and theocracy · Cuneiform writing and record-keeping · The Code of Hammurabi and written law · Long-distance trade networks · City-state political structure · Social hierarchy and role-based power
+      </div>
+      <div class="discussion-questions">
+        <h4>Class Discussion Questions</h4>
+        <p>1. How did geography — specifically the floods — shape every major decision your role faced?</p>
+        <p>2. Which role had the most power in Mesopotamia — and how did you know?</p>
+        <p>3. Why was writing invented in Mesopotamia? What problem did it solve?</p>
+        <p>4. The Code of Hammurabi says "an eye for an eye." Why was that actually a step toward fairness — not cruelty?</p>
+        <p>5. What does it tell us that religion and government were the same institution in Mesopotamia?</p>
+      </div>
+      <button class="btn" onclick="restart()">Play again as a different role</button>
+      <button class="btn btn-secondary" onclick="restart()">Return to start</button>
+    </div>`;
+}
+
+function screenGameover() {
+  const reason = state.stats.food <= 0
+    ? "Your family's food stores ran out. Without grain, you cannot pay the temple tithe, hire workers, or survive the dry season. In ancient Mesopotamia, food was the foundation of everything — currency, power, and survival."
+    : "You have lost the favor of the gods — or more precisely, their priests. In ancient Mesopotamia, there was no difference. Without religious standing, you lose access to irrigation water, legal protection, and community support. A family cast out of the temple network cannot survive alone.";
+
+  return `
+    <div class="gameover">
+      <div class="gameover-icon">⚱️</div>
+      <h2>Your story in Mesopotamia ends here</h2>
+      <p>${reason}</p>
+      <div class="disc-q">Discussion: What does a "game over" in this world teach us about what Mesopotamians valued and depended on — and who was most vulnerable when those systems failed?</div>
+      <button class="btn" onclick="restart()">Start a new story</button>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ACTIONS
+// ══════════════════════════════════════════════════════════════
+
+function go(screen) {
+  state.screen = screen;
+  render();
+}
+
+function selectRole(roleId) {
+  state.role = roleId;
+  state.chapterIndex = 0;
+  go("chapter");
+}
+
+function makeChoice(i) {
+  const ch = CHAPTERS[state.chapterIndex];
+  const choice = ch.choices[state.role][i];
+  applyStats(choice.stats);
+  state.pendingOutcome = choice;
+  if (isDead()) { go("gameover"); return; }
+  go("outcome");
+}
+
+function startDiscussion() {
+  go("discussion");
+}
+
+function advanceChapter() {
+  clearInterval(state.timerInterval);
+  state.chapterIndex++;
+  if (state.chapterIndex >= CHAPTERS.length) {
+    go("art_close");
+  } else {
+    if (isDead()) { go("gameover"); return; }
+    go("chapter");
+  }
+}
+
+function saveArt(phase, idx, val) {
+  state.artResponses[phase][idx] = val;
+}
+
+function restart() {
+  clearInterval(state.timerInterval);
+  state = {
+    screen: "art_open",
+    role: null,
+    chapterIndex: 0,
+    stats: { food: 50, divine: 50, wealth: 50, standing: 50 },
+    pendingOutcome: null,
+    timerInterval: null,
+    timerSeconds: 90,
+    artResponses: { open: ["","",""], close: ["","",""] }
+  };
+  render();
+}
+
+// ══════════════════════════════════════════════════════════════
+//  RENDER
+// ══════════════════════════════════════════════════════════════
+
+function render() {
+  const el = document.getElementById("content");
+  const screens = {
+    art_open: screenArtOpen,
+    role_select: screenRoleSelect,
+    chapter: screenChapter,
+    outcome: screenOutcome,
+    discussion: screenDiscussion,
+    art_close: screenArtClose,
+    ending: screenEnding,
+    gameover: screenGameover,
+  };
+  el.innerHTML = (screens[state.screen] || (() => "<p>Loading...</p>"))();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+render();
+</script>
+</body>
+</html>
