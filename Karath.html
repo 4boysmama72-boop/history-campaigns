@@ -1,0 +1,952 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Karath — The Story of Us</title>
+<style>
+  :root {
+    --ocean: #1A3A5C;
+    --ocean-mid: #2E6B8A;
+    --ocean-light: #D4EAF5;
+    --sand: #F5ECD7;
+    --sand-dark: #E8D5B0;
+    --clay: #8B5E3C;
+    --clay-light: #C4956A;
+    --gold: #B8860B;
+    --gold-light: #FFF8DC;
+    --green: #4A7C59;
+    --green-light: #DCF0E3;
+    --red: #8B2A2A;
+    --red-light: #F5DCDC;
+    --stone: #5A5A5A;
+    --stone-light: #F0EFED;
+    --ink: #1A1208;
+    --border: #2E6B8A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #0A1A2E;
+    color: #E8F4FF;
+    min-height: 100vh;
+  }
+
+  #app {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 3rem;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    text-align: center;
+    padding: 1.5rem 1rem 1rem;
+    border-bottom: 2px solid var(--ocean-mid);
+    margin-bottom: 1.5rem;
+  }
+  .site-header .campaign-tag {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--clay-light);
+    font-family: Arial, sans-serif;
+    margin-bottom: 6px;
+  }
+  .site-header h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: #E8F4FF;
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+  .site-header h2 {
+    font-size: 15px;
+    font-weight: normal;
+    color: var(--clay-light);
+    font-family: Arial, sans-serif;
+    font-style: italic;
+  }
+
+  /* ── Screens ── */
+  .screen-label {
+    font-size: 11px;
+    color: var(--clay-light);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: Arial, sans-serif;
+    margin-bottom: 6px;
+  }
+  .screen-heading {
+    font-size: 22px;
+    font-weight: bold;
+    color: #E8F4FF;
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+  .scene-text {
+    font-size: 15px;
+    line-height: 1.85;
+    color: #C8DCF0;
+    margin-bottom: 1rem;
+  }
+
+  /* ── Drone image frame ── */
+  .drone-frame {
+    background: #050D18;
+    border: 2px solid var(--ocean-mid);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 1.25rem;
+    font-family: 'Courier New', monospace;
+  }
+  .drone-meta {
+    font-size: 11px;
+    color: #4A9B6F;
+    letter-spacing: 0.06em;
+    margin-bottom: 12px;
+    line-height: 1.8;
+  }
+  .drone-image-area {
+    background: #0A1525;
+    border: 1px solid #1A3A5C;
+    border-radius: 4px;
+    min-height: 220px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    margin-bottom: 12px;
+    overflow: hidden;
+    position: relative;
+  }
+  .drone-image-area img {
+    width: 100%;
+    border-radius: 4px;
+    display: block;
+    filter: brightness(0.85) contrast(1.1) saturate(0.8);
+  }
+  /* ── DRONE IMAGE PLACEHOLDER ──
+     Replace the text below with an <img> tag when you have the Canva image URL.
+     Example: <img src="YOUR_URL_HERE" alt="Drone footage of Karath" />
+     Remove the .drone-placeholder div and add the img directly inside .drone-image-area
+  ── */
+  .drone-placeholder {
+    text-align: center;
+    padding: 2rem;
+    color: #2A6A4A;
+  }
+  .drone-placeholder .dp-icon { font-size: 32px; margin-bottom: 12px; display: block; }
+  .drone-placeholder .dp-text { font-size: 12px; line-height: 1.8; }
+  .drone-scanline {
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 2px;
+    background: rgba(74, 155, 111, 0.3);
+    animation: scan 3s linear infinite;
+  }
+  @keyframes scan {
+    0% { top: 0; }
+    100% { top: 100%; }
+  }
+  .drone-caption {
+    font-size: 11px;
+    color: #4A9B6F;
+    text-align: center;
+    letter-spacing: 0.04em;
+  }
+
+  /* ── Key Marco Cat image ── */
+  .artifact-frame {
+    background: #1A0A00;
+    border: 2px solid var(--clay-light);
+    border-radius: 8px;
+    padding: 16px;
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+  .artifact-frame img {
+    max-width: 100%;
+    max-height: 320px;
+    border-radius: 4px;
+    display: block;
+    margin: 0 auto 10px;
+  }
+  .artifact-caption {
+    font-size: 12px;
+    color: var(--clay-light);
+    font-family: Arial, sans-serif;
+    font-style: italic;
+    line-height: 1.5;
+  }
+
+  /* ── Info boxes ── */
+  .archaeology-note {
+    background: rgba(46, 107, 138, 0.2);
+    border-left: 3px solid var(--ocean-mid);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #A8CCE8;
+    margin-bottom: 1.25rem;
+    line-height: 1.65;
+    font-family: Arial, sans-serif;
+  }
+  .archaeology-note strong { color: #C8DCF0; font-weight: 600; }
+
+  .journal-prompt {
+    background: rgba(184, 134, 11, 0.15);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: #E8CC80;
+    margin-bottom: 1.25rem;
+    line-height: 1.7;
+    font-family: Arial, sans-serif;
+  }
+  .journal-prompt strong { color: #F0DC90; font-weight: 600; }
+
+  .restart-note {
+    background: rgba(139, 42, 42, 0.2);
+    border-left: 3px solid var(--red);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #F0A0A0;
+    margin-bottom: 1.25rem;
+    line-height: 1.65;
+    font-family: Arial, sans-serif;
+  }
+
+  /* ── Map for Geography chapter ── */
+  .site-map {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 10px;
+    margin-bottom: 1.25rem;
+  }
+  .map-site {
+    background: rgba(26, 58, 92, 0.4);
+    border: 1.5px solid var(--ocean-mid);
+    border-radius: 8px;
+    padding: 12px 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .map-site:hover { background: rgba(46, 107, 138, 0.4); border-color: #5AABCC; }
+  .map-site .site-label { font-size: 15px; font-weight: bold; color: #E8F4FF; margin-bottom: 4px; }
+  .map-site .site-icon { font-size: 24px; margin-bottom: 6px; display: block; }
+  .map-site .site-desc { font-size: 12px; color: #90B8D8; font-family: Arial, sans-serif; line-height: 1.5; }
+
+  /* ── Choices ── */
+  .choices-label {
+    font-size: 11px;
+    color: #90B8D8;
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: Arial, sans-serif;
+    margin-bottom: 8px;
+  }
+  .choices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+  .choice-btn {
+    background: rgba(26, 58, 92, 0.5);
+    border: 1.5px solid var(--ocean-mid);
+    border-radius: 8px;
+    padding: 12px 16px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: Georgia, serif;
+  }
+  .choice-btn:hover { background: rgba(46, 107, 138, 0.4); border-color: #5AABCC; }
+  .choice-btn .choice-text { font-size: 14px; color: #E8F4FF; line-height: 1.5; }
+  .choice-btn .choice-hint { font-size: 11px; color: #90B8D8; margin-top: 4px; font-family: Arial, sans-serif; font-style: italic; }
+
+  /* ── Outcome ── */
+  .outcome-box {
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 1.25rem;
+    font-size: 14px;
+    line-height: 1.7;
+    font-family: Arial, sans-serif;
+  }
+  .outcome-survived { background: rgba(74, 124, 89, 0.2); border: 1.5px solid var(--green); color: #A0D8B0; }
+  .outcome-barely { background: rgba(184, 134, 11, 0.15); border: 1.5px solid var(--gold); color: #E8CC80; }
+  .outcome-restart { background: rgba(139, 42, 42, 0.2); border: 1.5px solid var(--red); color: #F0A0A0; }
+  .outcome-label { font-size: 11px; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; font-family: Arial, sans-serif; }
+
+  /* ── Progress dots ── */
+  .progress-row { display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem; }
+  .prog-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(46,107,138,0.3); border: 1.5px solid var(--ocean-mid); }
+  .prog-dot.active { background: var(--ocean-mid); }
+  .prog-dot.done { background: var(--clay-light); border-color: var(--clay-light); }
+  .prog-label { font-size: 11px; color: #90B8D8; font-family: Arial, sans-serif; letter-spacing: 0.05em; }
+
+  /* ── Art prompts ── */
+  .art-prompts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.25rem; }
+  .art-prompt-box {
+    background: rgba(26, 58, 92, 0.3);
+    border: 1px solid var(--ocean-mid);
+    border-radius: 6px;
+    padding: 10px 14px;
+  }
+  .art-prompt-box .apt-label { font-size: 11px; font-weight: bold; color: var(--clay-light); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 4px; }
+  .art-prompt-box .apt-q { font-size: 14px; color: #C8DCF0; font-style: italic; }
+
+  /* ── Buttons ── */
+  .btn {
+    background: var(--ocean-mid);
+    color: white;
+    border: none;
+    border-radius: 8px;
+    padding: 11px 22px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    transition: background 0.15s;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+  .btn:hover { background: #1A5A7A; }
+  .btn-gold {
+    background: var(--gold);
+    color: #1A0A00;
+  }
+  .btn-gold:hover { background: #9A700A; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--clay-light);
+    border: 1.5px solid var(--clay-light);
+  }
+  .btn-secondary:hover { background: rgba(196, 149, 106, 0.15); }
+
+  /* ── Ending ── */
+  .grapes-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+  .grapes-card {
+    background: rgba(26, 58, 92, 0.4);
+    border: 1.5px solid var(--ocean-mid);
+    border-radius: 8px;
+    padding: 12px;
+    text-align: center;
+  }
+  .grapes-card .gc-letter { font-size: 28px; font-weight: bold; color: var(--clay-light); display: block; margin-bottom: 4px; }
+  .grapes-card .gc-word { font-size: 13px; color: #E8F4FF; font-weight: bold; margin-bottom: 4px; }
+  .grapes-card .gc-karath { font-size: 11px; color: #90B8D8; font-family: Arial, sans-serif; font-style: italic; line-height: 1.4; }
+
+  .discussion-questions {
+    background: rgba(184, 134, 11, 0.1);
+    border: 1px solid var(--gold);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 1.25rem;
+  }
+  .discussion-questions h4 { font-size: 12px; font-weight: bold; color: var(--gold); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 10px; }
+  .discussion-questions p { font-size: 13px; color: #E8CC80; line-height: 1.7; font-family: Arial, sans-serif; margin-bottom: 8px; }
+
+  .divider { height: 1px; background: var(--ocean-mid); margin: 1.25rem 0; opacity: 0.4; }
+
+  @media (max-width: 500px) {
+    .site-map { grid-template-columns: 1fr; }
+    .grapes-grid { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="site-header">
+    <div class="campaign-tag">The Story of Us · Campaign 0</div>
+    <h1>KARATH</h1>
+    <h2>The GRAPES Introduction · Junior Archaeologist Field Campaign</h2>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════
+let state = {
+  screen: "art_open",
+  chapterIndex: 0,
+  geoAttempts: 0,
+  pendingOutcome: null,
+  chapterOutcomes: [],
+};
+
+// ══════════════════════════════════════════════════════════════
+//  CHAPTER DATA
+// ══════════════════════════════════════════════════════════════
+
+const CHAPTERS = [
+  {
+    id: "geography",
+    number: 1,
+    grapes: "Geography",
+    title: "Chapter 1 — Where Do We Make Camp?",
+    intro: "Your marine archaeology team has arrived off the coast of South Carolina. The drone has located the ruins of Karath forty feet below the surface. But before any excavation can begin, you need to establish a base camp on the nearby island. You have one afternoon to choose your site. Choose carefully — you will be here for weeks.",
+    type: "map",
+  },
+  {
+    id: "achievements",
+    number: 2,
+    grapes: "Achievements",
+    title: "Chapter 2 — The Workshop",
+    intro: "Your team has begun excavating. In a sheltered area near the river inlet, you uncover what appears to be a workspace — filled with objects left exactly as they were thousands of years ago. Your dive team photographs everything before anything is touched. Now you have to figure out what you are looking at.",
+    note: "Your team finds: a curved bone needle with thread still attached, clay pots of varying sizes with residue inside, a flat stone with grooves worn into it from repeated use, a fire pit lined with carefully placed stones, and hundreds of fish bones sorted carefully by size.",
+    fieldPrompt: "One of these objects solved a problem for the people of Karath. Pick one object, name the problem it solved, and explain what new possibility that solution created for their civilization.",
+    choices: [
+      {
+        text: "Photograph and catalogue everything — these are basic survival objects, interesting but let's look for something more impressive",
+        hint: "Move fast — catalogue and continue",
+        outcome: "barely",
+        result: "Your photography reveals something your eyes missed. The wear patterns on these objects are completely different from each other. The needle is worn on one end only. The grinding stone is worn in the center. The clay pots show different heat damage patterns — some used daily over fire, some used rarely for storage. These objects were not all used by the same person doing everything. Someone in Karath spent their entire life making needles. Someone else fired clay. Someone else processed fish. You almost moved past the most important discovery of the excavation.",
+        discovery: "Different people in Karath had different jobs. Not everyone did the same thing every day."
+      },
+      {
+        text: "Bring in a craftsperson consultant — have them try to replicate each object and estimate how long mastering each skill would take",
+        hint: "Test the skill level required",
+        outcome: "survived",
+        result: "The consultant's findings are striking. Bone needle carving to this precision takes years of dedicated practice. Clay firing to produce pots of this consistency takes years more. Grinding stone tool-making is its own separate mastery. No single person could have achieved all of these in one lifetime. Karath had people who spent their entire lives doing one thing — and getting extraordinarily good at it. That changes everything about how you understand this community.",
+        discovery: "When people specialize — doing one thing their whole lives — they get better, faster, and more productive than any one person doing everything alone."
+      },
+      {
+        text: "Reconstruct the workspace — map where each object cluster sits and figure out how many people worked here simultaneously",
+        hint: "Understand the space itself",
+        outcome: "survived",
+        result: "The reconstruction reveals three distinct activity zones in the workspace. Each has its own tool cluster, its own waste pattern, its own wear evidence on the floor beneath it. Three different people worked here regularly — not doing the same thing, but doing completely different things side by side, every day. Karath did not have one person doing everything. It had specialists, working together, each contributing something the others could not.",
+        discovery: "Karath organized its work by specialization — different people with different skills, working side by side. This is how a community produces more than any individual ever could."
+      }
+    ]
+  },
+  {
+    id: "politics",
+    number: 3,
+    grapes: "Politics",
+    title: "Chapter 3 — The Chaos Layer",
+    intro: "As your team digs deeper, you hit a layer that stops everyone cold. A distinct stratum of burned material, scattered objects, and disrupted soil runs through the entire settlement. Above it, Karath looks organized and permanent. Below it, Karath looks different — smaller, more scattered, less structured. Something happened here. Something went wrong — and then something changed.",
+    note: "Your team finds in the chaos layer: a grain storage area broken into multiple times, fire damage clustered in specific neighborhoods, personal belongings scattered as if dropped mid-confrontation, and evidence of a boundary line — stones arranged in a deliberate line dividing the settlement. Above the chaos layer, the boundary stones are gone and a new central building appears.",
+    fieldPrompt: "Karath created some kind of decision-making system after the chaos. Why did they NEED one? What would have kept happening without it?",
+    choices: [
+      {
+        text: "Focus on the grain storage break-ins — figure out what was taken and from whom",
+        hint: "Follow the food",
+        outcome: "survived",
+        result: "The grain storage evidence tells a clear story. The break-ins came from the same direction every time — foot traffic patterns in the soil confirm it. Some families were taking more than their share. Others were going without. The crisis was not random — it was inequality in food distribution tearing the community apart. When people are hungry and nothing stops the strongest from taking what they want, the result is exactly what you see in this chaos layer. Karath needed a system not because people were organized — but because without one, only the strongest survived.",
+        discovery: "Political systems are invented to solve the problem of conflict over shared resources. Without rules and enforcement, power goes to whoever is strongest — not whoever needs something most."
+      },
+      {
+        text: "Analyze what specifically changed in the settlement's organization after the chaos layer",
+        hint: "Compare before and after",
+        outcome: "survived",
+        result: "The before-and-after comparison is dramatic. Below the chaos layer: scattered structures, no clear center, no shared storage, no evidence of organized decision-making. Above it: a central building with evidence of regular gatherings, communal grain storage accessible from multiple directions, and the boundary stones gone. Karath did not just recover from crisis. It reorganized itself specifically to prevent the same crisis from happening again. The chaos did not destroy Karath. It forced Karath to invent something new — a system for making collective decisions about shared resources.",
+        discovery: "Governments are not created because people are naturally organized. They are created because communities realize that without a system, conflict destroys everything everyone built together."
+      },
+      {
+        text: "Identify who lived in the fire-damaged structures and whether they were connected to the conflict",
+        hint: "Who got hurt — and who did the hurting",
+        outcome: "survived",
+        result: "The fire-damaged structures belonged to the families with the least. The grain break-ins targeted the families with the most. This was not random violence — it was a conflict between those who had and those who had not. Without any system to mediate, the conflict escalated until someone — or several someones — called the community together and said: this ends now, and here is how we prevent it next time. Political systems emerge specifically to manage inequality before it destroys the whole community.",
+        discovery: "Conflict over inequality is one of the most powerful forces that drives the creation of government. Karath did not invent politics because it was thriving. It invented politics because it was about to fall apart."
+      }
+    ]
+  },
+  {
+    id: "economics",
+    number: 4,
+    grapes: "Economics",
+    title: "Chapter 4 — The Landing Area",
+    intro: "On the eastern shore of Karath island, your team uncovers a section of beach that was clearly used heavily and deliberately. It is different from every other part of the settlement — organized, intentional, built for a specific purpose. This was not where people fished. This was where Karath met the rest of the world.",
+    note: "Your team finds: the remains of large ocean-going canoes too big for local fishing, construction stone that does not exist anywhere on the island, wood varieties that are not native to this region, a separate storage area for incoming goods distinct from the community storage, marks suggesting heavy objects were regularly dragged from water to land, and finished pottery and dried fish in a staging area as if waiting to be loaded.",
+    fieldPrompt: "Karath was sending things out and receiving things in. What problem made this necessary — and what did Karath have to offer that made other communities want to trade with them?",
+    choices: [
+      {
+        text: "Identify exactly what came IN that could not be found on the island — build an inventory of what Karath was missing",
+        hint: "What did the island not have?",
+        outcome: "survived",
+        result: "The inventory reveals Karath's fundamental geographic problem. The construction stone is a hard variety used for permanent building — the island's native rock is too soft. The imported wood is harder and more durable than anything growing on the island. Karath was skilled and organized and thriving — but the island had a ceiling. To build bigger, stronger, and more permanently, they needed what the island could not provide. Trade was not a luxury or an ambition. It was the only way to keep growing beyond what geography allowed.",
+        discovery: "Every civilization eventually hits the limits of its geography. Trade is invented not from greed but from necessity — you cannot build what you need if the materials do not exist where you live."
+      },
+      {
+        text: "Analyze what Karath was sending OUT — figure out what they offered in exchange",
+        hint: "What made Karath valuable to others?",
+        outcome: "survived",
+        result: "The outgoing goods tell a fascinating story. Dried fish — perfectly preserved, clearly a specialty that required specific knowledge. Woven textiles with distinctive patterns — high quality, not common. Finished pottery — the same high-skill work from the workshop excavation. Karath was not trading raw materials. It was trading finished goods. Things that required specialized skill to produce. Things other communities could not easily make themselves. Karath had discovered something profound — trade what you are best at making for what you cannot make at all. This is the foundation of every trade relationship in human history.",
+        discovery: "Successful trade economies are built on specialization — producing what you are uniquely good at and exchanging it for what others are uniquely good at. Karath's achievement specialists made this possible."
+      },
+      {
+        text: "Map how far these trading partners were — trace the origins of the imported materials",
+        hint: "How wide was Karath's world?",
+        outcome: "survived",
+        result: "The material analysis is striking. The construction stone's nearest source is a three-day ocean journey. The hardwood varieties come from even further inland on the mainland. Karath was not trading with neighbors — it was maintaining relationships across significant distances. Someone from Karath was regularly making those journeys, building trust with distant communities, honoring agreements, returning. Trade at this scale requires more than goods. It requires ongoing relationships. The canoes were not just transportation — they were diplomacy. Karath's economy and Karath's foreign relationships were the same thing.",
+        discovery: "Long-distance trade requires trust, agreements, and ongoing relationships — not just goods. The moment Karath began trading across open water, it also began practicing diplomacy."
+      }
+    ]
+  },
+  {
+    id: "social",
+    number: 5,
+    grapes: "Social Structure",
+    title: "Chapter 5 — The Full Map",
+    intro: "For the first time, your team has a complete map of the entire Karath settlement — every structure, its size, its location, and its contents. You spread it out on the research boat and look at it together. Something is immediately obvious before anyone says a word.",
+    note: "The map shows: some structures significantly larger than others, larger structures clustered near the center of the settlement close to the trade landing and the central decision-making building, smaller structures toward the outer edges, fishing equipment and related tools concentrated in the outermost smallest structures, craft workshop evidence in a middle ring, and imported goods found only in the central structures.",
+    fieldPrompt: "Draw a simple shape that represents how Karath was organized. Label each part with what you actually found — not textbook words, just what you observed. Then answer: does this seem fair to you, and how do you know?",
+    choices: [
+      {
+        text: "Look inside the largest central structures — what did the people who lived there own compared to those on the outer edge?",
+        hint: "Compare what people had",
+        outcome: "survived",
+        result: "The contents of the central structures are strikingly different from the outer ones. The large central homes contain imported goods from the trade landing, high-quality finished tools, evidence of varied food including things that had to come from the mainland, and decorative objects that serve no practical purpose — things that exist purely to look impressive. The small outer homes contain fish bones, basic local tools, nothing imported, nothing decorative. The difference is not subtle. Some people in Karath had far more than they needed. Others had exactly what survival required — and sometimes less.",
+        discovery: "Not everyone in Karath lived the same way. The settlement organized itself so that some people had far more than others — and that gap was visible in everything they owned."
+      },
+      {
+        text: "Find out what the people in the smallest outer structures did for work every single day",
+        hint: "What did daily life look like at the bottom?",
+        outcome: "survived",
+        result: "The physical evidence in the outer structures is repetitive and relentless. Fish bones in enormous quantities. Net weights by the hundreds. Tool handles worn smooth from thousands of uses. The same motion, repeated daily, for an entire lifetime. Then your team examines the central structures. The work evidence is completely different — trade goods being sorted, measuring tools, record-keeping implements. Different work. Same settlement. Completely different daily lives. And the pattern in the soil shows it was the same family groups, generation after generation, doing the same work in the same locations.",
+        discovery: "What you did every day in Karath determined where you lived and what you owned. And what you did every day was largely determined by what your parents did. The pattern was hardening into something permanent."
+      },
+      {
+        text: "Count how many people lived in each type of structure — figure out the actual numbers",
+        hint: "How many people were in each layer?",
+        outcome: "survived",
+        result: "The numbers are immediately striking. The outer small structures — home to fishing families doing the most physically demanding daily work — account for roughly seventy percent of Karath's population. The middle ring of craftspeople and specialists accounts for about twenty percent. The central large structures — controlling trade and community decisions — housed perhaps ten percent. Most people, doing the hardest work, living in the smallest spaces. A few people, making the decisions and controlling the traded goods, living largest. Your team sketches this out without meaning to. It looks like a triangle.",
+        discovery: "Karath's society had a shape — wide at the bottom where most people lived doing essential physical work, narrow at the top where a few people controlled resources and decisions. Nobody designed it this way. It just grew."
+      }
+    ]
+  },
+  {
+    id: "religion",
+    number: 6,
+    grapes: "Religion",
+    title: "Chapter 6 — The Structure at the Center",
+    intro: "You have saved this location for last. It has been visible in the drone footage from the beginning — a structure unlike anything else in Karath, positioned at the center of the settlement but not the largest building. Your team has excavated five aspects of this civilization. Now you face the final mystery.",
+    note: "Inside the structure your team finds: at least seven carved figures, each distinctly different and clearly non-human, evidence of controlled ceremonial fire not used for cooking or warmth, objects brought from great distances and left here permanently — the most valuable trade goods Karath received, a calendar carved into the floor tracking the sun, moon, tides, and fish migration seasons with remarkable precision, skeletal remains arranged with extraordinary care surrounded by the most valued objects, and evidence that every social layer of Karath gathered here regularly — fishing families, craftspeople, and traders all came to this one place.",
+    fieldPrompt: "Karath had at least seven figures in this structure — not one. Why seven and not one? Use evidence from your excavation to explain why the people of Karath needed multiple explanations for the world they lived in.",
+    choices: [
+      {
+        text: "Study the seven carved figures — figure out what each one represents based on what surrounds it",
+        hint: "Read the figures as evidence",
+        outcome: "survived",
+        result: "Each figure has distinct features and is associated with specific evidence nearby. One is surrounded by fish bones and net weights. One is positioned near the fire-making evidence. One faces the trade landing. One appears near the calendar markings tracking storm seasons. One is surrounded by medicinal plant remains. One is positioned at the carefully arranged burial site. One — the largest — appears at the center associated with no single activity but present in every context. Your team realizes: each figure represents a different force that affected life in Karath. The fishing force. The fire force. The storm force. The trade force. The healing force. The death force. One above all of them. Karath did not invent one explanation for everything. It invented one for each force it could not control.",
+        discovery: "Karath's people experienced the world as many distinct forces — each real, each separate, each requiring its own way of asking for help. Polytheism is not confusion. It is careful attention to a world full of genuinely different powers."
+      },
+      {
+        text: "Analyze who came here and when — map the pattern of gatherings across the settlement's social layers",
+        hint: "Who gathered here and why?",
+        outcome: "survived",
+        result: "The evidence of gathering is extraordinary. Most spaces in Karath were used by specific groups — fishing families at the shore, craftspeople in the workshops, traders at the landing. But this structure shows evidence of everyone. Foot traffic from every direction. Objects left by every social layer. And the timing corresponds exactly to the calendar on the floor — gatherings happened at astronomical moments. The spring tide. The storm season's end. The fish migration. Every gathering tied to a natural event affecting the entire community regardless of social position. This was the one place and the one time when Karath stopped being a pyramid and became a community. Religion held together what economics and social structure were pulling apart.",
+        discovery: "Religion served a social function beyond belief. In a settlement divided by wealth and daily experience, the shared ritual space was the one thing everyone had in common. It held the community together across every division."
+      },
+      {
+        text: "Examine what was left here permanently — calculate what portion of Karath's traded wealth ended up in this structure",
+        hint: "What did people give away — and why?",
+        outcome: "survived",
+        result: "The permanently deposited goods represent a significant portion of Karath's most valuable trade imports. The finest stone. The highest quality textiles. Carved objects that took enormous skill to produce. Tools that would have been incredibly useful — given away permanently to a structure. Your team asks the question: why would people who worked incredibly hard for these goods give them away? The answer arrives slowly. Because the forces they were trying to influence were more powerful than anything they owned. A storm could erase a season of fishing in a night. Disease could take half the community in a month. Against those forces — giving away your most valuable possessions was not irrational. It was a transaction with something that could take everything.",
+        discovery: "Religious offering is not irrational. It is a rational transaction with forces that no other human system can control. Politics can organize your community. Economics can get you what you need. But neither can stop a hurricane. Religion steps in exactly where every other system reaches its limit."
+      }
+    ]
+  }
+];
+
+// Geography map sites
+const GEO_SITES = [
+  {
+    id: "grassland",
+    icon: "🌾",
+    label: "Site A — Open Grassland",
+    desc: "Flat, open, easy to build. Good sight lines in all directions. No water visible nearby.",
+    outcomes: [
+      { attempt: 1, type: "restart", text: "By the end of the first week, your team is rationing water. The nearest freshwater source is a 40-minute hike each way. Half your team's energy goes to water hauling instead of archaeology. You find nothing. A base camp without water is not a base camp — it is a slow emergency. The ancient people who built Karath faced this exact choice. They got it wrong too — at first. What would you do differently?" },
+      { attempt: 2, type: "restart", text: "You tried Site A again. The second week is worse than the first. Heat, dehydration, and the endless water haul are wearing your team down. You are spending more energy surviving than excavating. Notice something: every ancient settlement you have ever studied was built near water. That is not a coincidence. It is the single most important decision any community ever makes. Try again." },
+      { attempt: 3, type: "restart", text: "Site A has failed your team three times. Step back and ask: what do humans need every single day to survive, without exception? Then look at the map again. The answer has been there the whole time." }
+    ]
+  },
+  {
+    id: "river",
+    icon: "🌊",
+    label: "Site B — River Inlet",
+    desc: "Adjacent to a freshwater river inlet meeting the coast. Rich dark soil. Evidence of seasonal flooding. Dense vegetation.",
+    outcome: { type: "survived", text: "Your team establishes camp beside the river inlet. The first morning, you wake to the sound of water and birds. Fresh water is thirty steps away. The soil is dark and fertile — anything you plant will grow. The flooding is manageable with a bit of elevated building. Within days your team is functioning smoothly, energy focused entirely on the excavation ahead. You notice something as you set up: Karath's ancient structures are clustered in exactly this area. The people who built this civilization made the same choice you just made. And now you understand exactly why." }
+  },
+  {
+    id: "hilltop",
+    icon: "⛰️",
+    label: "Site C — Hilltop Overlook",
+    desc: "High ground with excellent views. Defensible position. Hard rocky terrain. Water source not visible from the summit.",
+    outcomes: [
+      { attempt: 1, type: "restart", text: "The view is spectacular. The water situation is not. Your team spends two hours each morning hauling water from a stream at the base of the hill. By day four, two team members are showing signs of dehydration. The hilltop feels safe and strategic — but safety means nothing if you cannot sustain the people defending it. Ancient communities learned this lesson the hard way. So are you. Try again." },
+      { attempt: 2, type: "restart", text: "The hill fails your team again. Here is something to think about while you regroup: every major ancient civilization — Mesopotamia, Egypt, India, China — built near water. Not on high ground. Not in defensible positions. Near water. Defense matters. But water matters every single day, multiple times a day, without exception. Which problem is more urgent? Try again." },
+      { attempt: 3, type: "restart", text: "Three attempts at Site C. The hill is not working. Sometimes the obvious strategic choice is not the survival choice. Look at the map one more time with fresh eyes." }
+    ]
+  },
+  {
+    id: "forest",
+    icon: "🌲",
+    label: "Site D — Dense Forest Edge",
+    desc: "Excellent natural shelter and building materials. Shade from the heat. Navigation is difficult. Standing water visible nearby.",
+    outcomes: [
+      { attempt: 1, type: "restart", text: "The forest provides shade and wood — and within three days, three team members are ill. The standing water nearby is stagnant, a perfect breeding ground for the insects now making camp miserable. You cannot navigate to the excavation site consistently — the dense canopy makes orientation nearly impossible. Ancient people who chose dense forest settlements faced exactly these problems. Disease from stagnant water ended more communities than any attack ever did. Try again." },
+      { attempt: 2, type: "restart", text: "The forest is beautiful and deadly in equal measure. Standing water and stagnant pools are not the same as a clean freshwater source. Ancient communities learned to tell the difference. Can you find a site with moving freshwater — a river, a stream, a coastal inlet — rather than standing water? Try again." },
+      { attempt: 3, type: "restart", text: "Three forest attempts. Here is the key distinction your team keeps missing: moving water versus standing water. Rivers and inlets flush themselves. Pools and marshes breed disease. Look at the map one final time. Which site has moving freshwater?" }
+    ]
+  }
+];
+
+// ══════════════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════════════
+
+function go(screen) {
+  state.screen = screen;
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function progressDots(current) {
+  return `<div class="progress-row">
+    ${CHAPTERS.map((ch, i) => `<div class="prog-dot ${i < current ? 'done' : i === current ? 'active' : ''}"></div>`).join("")}
+    <span class="prog-label">Chapter ${current + 1} of ${CHAPTERS.length}</span>
+  </div>`;
+}
+
+function getSiteOutcome(siteId) {
+  const site = GEO_SITES.find(s => s.id === siteId);
+  if (siteId === "river") return site.outcome;
+  const attempt = Math.min(state.geoAttempts, site.outcomes.length - 1);
+  return site.outcomes[attempt];
+}
+
+// ══════════════════════════════════════════════════════════════
+//  SCREENS
+// ══════════════════════════════════════════════════════════════
+
+function screenArtOpen() {
+  return `
+    <div class="screen-label">Before we begin</div>
+    <div class="screen-heading">Karath — First Contact</div>
+
+    <div class="drone-frame">
+      <div class="drone-meta">
+        ▶ KARATH MARINE SURVEY · DRONE CAM 01<br>
+        DEPTH: 42 FT · LOCATION: 31.2°N 79.8°W<br>
+        DATE: OCT 14, 2024 · VISIBILITY: LIMITED<br>
+        OBJECT: CARVED STONE FORMATION · EST. 3.2M × 1.8M
+      </div>
+      <div class="drone-image-area">
+        <div class="drone-scanline"></div>
+        <!-- ═══════════════════════════════════════════════════
+             DRONE IMAGE PLACEHOLDER
+             When you have your Canva image URL, replace this
+             entire comment block and the drone-placeholder div
+             below with:
+             <img src="YOUR_CANVA_IMAGE_URL" alt="Drone footage of Karath carved stone" />
+             ═══════════════════════════════════════════════════ -->
+        <div class="drone-placeholder">
+          <span class="dp-icon">📡</span>
+          <div class="dp-text">
+            [DRONE IMAGE — INSERT CANVA IMAGE HERE]<br><br>
+            Geometric carved stone formation detected<br>
+            on ocean floor · Sediment partially obscures surface<br>
+            Deliberate markings confirmed · Origin unknown<br><br>
+            <em>Your teacher will display this image</em>
+          </div>
+        </div>
+      </div>
+      <div class="drone-caption">▌ TRANSMISSION RECEIVED · KARATH EXCAVATION TEAM · SC COASTAL SURVEY</div>
+    </div>
+
+    <div class="scene-text">This is the first image your team has received from the ocean floor. Before you do anything else — look at it. Answer these three questions in your field journal:</div>
+
+    <div class="art-prompts">
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 1</div>
+        <div class="apt-q">What do you think this is?</div>
+      </div>
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 2</div>
+        <div class="apt-q">How old do you think it is — and what makes you think that?</div>
+      </div>
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 3</div>
+        <div class="apt-q">What is the one thing you most want to know about whoever made this?</div>
+      </div>
+    </div>
+
+    <div class="archaeology-note"><strong>Answer in your field journal</strong> — take 30 seconds of silence to look before you write. When your teacher gives the signal, continue.</div>
+
+    <button class="btn btn-gold" onclick="go('role_card')">My team is ready to begin →</button>`;
+}
+
+function screenRoleCard() {
+  return `
+    <div class="screen-label">Your identity for this campaign</div>
+    <div class="screen-heading">Junior Archaeologist</div>
+    <div class="screen-heading" style="font-size:16px;color:var(--clay-light);margin-top:-0.5rem;margin-bottom:1rem">Karath Island Excavation · South Carolina Coast · 2024</div>
+
+    <div class="scene-text">You have no prior knowledge of this civilization — nobody does. You are the first people to see any of this in thousands of years.</div>
+
+    <div class="archaeology-note">
+      <strong>Your team controls:</strong> A small excavation crew, underwater cameras, basic archaeology tools, and your powers of careful observation.<br><br>
+      <strong>Your team fears:</strong> Missing evidence that changes everything. Getting it wrong in front of the world. Letting this civilization stay unknown forever.<br><br>
+      <strong>Your team wants:</strong> To figure out who these people were, how they lived, what they believed — and why they disappeared.
+    </div>
+
+    <div class="scene-text">You will excavate six aspects of Karath across this campaign. Each one will reveal something new. By the end, you will have uncovered something that historians use every time they study any ancient civilization.</div>
+
+    <button class="btn btn-gold" onclick="go('chapter')">Begin the excavation →</button>`;
+}
+
+function screenChapter() {
+  const ch = CHAPTERS[state.chapterIndex];
+  if (ch.type === "map") return screenGeography();
+
+  return `
+    ${progressDots(state.chapterIndex)}
+    <div class="screen-label">${ch.title}</div>
+    <div class="screen-heading" style="font-size:18px">${ch.title}</div>
+    <div class="scene-text">${ch.intro}</div>
+
+    <div class="archaeology-note"><strong>What your team found:</strong> ${ch.note}</div>
+
+    <div class="choices-label">What does your team investigate first?</div>
+    <div class="choices">
+      ${ch.choices.map((c, i) => `
+        <button class="choice-btn" onclick="makeChoice(${i})">
+          <div class="choice-text">${c.text}</div>
+          <div class="choice-hint">${c.hint}</div>
+        </button>`).join("")}
+    </div>`;
+}
+
+function screenGeography() {
+  const attempts = state.geoAttempts;
+  const attemptText = attempts === 0 ? "" :
+    attempts === 1 ? `<div class="restart-note">Your team is trying again. This is attempt ${attempts + 1}. Look more carefully at what each site actually offers.</div>` :
+    `<div class="restart-note">Attempt ${attempts + 1}. Think about what your team needs every single day to function. What is the one thing you absolutely cannot go without?</div>`;
+
+  return `
+    ${progressDots(0)}
+    <div class="screen-label">Chapter 1 — Geography</div>
+    <div class="screen-heading" style="font-size:18px">Where Do We Make Camp?</div>
+    <div class="scene-text">Your marine archaeology team has arrived off the coast of South Carolina. The drone has located the ruins of Karath forty feet below. But before excavation begins, you need a base camp on the nearby island. You have one afternoon to choose your site. You will be here for weeks.</div>
+    ${attemptText}
+    <div class="choices-label">Study the four sites. Choose where your team makes camp:</div>
+    <div class="site-map">
+      ${GEO_SITES.map(site => `
+        <div class="map-site" onclick="chooseSite('${site.id}')">
+          <span class="site-icon">${site.icon}</span>
+          <div class="site-label">${site.label}</div>
+          <div class="site-desc">${site.desc}</div>
+        </div>`).join("")}
+    </div>`;
+}
+
+function screenGeoOutcome() {
+  const o = state.pendingOutcome;
+  const isRestart = o.type === "restart";
+  return `
+    ${progressDots(0)}
+    <div class="outcome-box outcome-${isRestart ? 'restart' : 'survived'}">
+      <div class="outcome-label">${isRestart ? "✗ Your camp failed" : "✓ Camp established"}</div>
+      ${o.text}
+    </div>
+    ${isRestart
+      ? `<div class="journal-prompt"><strong>Before you try again —</strong> write one sentence in your field journal: what went wrong, and what will you look for differently this time?</div>
+         <button class="btn" onclick="retryGeo()">Try again →</button>`
+      : `<div class="journal-prompt"><strong>Field Journal Prompt:</strong> You chose the river inlet — and so did the ancient people of Karath. In your journal, write one sentence explaining why this location made everything else possible.</div>
+         <button class="btn btn-gold" onclick="advanceChapter()">Begin excavating Karath →</button>`
+    }`;
+}
+
+function screenOutcome() {
+  const ch = CHAPTERS[state.chapterIndex];
+  const o = state.pendingOutcome;
+  return `
+    ${progressDots(state.chapterIndex)}
+    <div class="outcome-box outcome-${o.outcome === 'survived' ? 'survived' : 'barely'}">
+      <div class="outcome-label">${o.outcome === 'survived' ? '✓ Discovery made' : '→ Partial discovery'}</div>
+      ${o.result}
+    </div>
+    <div class="archaeology-note"><strong>What your team now understands:</strong> ${o.discovery}</div>
+    <div class="journal-prompt">
+      <strong>✏ Field Journal Prompt —</strong> answer in your journal before your teacher signals to move on:<br><br>
+      ${ch.fieldPrompt}
+    </div>
+    <button class="btn btn-gold" onclick="advanceChapter()">
+      ${state.chapterIndex < CHAPTERS.length - 1 ? 'Continue excavating →' : 'See what you discovered →'}
+    </button>`;
+}
+
+function screenArtClose() {
+  return `
+    <div class="screen-label">Closing — one final artifact</div>
+    <div class="screen-heading">The Key Marco Cat</div>
+
+    <div class="artifact-frame">
+      <img src="https://th-thumbnailer.cdn-si-edu.com/-NHYFUfwe2zOsjsdHSxH1kCyVow=/fit-in/1200x0/filters:focal(1197x694:1198x695)/https://tf-cmsv2-smithsonianmag-media.s3.amazonaws.com/filer/fe/6f/fe6fde35-471b-481d-a5c4-46b2cacd97a4/1-key-marco-cat-a240915_dept-of-anthropology_smithsonian-institution-web.jpg"
+           alt="The Key Marco Cat — carved wooden figure, Calusa people, Florida coast"
+           onerror="this.style.display='none';document.getElementById('kmc-fallback').style.display='block'" />
+      <div id="kmc-fallback" style="display:none;padding:1rem;color:var(--clay-light);font-family:Arial,sans-serif;font-size:13px">
+        [Key Marco Cat image — search "Key Marco Cat Smithsonian" to view]
+      </div>
+      <div class="artifact-caption">
+        The Key Marco Cat · Carved wood · Calusa people · Found 1896, Marco Island, Florida<br>
+        Approximately 6 inches tall · Florida Museum of Natural History · Est. 500–1000 years old<br>
+        <em>Smithsonian Institution · Public Domain</em>
+      </div>
+    </div>
+
+    <div class="scene-text">This object is real. It was found in 1896 during an excavation of a coastal site off Marco Island, Florida — not far from where you have been working. It was made by the Calusa people, a sophisticated civilization that built islands, managed water, and traded across the Gulf of Mexico. We still know relatively little about them.</div>
+
+    <div class="scene-text">Use your three analysis prompts in your field journal:</div>
+
+    <div class="art-prompts">
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 1</div>
+        <div class="apt-q">One thing I find interesting...</div>
+      </div>
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 2</div>
+        <div class="apt-q">One thing that puzzles me...</div>
+      </div>
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 3</div>
+        <div class="apt-q">One question I have for the creator...</div>
+      </div>
+    </div>
+
+    <div class="journal-prompt">
+      <strong>Final journal question:</strong> After everything your team excavated in Karath this week — what questions would you most want to answer about the people who made this object?
+    </div>
+
+    <div class="archaeology-note">Those questions you just wrote? Historians have been asking them for centuries. They eventually figured out that every civilization — no matter how mysterious — leaves behind answers to the same six questions. Your teacher is about to show you what those six questions are.</div>
+
+    <button class="btn btn-gold" onclick="go('ending')">See what you discovered →</button>`;
+}
+
+function screenEnding() {
+  const grapes = [
+    { letter: "G", word: "Geography", karath: "River inlet base camp — water, fertile soil, access to the sea" },
+    { letter: "R", word: "Religion", karath: "Seven figures, ceremonial space, calendar, offerings to forces beyond control" },
+    { letter: "A", word: "Achievements", karath: "Specialized crafts, ocean-going canoes, preservation techniques, calendar" },
+    { letter: "P", word: "Politics", karath: "Chaos layer, grain conflict, new central decision-making structure" },
+    { letter: "E", word: "Economics", karath: "Trade landing, imported materials, exported finished goods, distant relationships" },
+    { letter: "S", word: "Social Structure", karath: "Settlement pyramid — outer fishing families, middle craftspeople, central traders" },
+  ];
+
+  return `
+    <div class="screen-label">End of the Karath Campaign</div>
+    <div class="screen-heading">What Your Team Discovered</div>
+
+    <div class="scene-text">Your team spent this campaign excavating six aspects of an unknown ancient civilization. Look at what you found — and what historians call each one.</div>
+
+    <div class="grapes-grid">
+      ${grapes.map(g => `
+        <div class="grapes-card">
+          <span class="gc-letter">${g.letter}</span>
+          <div class="gc-word">${g.word}</div>
+          <div class="gc-karath">${g.karath}</div>
+        </div>`).join("")}
+    </div>
+
+    <div class="archaeology-note">
+      <strong>Your teacher is about to write six words on the board.</strong> Look at the grid above. Match each card to one thing your team actually excavated. Then listen for the name historians use for all six together.
+    </div>
+
+    <div class="discussion-questions">
+      <h4>Class Discussion Questions</h4>
+      <p>1. Which chapter surprised your team the most — and why?</p>
+      <p>2. Which of the six categories do you think was most important for Karath's survival — and which came first?</p>
+      <p>3. Karath had multiple gods — one for each force they could not control. What does that tell you about what daily life actually felt like for the people who lived there?</p>
+      <p>4. The chaos layer showed that Karath almost fell apart before it got organized. What saved it — and what would have happened if nothing changed?</p>
+      <p>5. You will use these same six categories to study every civilization for the rest of the year. Which one do you think will be most different from civilization to civilization?</p>
+    </div>
+
+    <button class="btn btn-gold" onclick="restart()">Start again from the beginning</button>
+    <button class="btn btn-secondary" onclick="restart()">Return to opening</button>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ACTIONS
+// ══════════════════════════════════════════════════════════════
+
+function chooseSite(siteId) {
+  const outcome = getSiteOutcome(siteId);
+  if (siteId !== "river") state.geoAttempts++;
+  state.pendingOutcome = outcome;
+  state.screen = "geo_outcome";
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function retryGeo() {
+  state.pendingOutcome = null;
+  state.screen = "chapter";
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function makeChoice(i) {
+  const ch = CHAPTERS[state.chapterIndex];
+  state.pendingOutcome = ch.choices[i];
+  state.chapterOutcomes.push({ chapter: ch.id, choice: i });
+  state.screen = "outcome";
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function advanceChapter() {
+  state.pendingOutcome = null;
+  if (state.chapterIndex < CHAPTERS.length - 1) {
+    state.chapterIndex++;
+    state.screen = "chapter";
+  } else {
+    state.screen = "art_close";
+  }
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function restart() {
+  state = {
+    screen: "art_open",
+    chapterIndex: 0,
+    geoAttempts: 0,
+    pendingOutcome: null,
+    chapterOutcomes: [],
+  };
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// ══════════════════════════════════════════════════════════════
+//  RENDER
+// ══════════════════════════════════════════════════════════════
+
+function render() {
+  const el = document.getElementById("content");
+  const screens = {
+    art_open:    screenArtOpen,
+    role_card:   screenRoleCard,
+    chapter:     screenChapter,
+    geo_outcome: screenGeoOutcome,
+    outcome:     screenOutcome,
+    art_close:   screenArtClose,
+    ending:      screenEnding,
+  };
+  el.innerHTML = (screens[state.screen] || (() => "<p>Loading...</p>"))();
+}
+
+render();
+</script>
+</body>
+</html>
