@@ -1,0 +1,1057 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Stone Age — The Story of Us</title>
+<style>
+  :root {
+    --earth: #3B2A1A;
+    --earth-mid: #5C3D1E;
+    --earth-light: #8B5E3C;
+    --ochre: #C4782A;
+    --ochre-light: #F5D4A0;
+    --bone: #F0E8D0;
+    --bone-dark: #D4C4A0;
+    --ash: #6A6A5A;
+    --ash-light: #C8C4B0;
+    --fire: #C84A1A;
+    --fire-light: #F5D0C0;
+    --green: #3A5C2A;
+    --green-light: #C0D8B0;
+    --shadow: #1A120A;
+    --ink: #1A120A;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #1A120A;
+    color: var(--bone);
+    min-height: 100vh;
+  }
+
+  #app {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 3rem;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    text-align: center;
+    padding: 1.5rem 1rem 1rem;
+    border-bottom: 2px solid var(--earth-mid);
+    margin-bottom: 1.5rem;
+  }
+  .site-header .campaign-tag {
+    font-size: 11px;
+    letter-spacing: 0.14em;
+    text-transform: uppercase;
+    color: var(--ochre);
+    font-family: Arial, sans-serif;
+    margin-bottom: 6px;
+  }
+  .site-header h1 {
+    font-size: 28px;
+    font-weight: bold;
+    color: var(--bone);
+    letter-spacing: 0.04em;
+    margin-bottom: 4px;
+  }
+  .site-header h2 {
+    font-size: 15px;
+    font-weight: normal;
+    color: var(--ochre);
+    font-family: Arial, sans-serif;
+    font-style: italic;
+  }
+
+  /* ── Survival tracker ── */
+  .tracker {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+  .tracker-stat {
+    background: rgba(59, 42, 26, 0.6);
+    border: 1.5px solid var(--earth-light);
+    border-radius: 8px;
+    padding: 8px 10px;
+    text-align: center;
+  }
+  .tracker-icon { font-size: 18px; display: block; margin-bottom: 2px; }
+  .tracker-label { font-size: 11px; color: var(--ochre); letter-spacing: 0.05em; text-transform: uppercase; font-family: Arial, sans-serif; }
+  .tracker-status { font-size: 16px; font-weight: bold; margin: 3px 0; }
+  .status-ok { color: #6ABF6A; }
+  .status-low { color: #E8C050; }
+  .status-crit { color: #E05050; }
+  .tracker-bar-bg { height: 5px; background: rgba(255,255,255,0.1); border-radius: 3px; margin-top: 4px; }
+  .tracker-bar { height: 5px; border-radius: 3px; transition: width 0.5s, background 0.5s; }
+
+  /* ── Role badge ── */
+  .role-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(59,42,26,0.5);
+    border: 1px solid var(--earth-light);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 1.25rem;
+  }
+  .role-badge .rb-icon { font-size: 24px; }
+  .role-badge .rb-name { font-size: 15px; font-weight: bold; color: var(--ochre); }
+  .role-badge .rb-desc { font-size: 12px; color: var(--ash-light); font-family: Arial, sans-serif; }
+
+  /* ── Progress ── */
+  .progress-row { display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem; }
+  .prog-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(92,61,30,0.4); border: 1.5px solid var(--earth-light); }
+  .prog-dot.active { background: var(--ochre); border-color: var(--ochre); }
+  .prog-dot.done { background: var(--earth-light); border-color: var(--earth-light); }
+  .prog-label { font-size: 11px; color: var(--ash-light); font-family: Arial, sans-serif; }
+
+  /* ── Scene ── */
+  .screen-label {
+    font-size: 11px;
+    color: var(--ochre);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: Arial, sans-serif;
+    margin-bottom: 6px;
+  }
+  .screen-heading {
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--bone);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+  .scene-text {
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--bone-dark);
+    margin-bottom: 1rem;
+  }
+  .role-context {
+    background: rgba(196,120,42,0.15);
+    border-left: 3px solid var(--ochre);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--ochre-light);
+    margin-bottom: 1.25rem;
+    line-height: 1.65;
+    font-family: Arial, sans-serif;
+  }
+
+  /* ── Info boxes ── */
+  .info-box {
+    background: rgba(59,42,26,0.4);
+    border-left: 3px solid var(--earth-light);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--bone-dark);
+    margin-bottom: 1.25rem;
+    line-height: 1.65;
+    font-family: Arial, sans-serif;
+  }
+  .info-box strong { color: var(--bone); font-weight: 600; }
+
+  .journal-prompt {
+    background: rgba(196,120,42,0.12);
+    border-left: 3px solid var(--ochre);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: var(--ochre-light);
+    margin-bottom: 1.25rem;
+    line-height: 1.7;
+    font-family: Arial, sans-serif;
+  }
+  .journal-prompt strong { color: #F5D4A0; font-weight: 600; }
+
+  .restart-box {
+    background: rgba(200,74,26,0.15);
+    border-left: 3px solid var(--fire);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: #F5C0B0;
+    margin-bottom: 1.25rem;
+    line-height: 1.7;
+    font-family: Arial, sans-serif;
+  }
+
+  .discovery-box {
+    background: rgba(58,92,42,0.2);
+    border: 1.5px solid var(--green);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 1.25rem;
+    font-size: 14px;
+    color: var(--green-light);
+    line-height: 1.7;
+    font-family: Arial, sans-serif;
+  }
+  .discovery-box .disc-label { font-size: 11px; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; color: #8ADF8A; font-family: Arial, sans-serif; }
+
+  /* ── Outcome boxes ── */
+  .outcome-box {
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 1.25rem;
+    font-size: 14px;
+    line-height: 1.7;
+    font-family: Arial, sans-serif;
+  }
+  .outcome-survived { background: rgba(58,92,42,0.2); border: 1.5px solid var(--green); color: var(--green-light); }
+  .outcome-barely { background: rgba(196,120,42,0.15); border: 1.5px solid var(--ochre); color: var(--ochre-light); }
+  .outcome-restart { background: rgba(200,74,26,0.2); border: 1.5px solid var(--fire); color: #F5C0B0; }
+  .outcome-label { font-size: 11px; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; font-family: Arial, sans-serif; }
+
+  /* ── Choices ── */
+  .choices-label {
+    font-size: 11px;
+    color: var(--ash-light);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: Arial, sans-serif;
+    margin-bottom: 8px;
+  }
+  .choices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+  .choice-btn {
+    background: rgba(59,42,26,0.5);
+    border: 1.5px solid var(--earth-light);
+    border-radius: 8px;
+    padding: 12px 16px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: Georgia, serif;
+  }
+  .choice-btn:hover { background: rgba(92,61,30,0.6); border-color: var(--ochre); }
+  .choice-btn .choice-text { font-size: 14px; color: var(--bone); line-height: 1.5; }
+  .choice-btn .choice-hint { font-size: 11px; color: var(--ash-light); margin-top: 4px; font-family: Arial, sans-serif; font-style: italic; }
+  .choice-btn .choice-cost { font-size: 11px; color: #E05050; margin-top: 3px; font-family: Arial, sans-serif; }
+
+  /* ── Art screens ── */
+  .art-frame {
+    border: 2px solid var(--earth-light);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    background: var(--shadow);
+  }
+  .art-frame img {
+    width: 100%;
+    display: block;
+    max-height: 340px;
+    object-fit: cover;
+    object-position: center;
+  }
+  .art-caption {
+    padding: 8px 12px;
+    font-size: 11px;
+    color: var(--ochre);
+    font-family: Arial, sans-serif;
+    font-style: italic;
+    background: rgba(59,42,26,0.8);
+    line-height: 1.5;
+  }
+
+  .art-prompts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.25rem; }
+  .art-prompt-box {
+    background: rgba(59,42,26,0.4);
+    border: 1px solid var(--earth-light);
+    border-radius: 6px;
+    padding: 10px 14px;
+  }
+  .art-prompt-box .apt-label { font-size: 11px; font-weight: bold; color: var(--ochre); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 4px; }
+  .art-prompt-box .apt-q { font-size: 14px; color: var(--bone-dark); font-style: italic; }
+
+  /* ── Role select ── */
+  .role-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1rem; }
+  .role-card {
+    background: rgba(59,42,26,0.5);
+    border: 2px solid var(--earth-light);
+    border-radius: 10px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .role-card:hover { background: rgba(92,61,30,0.6); border-color: var(--ochre); transform: translateY(-1px); }
+  .role-card .rc-icon { font-size: 28px; margin-bottom: 6px; display: block; }
+  .role-card .rc-name { font-size: 15px; font-weight: bold; color: var(--ochre); margin-bottom: 4px; }
+  .role-card .rc-provides { font-size: 12px; color: var(--bone-dark); font-family: Arial, sans-serif; line-height: 1.5; margin-bottom: 4px; }
+  .role-card .rc-fails { font-size: 11px; color: #E08060; font-family: Arial, sans-serif; font-style: italic; }
+
+  /* ── Bridge / Ending ── */
+  .bridge-box {
+    background: rgba(59,42,26,0.4);
+    border: 1.5px solid var(--ochre);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 1.25rem;
+  }
+  .bridge-box h3 { font-size: 18px; color: var(--ochre); margin-bottom: 8px; }
+  .bridge-box p { font-size: 14px; color: var(--bone-dark); line-height: 1.75; font-family: Arial, sans-serif; margin-bottom: 10px; }
+  .needs-list { list-style: none; display: grid; grid-template-columns: 1fr 1fr; gap: 6px; margin-top: 8px; }
+  .needs-list li { font-size: 13px; color: var(--ochre-light); font-family: Arial, sans-serif; padding: 4px 0; border-bottom: 1px solid rgba(196,120,42,0.3); }
+  .needs-list li::before { content: "→ "; color: var(--ochre); }
+
+  .next-stop {
+    text-align: center;
+    padding: 1.5rem 1rem;
+    border-top: 1px solid var(--earth-mid);
+    margin-top: 1.25rem;
+  }
+  .next-stop h3 { font-size: 20px; color: var(--ochre); margin-bottom: 8px; }
+  .next-stop p { font-size: 14px; color: var(--bone-dark); font-family: Arial, sans-serif; line-height: 1.7; }
+
+  .discussion-questions {
+    background: rgba(196,120,42,0.1);
+    border: 1px solid var(--ochre);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 1.25rem;
+  }
+  .discussion-questions h4 { font-size: 12px; font-weight: bold; color: var(--ochre); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 10px; }
+  .discussion-questions p { font-size: 13px; color: var(--ochre-light); line-height: 1.7; font-family: Arial, sans-serif; margin-bottom: 8px; }
+
+  /* ── Buttons ── */
+  .btn {
+    background: var(--earth-mid);
+    color: var(--bone);
+    border: none;
+    border-radius: 8px;
+    padding: 11px 22px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    transition: background 0.15s;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+  .btn:hover { background: var(--earth-light); }
+  .btn-fire { background: var(--fire); color: var(--bone); }
+  .btn-fire:hover { background: #A03A10; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--ochre);
+    border: 1.5px solid var(--ochre);
+  }
+  .btn-secondary:hover { background: rgba(196,120,42,0.15); }
+
+  .divider { height: 1px; background: var(--earth-mid); margin: 1.25rem 0; opacity: 0.5; }
+
+  @media (max-width: 500px) {
+    .role-grid { grid-template-columns: 1fr; }
+    .tracker { grid-template-columns: repeat(3, 1fr); }
+    .needs-list { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="site-header">
+    <div class="campaign-tag">The Story of Us · Campaign 0.5</div>
+    <h1>THE STONE AGE</h1>
+    <h2>From Nomads to the Edge of Civilization</h2>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  ROLES
+// ══════════════════════════════════════════════════════════════
+const ROLES = [
+  {
+    id: "hunter",
+    name: "Hunter",
+    icon: "🏹",
+    desc: "You track and kill large game — the most dangerous and most celebrated work in the group.",
+    provides: "Meat, hides for warmth, bones for tools. When the hunt works, the group eats well.",
+    fails: "If the hunt fails — and it often does — the group goes hungry. And hungry groups make desperate decisions.",
+    context: {
+      ch1: "You need open land with animals to track. But open land means exposure. Every location is a gamble.",
+      ch2: "The hunt went wrong. You know this story — it happens more than anyone admits.",
+      ch3: "You have been hunting for weeks. The animals are thin and scarce. The group is depending on you.",
+      ch4: "You were out hunting when the gatherer noticed the plants near the old camp. You almost missed it.",
+      ch5: "You are the one who brought the wolf pup back. Everyone thought you were foolish.",
+      ch6: "Staying means giving up the hunt ranges you know. Everything changes if you stop moving."
+    }
+  },
+  {
+    id: "gatherer",
+    name: "Gatherer",
+    icon: "🌿",
+    desc: "You collect plants, berries, roots, and nuts — slower work than hunting, but more reliable.",
+    provides: "Steady plant food, medicinal plants, knowledge of what grows where and when.",
+    fails: "Gathering is seasonal. In winter or drought, there is almost nothing. The group cannot survive on gathering alone.",
+    context: {
+      ch1: "You need to know what grows nearby before committing. A place with no edible plants is a death sentence in winter.",
+      ch2: "While the hunters were out, you kept the group fed with what you could find. It was never quite enough.",
+      ch3: "You have walked every inch of this territory looking for food that isn't there. The winter stores are nearly gone.",
+      ch4: "You noticed the plants first. Near the old fire pit. Growing where seeds had fallen. You almost didn't stop to look.",
+      ch5: "You watched the wolf pup grow. You noticed it would follow certain movements. Something clicked.",
+      ch6: "You know better than anyone what this land can and cannot provide. You have eaten every plant here."
+    }
+  },
+  {
+    id: "elder",
+    name: "Elder",
+    icon: "🧓",
+    desc: "You hold the group's memory — migration routes, safe seasons, past disasters, old solutions.",
+    provides: "Knowledge, decisions, stories that hold the group together when things get hard.",
+    fails: "Your knowledge is of the past. When something new happens, you have no answer. And the group expects one.",
+    context: {
+      ch1: "You remember this land from two migrations ago. But that was fifteen years back. The rivers have shifted.",
+      ch2: "You have seen hunts go wrong before. You know the difference between bad luck and a pattern.",
+      ch3: "You remember a winter like this one. Half the group didn't make it. You have never told anyone.",
+      ch4: "You have heard stories from other groups about plants that grow near old camps. You thought they were myths.",
+      ch5: "You remember a story your grandmother told about a wolf that helped a hunting group find deer. You dismissed it.",
+      ch6: "This decision will outlast you. Whatever you advise now, the group will carry forward long after you are gone."
+    }
+  },
+  {
+    id: "healer",
+    name: "Healer",
+    icon: "🌱",
+    desc: "You treat injuries and illness with plants, rest, and the knowledge passed down through generations.",
+    provides: "Keeping people alive and functional. A group without a healer loses people to things that don't have to kill.",
+    fails: "You have almost no tools. Serious injury means death. Disease spreads before you can stop it. You lose people you should have been able to save.",
+    context: {
+      ch1: "You need clean water nearby. Contaminated water kills more people than any predator. You know this better than anyone.",
+      ch2: "Someone got hurt on the hunt. You have done what you can. It may not be enough.",
+      ch3: "Malnutrition is setting in. You can see it. The group looks thinner, slower, more vulnerable to illness.",
+      ch4: "You recognized the plants immediately. Some of them have healing properties. This changes things.",
+      ch5: "You have been watching the wolf. Its instincts could warn the group of danger before anyone gets sick or hurt.",
+      ch6: "Settling means better access to medicinal plants. It also means diseases can spread through a group that doesn't move."
+    }
+  },
+  {
+    id: "toolmaker",
+    name: "Tool Maker",
+    icon: "🪨",
+    desc: "You craft weapons, scrapers, needles, and implements from stone and bone.",
+    provides: "Everything the group uses to hunt, prepare food, make clothing, and build shelter.",
+    fails: "Without the right stone, you cannot make tools. Without tools, the hunter cannot hunt. Everything depends on your materials.",
+    context: {
+      ch1: "You need flint or obsidian nearby. A location without workable stone means your tools eventually break and cannot be replaced.",
+      ch2: "The spear you made held. But the technique could be better. You have been thinking about a new design.",
+      ch3: "You have been stretching every tool to its limit. Using broken scrapers. Sharpening blades that should have been replaced.",
+      ch4: "The bone needle you made last season — you see the same material growing near the old camp. If they could stay, you could build a proper workshop.",
+      ch5: "A domesticated animal means regular hides. Regular hides mean better tools, better clothing, better everything.",
+      ch6: "A permanent camp means a permanent workshop. You could finally make things that last longer than one season."
+    }
+  },
+  {
+    id: "scout",
+    name: "Scout",
+    icon: "👁️",
+    desc: "You range ahead of the group to find food, water, safe paths, and danger.",
+    provides: "Warning. Information. The difference between walking into a predator's territory and walking around it.",
+    fails: "You can only be in one place at a time. What you don't see can kill the group before you get back to warn them.",
+    context: {
+      ch1: "You have already been to three of these sites. You know things about them the others don't. But they don't always listen.",
+      ch2: "You saw the animal sign two days ago. You warned them. They went anyway. Now someone is hurt.",
+      ch3: "You have ranged further than anyone this season looking for game. The territory is emptier than you have ever seen it.",
+      ch4: "You were the first to find the other group — the one who told you about planting seeds near camps. You almost didn't stop to talk.",
+      ch5: "You have been watching wolf behavior for years. You have a theory about how they could be useful. Nobody has listened yet.",
+      ch6: "You have scouted further than anyone. You know what is out there. You also know what isn't."
+    }
+  }
+];
+
+// ══════════════════════════════════════════════════════════════
+//  CHAPTERS
+// ══════════════════════════════════════════════════════════════
+const CHAPTERS = [
+  {
+    id: "ch1",
+    number: 1,
+    title: "Where Do We Go?",
+    subtitle: "Finding the Next Place to Survive",
+    scene: "The season is changing. The animals your group has been following have moved on. The plants in this area are stripped bare. It is time to move — but where? Every direction has something to offer and something that could kill you. Your group has half a day to decide before you need to start moving.",
+    journalPrompt: "Your group chose a location. What was the most important thing you considered — and what are you most worried about now that you have committed to that direction?",
+    choices: {
+      hunter: [
+        { text: "Follow the animal tracks northeast — there are clear signs of large game in that direction", hint: "Follow the food", cost: "Safety is unknown", outcome: "barely", result: "The game is there — for now. The territory is also unfamiliar and exposed. On the second night a predator moves through the camp. Nobody is killed but nobody sleeps either. You have food but you are burning energy on fear. This will catch up with you.", statChange: { food: 15, safety: -20, health: -5 } },
+        { text: "Head toward the river valley you passed three seasons ago — there was water, game, and shelter", hint: "Return to known territory", cost: "Long journey, uncertain if conditions are the same", outcome: "survived", result: "Three days of hard travel. When you arrive, the river is lower than you remember — but it is there. There is game, there are edible plants, and there is a rock overhang that will shelter the group. The journey cost you, but you made the right call.", statChange: { food: 5, safety: 10, health: -10 } },
+        { text: "Stay in this territory a little longer — push further from camp each day to see if game returns", hint: "Wait it out", cost: "Resources are already thin here", outcome: "restart", result: "The game does not return. By the time the group agrees to move, two people are too weak to travel at full speed. You have lost time you cannot get back. The Stone Age does not reward waiting when the land has already given you its answer. Move." }
+      ],
+      gatherer: [
+        { text: "Move toward the forest edge to the south — you remember seeing diverse plants and a stream there last season", hint: "Follow the plant knowledge", cost: "Dense forest is harder to navigate and shelter in", outcome: "survived", result: "The forest edge delivers. The stream is clean. The plants include roots that will last through cold months if dried carefully. The hunting is harder here — the trees break sight lines — but the group will not starve. Your knowledge just saved everyone.", statChange: { food: 15, safety: 5, health: 5 } },
+        { text: "Head for the open grassland to the west — easier to travel but you'll need to find water", hint: "Easier movement, uncertain water", cost: "No guaranteed water source", outcome: "barely", result: "The grassland is easy to cross but the water situation is constant stress. You find a small seasonal pool — but seasonal means unreliable. Everyone is managing but the edge of thirst is always there. It is wearing people down.", statChange: { food: 5, safety: 10, health: -15 } },
+        { text: "Stay one more week to harvest everything left in this area before moving", hint: "Strip the territory before leaving", cost: "Delays the move while resources decline", outcome: "restart", result: "You harvest everything — but there is less than you thought. By the time you move, the season has shifted, the travel conditions are worse, and the group is already low on energy. Sometimes leaving later means arriving in worse shape. Move when the land tells you to." }
+      ],
+      elder: [
+        { text: "Lead the group to the river valley three days northeast — your grandmother's people sheltered there in a similar season", hint: "Trust inherited knowledge", cost: "Old knowledge may no longer apply", outcome: "survived", result: "The river valley has changed — but the fundamentals your grandmother's knowledge described are still true. Water. Shelter from wind. Game routes nearby. Old knowledge, carefully applied, is still knowledge. The group is safe — for now.", statChange: { food: 10, safety: 15, health: 0 } },
+        { text: "Call a group council before deciding — everyone's knowledge combined is better than yours alone", hint: "Collective decision", cost: "Takes time the group may not have", outcome: "barely", result: "The council takes most of a day. Three different directions are proposed. A compromise is reached — a route that is nobody's first choice but nobody's last either. The delay costs you weather. The compromise costs you efficiency. But the group decided together, and that matters for morale.", statChange: { food: -5, safety: 5, health: 5 } },
+        { text: "Tell the group to follow the river downstream — water always leads somewhere livable", hint: "Follow the water", cost: "Unknown where it leads", outcome: "survived", result: "The river leads to a wide, calm section with a gravel bank, good fishing, and a treeline that breaks the wind. You did not know this was here. Your instinct about water was right. Sometimes the oldest rules are old because they work.", statChange: { food: 10, safety: 10, health: 5 } }
+      ],
+      healer: [
+        { text: "Insist on moving toward the river — clean water is more important than game right now", hint: "Prioritize health above all", cost: "Group may resist — they want food, not water lectures", outcome: "survived", result: "You push hard for the river. Three people argue. You point to the one group member who has been showing signs of dehydration. The argument stops. The group moves toward water. Within a day, everyone feels steadier. You were right, and they know it.", statChange: { food: 5, safety: 10, health: 20 } },
+        { text: "Move toward the forest where you know certain medicinal plants grow — you are running low on supplies", hint: "Replenish medical supplies", cost: "Forest has its own dangers", outcome: "barely", result: "You find the plants. You also find evidence that large predators have been denning nearby. The group is nervous and alert — useful, but exhausting. Health supplies are restocked. Sleep is not.", statChange: { food: 5, safety: -15, health: 15 } },
+        { text: "Recommend wherever the group can rest for several days — someone is not well enough to travel hard", hint: "Rest is medicine too", cost: "Staying risks the group's overall food situation", outcome: "restart", result: "The sick person does not recover as fast as you hoped. The rest of the group's food situation deteriorates. When you finally move, you are doing so in worse condition than if you had moved when the illness began. Sometimes the medicine is movement. Move." }
+      ],
+      toolmaker: [
+        { text: "Find the location with the best stone deposits — without materials, nothing else works long-term", hint: "Materials first", cost: "Stone deposits don't always come with water or food", outcome: "barely", result: "You find the flint deposit. It is excellent. The nearest water source is a 40-minute walk. The group manages but the daily water haul is exhausting everyone. Your tools will be magnificent. Getting to water to make them is the problem.", statChange: { food: 5, safety: 5, health: -15 } },
+        { text: "Scout the river bend you noticed — the exposed gravel banks often have the best flint AND water", hint: "Look for both", cost: "River bends can flood unpredictably", outcome: "survived", result: "The gravel bank is everything you hoped. Clean water, excellent flint, and the river bend creates a natural shelter from the prevailing wind. You arrive to find the site better than expected. The group settles quickly. You are already planning what you will build here.", statChange: { food: 10, safety: 10, health: 10 } },
+        { text: "Follow the group wherever they decide — your job is tools, not navigation", hint: "Stay in your role", cost: "You have information that could help and you are withholding it", outcome: "barely", result: "The group chooses a location with poor stone. You spend the next two weeks making do with inferior material. Everything is slightly worse than it should be — the blades chip faster, the scrapers don't hold their edge. Small disadvantages compound in the Stone Age.", statChange: { food: 5, safety: 5, health: -5 } }
+      ],
+      scout: [
+        { text: "Lead them to the river valley you scouted last week — you know exactly what is there", hint: "Use your intel", cost: "You saw it one week ago. Things change.", outcome: "survived", result: "The valley is exactly as you described. The group follows you with unusual trust and the location delivers. For once, everyone listens to the scout before the disaster instead of after. The camp is established quickly. You have earned something valuable: credibility.", statChange: { food: 10, safety: 15, health: 5 } },
+        { text: "Warn the group away from the northeast — you saw predator signs there — but let them choose direction", hint: "Share intelligence, respect autonomy", cost: "They may not listen", outcome: "barely", result: "Half the group listens. Half argues that game follows predators. A compromise route is chosen that avoids the worst of the predator territory but isn't your first choice either. It works — barely. Next time, you will be more forceful with your warnings.", statChange: { food: 5, safety: 5, health: 5 } },
+        { text: "Push for the coastal area two days south — you have heard from another group that fish are abundant there", hint: "Secondary intelligence, new territory", cost: "Secondhand information is unreliable", outcome: "restart", result: "The coast is real. The fish abundance was exaggerated — the other group was there in peak season. You arrive off-season to a stripped coastline and deteriorating weather. Secondhand information got you here. Your own eyes will have to get you out. Move." }
+      ]
+    }
+  },
+  {
+    id: "ch2",
+    number: 2,
+    title: "The Hunt Goes Wrong",
+    subtitle: "When the Plan Fails",
+    scene: "The hunters went out at dawn. By midday something has gone badly wrong. The animal they cornered turned on them. One person is injured. The hunt yielded almost nothing. The rest of the group is watching the hunters return, counting what they brought back, doing the math on how long it will last. The math is not good.",
+    journalPrompt: "Something went wrong that your role either caused, couldn't prevent, or has to deal with now. What is the hardest part of this moment for your specific role?",
+    choices: {
+      hunter: [
+        { text: "Go back out immediately — the group needs food and you need to prove this was a one-time failure", hint: "Push through", cost: "The injured hunter cannot come. You are going with fewer people.", outcome: "barely", result: "You bring back something — not much, but something. A smaller animal. Enough for tonight. The injured hunter watches you return. You do not feel like you proved anything. You feel like you got lucky. There is a difference, and you know it.", statChange: { food: 10, safety: -10, health: -5 } },
+        { text: "Tend to the injured hunter first — the group cannot afford to lose a second person trying to make up for today", hint: "People over pride", cost: "The group goes hungry today", outcome: "survived", result: "The injury is serious but manageable with rest. The group eats less today. But the hunter will recover and hunt again. You made the right call, even though the group is quiet tonight. A live hunter who recovers is worth more than a desperate second hunt that costs you another person.", statChange: { food: -15, safety: 5, health: 15 } },
+        { text: "Blame the terrain, the weather, the animal's behavior — not the hunting technique", hint: "Protect morale", cost: "The real problem goes unexamined", outcome: "barely", result: "The group accepts your explanation. Tonight is manageable. But the technique that failed today will fail again because nobody examined it. You bought morale at the cost of learning. In the Stone Age, that is a debt that eventually comes due.", statChange: { food: -5, safety: 5, health: -5 } }
+      ],
+      gatherer: [
+        { text: "Immediately go out and gather everything edible you can find to supplement what the hunt didn't provide", hint: "Fill the gap", cost: "You have already gathered this area heavily", outcome: "barely", result: "You find enough to stretch the meal. Mostly bitter roots and some dried berries from a hidden cache. Nobody is full but nobody is empty either. The group manages. You are exhausted. Tomorrow you will have to range even further.", statChange: { food: 10, safety: 0, health: -10 } },
+        { text: "Call a group meeting about food management — the hunt cannot be the group's only food strategy", hint: "Systemic thinking", cost: "People are hungry and may not want a meeting", outcome: "survived", result: "The meeting is tense. But something shifts. The hunters acknowledge their food is unpredictable. The gatherers agree to expand their range. A rough division of labor emerges from necessity. The group is slightly better organized after tonight than it was before the hunt went wrong.", statChange: { food: 5, safety: 5, health: 5 } },
+        { text: "Say nothing and quietly share your personal food reserves with the most vulnerable group members", hint: "Silent sacrifice", cost: "Your own reserves are now gone", outcome: "barely", result: "The children and the injured eat. You go to sleep hungry. Nobody notices — which is somehow the point. You will need to rebuild your reserves before the next shortage. In the Stone Age, personal sacrifice can only carry a group so far before the person making it breaks.", statChange: { food: 5, safety: 0, health: -15 } }
+      ],
+      elder: [
+        { text: "Tell the group a story about a similar failure your people survived — this has happened before and you got through it", hint: "Stories as medicine", cost: "Stories don't fill stomachs", outcome: "survived", result: "The story works. Not because it solves anything — but because it reminds the group they are not the first people to face this. Morale is fragile tonight and your story holds it together. Tomorrow the problems are still real. But the group faces them as a unit instead of individuals.", statChange: { food: -5, safety: 10, health: 10 } },
+        { text: "Make a hard decision — reduce everyone's ration immediately before the situation becomes desperate", hint: "Discipline over comfort", cost: "Nobody will thank you for this", outcome: "survived", result: "Nobody thanks you. Several people argue. But the rationing works — the food lasts longer than it would have without it. Three days later, the hunt succeeds. The group still has reserves. Your unpopular decision is quietly acknowledged as correct. Leadership is not always comfortable.", statChange: { food: 15, safety: 5, health: -10 } },
+        { text: "Defer to the hunters — this is their domain, not yours", hint: "Stay in your lane", cost: "Your perspective could have helped and didn't", outcome: "barely", result: "The hunters handle it as best they can. It is not quite enough. Your knowledge of past famines and how groups survived them sits unused. Sometimes not speaking is its own kind of failure. You are the elder. The group needs more than deference.", statChange: { food: 0, safety: 0, health: -5 } }
+      ],
+      healer: [
+        { text: "Focus everything on the injured hunter — they are your priority and nothing else matters right now", hint: "One patient, full attention", cost: "Others in the group may be struggling and you won't notice", outcome: "survived", result: "The injured hunter stabilizes. They will hunt again. While you were focused, you missed early signs of illness in a child. You catch it the next morning — early enough. Triage is always an impossible calculation. You made your call. It was defensible.", statChange: { food: 0, safety: 5, health: 15 } },
+        { text: "Treat the injury quickly and then assess the whole group — the stress of a failed hunt affects everyone", hint: "Whole-group health", cost: "Divided attention means neither gets full care", outcome: "barely", result: "The injury gets adequate care — not optimal, but adequate. The group assessment reveals two people showing signs of stress exhaustion. You address those too. Nothing is done as well as it could be. Everything is done well enough. This is most of what healing looks like.", statChange: { food: 0, safety: 5, health: 10 } },
+        { text: "Use medicinal plants to ease the injured hunter's pain — even if it slows healing, they need relief now", hint: "Comfort over speed", cost: "Some of your rarest supplies used for comfort, not cure", outcome: "barely", result: "The hunter is comfortable. Recovery is slower. Your rare supplies are depleted. The group sees you as compassionate — which builds trust. But trust does not replace the medicinal plants you just used. The next serious injury will have fewer options.", statChange: { food: 0, safety: 5, health: 5 } }
+      ],
+      toolmaker: [
+        { text: "Examine the broken spear immediately — figure out what failed and fix the design tonight", hint: "Learn from failure", cost: "Working by firelight is slow and imprecise", outcome: "survived", result: "You find the flaw — the binding weakened at the junction between shaft and point. A new technique you apply tonight means the next spear will not fail the same way. The hunters do not thank you. They rarely do. But the next hunt will be slightly safer because of what you did tonight.", statChange: { food: 5, safety: 10, health: 0 } },
+        { text: "Make new tools immediately — replace everything that broke or was lost in the failed hunt", hint: "Replace, don't analyze", cost: "Same design, same flaws", outcome: "barely", result: "The tools are replaced quickly. Same design. Same weaknesses. The group feels better about its equipment but the fundamental problem was not addressed. In three hunts, something will fail again for the same reason. Speed of replacement is not the same as quality of thinking.", statChange: { food: 5, safety: 5, health: 0 } },
+        { text: "Ask the hunters what happened in detail before making anything", hint: "Understand before acting", cost: "Slower process, group is impatient", outcome: "survived", result: "The hunter describes the moment of failure reluctantly. You ask questions they find irritating. What you learn redesigns the spear point in a way that would not have occurred to you without their account. The next spear is genuinely better. Patient process produces better tools than rushed replacement.", statChange: { food: 5, safety: 15, health: 0 } }
+      ],
+      scout: [
+        { text: "Admit you saw signs that the hunt area was risky and didn't communicate them clearly enough", hint: "Accountability", cost: "This is hard to say. But it is true.", outcome: "survived", result: "The admission is hard. The group is quiet after you say it. Then the elder says: tell us what you saw so we do not repeat this. A genuine debrief happens. The group's scouting communication improves. Your honesty cost you comfort. It may have saved someone's life next time.", statChange: { food: 0, safety: 15, health: 5 } },
+        { text: "Go back to the hunt area immediately to assess what happened and find alternative game nearby", hint: "Solve the next problem", cost: "You are exhausted. Rushing produces errors.", outcome: "barely", result: "You find signs of smaller game nearby — not ideal but workable. You also nearly miss a predator because you are tired and moving too fast. The information you bring back is useful. The way you got it was reckless. Tiredness kills scouts.", statChange: { food: 10, safety: -10, health: -5 } },
+        { text: "Map the wider territory while the group recovers — find three alternative hunting areas for next time", hint: "Plan ahead", cost: "The group needs you here, not ranging far", outcome: "barely", result: "Your maps are excellent. The group needed morale today, not maps. Both things are true. The maps will be useful in three days. Today you were not. Timing is part of your job too.", statChange: { food: 5, safety: 10, health: -5 } }
+      ]
+    }
+  },
+  {
+    id: "ch3",
+    number: 3,
+    title: "Winter Is Coming",
+    subtitle: "The Food Problem",
+    scene: "The temperature is dropping. The animals your group depends on are moving to lower ground — away from you. The plants are dying back. You have been in this location for two months and the territory is showing the strain. Your group has perhaps three weeks of comfortable food before things become genuinely dangerous. Everyone knows it. Nobody is saying it out loud.",
+    journalPrompt: "Your group is facing a slow emergency — not a sudden crisis but a gradual one. Which is harder to respond to — a fast disaster or a slow one? Why?",
+    choices: {
+      hunter: [
+        { text: "Make a long-range hunting trip — push further than usual to find where the herds have gone", hint: "Chase the food", cost: "You may be gone for days. The group is vulnerable without hunters.", outcome: "barely", result: "You find the herds. The journey back with the kill nearly breaks you. You arrive back to a group that has been anxious for four days. You bring food. You also bring back the knowledge that the herds are moving south — which means your group needs to follow them eventually. The hunt was necessary. The information it produced is more valuable.", statChange: { food: 20, safety: -15, health: -10 } },
+        { text: "Switch entirely to trapping small animals — it is less food but requires less energy and can be done constantly", hint: "Sustainable over spectacular", cost: "Small game is never quite enough", outcome: "survived", result: "The traps produce consistently. Never a feast. Never a famine. The group is not thriving but it is not declining. You have three weeks of managed scarcity instead of two weeks of comfort followed by crisis. Trapping is not hunting's equal in glory. It may be its equal in survival.", statChange: { food: 15, safety: 5, health: 0 } },
+        { text: "Propose that the group moves now before the situation gets worse", hint: "Leave before you have to", cost: "Moving in early cold is hard. The group may resist.", outcome: "survived", result: "The group argues. You press. You move. The journey is hard. But you arrive at winter territory with reserves still intact. Every group that waited until the situation was critical moved in worse condition than yours. You learned something your group will use for generations: early is always better than urgent.", statChange: { food: 5, safety: 10, health: 5 } }
+      ],
+      gatherer: [
+        { text: "Begin intensive food preservation — dry everything that can be dried, cache it in multiple locations", hint: "Extend what you have", cost: "Labor intensive, cold makes it harder", outcome: "survived", result: "The preservation works. The dried stores are not exciting food. But they are food in a season when food is scarce. Your caches are hidden in three locations so a predator finding one does not cost everything. This level of planning — this is new. The group is learning to think ahead.", statChange: { food: 20, safety: 5, health: 5 } },
+        { text: "Teach others to gather — if more hands know what to look for, the total collected increases", hint: "Share knowledge", cost: "Teaching takes time you could spend gathering", outcome: "survived", result: "Three people learn to identify five plants they previously ignored. The total food collected increases. Your individual contribution decreases slightly. The group's total capacity increases substantially. You have discovered that knowledge shared is more powerful than knowledge hoarded.", statChange: { food: 15, safety: 5, health: 10 } },
+        { text: "Ration everything and gather what you can — but tell the group honestly how serious this is", hint: "Radical honesty", cost: "Fear is contagious. This may panic people.", outcome: "barely", result: "The group is frightened. Two people cry. Then something happens that surprises you — they start helping. The hunter offers to trap smaller animals. The toolmaker makes better fishing implements. The scout ranges for food sources in addition to safety. Honesty created a problem. Honesty also solved it.", statChange: { food: 10, safety: 5, health: 5 } }
+      ],
+      elder: [
+        { text: "Call a serious meeting and lay out the situation honestly — the group needs to decide together", hint: "Collective reckoning", cost: "Naming the problem makes it real. That is frightening.", outcome: "survived", result: "The meeting is quiet. Then productive. Roles shift. People take on tasks outside their usual work. A rough plan emerges. Not perfect. But shared. A plan everyone understands is executed better than a plan only the leader knows. This is something your people will remember how to do.", statChange: { food: 10, safety: 10, health: 10 } },
+        { text: "Make the hard decision to reduce the food given to the weakest members to preserve the strongest", hint: "Brutal arithmetic", cost: "This is a decision that haunts.", outcome: "barely", result: "You make the decision. You do not explain it. You watch the faces of the people who receive less. Three of them understand. One does not. This calculation may have saved the group. The weight of it belongs to you alone. Leadership in the Stone Age is not about glory. It is about this.", statChange: { food: 10, safety: 5, health: -15 } },
+        { text: "Reach out to the other group two days east — your people have traded information before", hint: "Alliance over isolation", cost: "Asking for help is difficult. They may not have enough either.", outcome: "survived", result: "The other group has less food than you — but more knowledge of winter plant sources in this area. You trade information for information. Two groups facing winter together, sharing intelligence, fare better than two groups facing it alone. This is a form of economy your people are just beginning to discover.", statChange: { food: 15, safety: 10, health: 5 } }
+      ],
+      healer: [
+        { text: "Prioritize nutrition for the most vulnerable — children and the injured get the best of what there is", hint: "Triage the group", cost: "Others eat less. They notice.", outcome: "survived", result: "The strongest members eat less than they want. Nobody gets sick. The children remain functional. The injured continues recovering. Your triage was correct medically. Socially it created tension that you will manage for weeks. Good medicine and good group dynamics are not always the same decision.", statChange: { food: 5, safety: 5, health: 15 } },
+        { text: "Identify everyone who is showing early signs of decline and address those first", hint: "Prevent before treating", cost: "Harder to convince people they are declining before they feel it", outcome: "survived", result: "You catch four people in early decline — fatigue, slower movement, dulled thinking. Extra food and rest for those four. The rest of the group resists slightly, then accepts your assessment when they see the improvement. Prevention is harder to credit than treatment. But it costs less.", statChange: { food: 5, safety: 5, health: 20 } },
+        { text: "Propose hibernation-style rest — conserve energy by sleeping and moving as little as possible", hint: "Conserve everything", cost: "A sleeping group is a vulnerable group", outcome: "barely", result: "The resting group conserves energy. They also cannot scout, cannot hunt, cannot respond to threats. A predator circles the camp for two days before the scout notices. The camp survives. The rest helped. The vulnerability it created nearly cost you more than the calories it saved.", statChange: { food: 10, safety: -20, health: 10 } }
+      ],
+      toolmaker: [
+        { text: "Build fish traps for the river — winter fishing is underused and could supplement the food supply", hint: "Open a new food source", cost: "New tool design takes time to perfect", outcome: "survived", result: "The first traps are inefficient. The third design works well. Within a week the river is providing supplemental protein that no one was using before. You did not find food. You built a way to find it. The difference between tool making and hunting is that tools keep working while you sleep.", statChange: { food: 15, safety: 5, health: 5 } },
+        { text: "Build better insulated shelters — cold kills as surely as hunger and shelter costs nothing but time", hint: "Address cold, not just food", cost: "Time spent on shelter is not spent on food", outcome: "survived", result: "The better shelter reduces the energy the group burns staying warm. This effectively stretches your food supply without adding to it. You did not feed anyone. You made the food they have last longer. Indirect solutions are still solutions. The group is warmer and better fed than they would have been.", statChange: { food: 10, safety: 10, health: 10 } },
+        { text: "Make better hunting tools to improve the hunters' yield on every trip", hint: "Improve existing system", cost: "Tools are already adequate — marginal improvement only", outcome: "barely", result: "The improved tools help slightly. The hunters appreciate the upgrade. But the fundamental problem — winter scarcity — is not a tool problem. It is a location and food diversity problem. Better tools for an inadequate food source produce slightly more of not enough.", statChange: { food: 10, safety: 5, health: 0 } }
+      ],
+      scout: [
+        { text: "Make a multi-day survey of the entire surrounding territory — map every food source and threat you can find", hint: "Complete intelligence picture", cost: "Days away from the group while they are vulnerable", outcome: "survived", result: "You return with a complete picture of what the next sixty days look like in this territory. Two alternative food sources. One significant threat. One possible alliance group. The group makes better decisions with your information than they would have made with less of it. This is what scouting is actually for.", statChange: { food: 10, safety: 15, health: 5 } },
+        { text: "Find the other group that was spotted two days east and assess whether they are a threat or a resource", hint: "Intelligence on neighbors", cost: "Contact could go wrong", outcome: "survived", result: "The other group is smaller and also struggling. They have different food knowledge than yours. An informal exchange of information happens — cautious, slow, productive. You return with three plant sources your group did not know about. The other group now knows your territory's hunting routes. Both groups are slightly better off.", statChange: { food: 15, safety: 10, health: 5 } },
+        { text: "Stay close to camp — the group needs protection more than intelligence right now", hint: "Guard over explore", cost: "The information you are not gathering has costs too", outcome: "barely", result: "The camp is safe. A predator approaches twice — you turn it away both times. The group is grateful. But the alternative food sources you are not finding continue to go unfound. Safety and intelligence are both necessary. You cannot provide both alone.", statChange: { food: 0, safety: 20, health: 0 } }
+      ]
+    }
+  },
+  {
+    id: "ch4",
+    number: 4,
+    title: "The Accidental Garden",
+    subtitle: "Agriculture Discovered",
+    scene: "Your group has returned to a place you camped two seasons ago. Someone notices something strange near the old fire pit — plants growing in dense, organized-looking clusters. Wild plants do not grow like this. Then someone remembers: the food scraps and seed waste from the last camp. The plants grew from the seeds your group accidentally left behind. Nobody planted them. But they grew exactly where you were.",
+    journalPrompt: "Your group just stumbled onto something that will change everything — but it doesn't feel like a revelation yet. It feels like a strange observation. Write what your role thinks this means and what questions you have.",
+    choices: {
+      hunter: [
+        { text: "Dismiss it — you cannot hunt plants, and the group needs meat, not gardening", hint: "Skepticism from the hunter", cost: "You may be wrong about what this is", outcome: "barely", result: "You push the group toward hunting. The plants are left behind. Three seasons later, another group shows you what you walked away from — a permanent food source that did not require tracking, risk, or luck. You were not wrong that hunting matters. You were wrong that this did not.", statChange: { food: 5, safety: 5, health: 0 } },
+        { text: "Observe it carefully before deciding anything — something this strange deserves attention", hint: "Patience from the hunter", cost: "Takes time, group is restless", outcome: "survived", result: "You spend half a day watching the plants. You notice something — the densest growth is exactly where the seed waste was thrown. The connection clicks. If seeds grew here by accident, they could grow somewhere else on purpose. You do not have words for farming. But you have the idea.", statChange: { food: 10, safety: 5, health: 5 } },
+        { text: "Harvest everything here now — food is food regardless of how it grew", hint: "Immediate harvest, no reflection", cost: "The lesson goes unlearned", outcome: "barely", result: "The food is good. The group eats well tonight. And leaves. The discovery that seeds grow where they fall — one of the most important realizations in human history — goes unexamined because the food was eaten before anyone thought about what it meant.", statChange: { food: 15, safety: 0, health: 5 } }
+      ],
+      gatherer: [
+        { text: "Study every plant carefully — you want to understand exactly how this happened before the group moves on", hint: "Knowledge before harvest", cost: "The group wants to eat, not study", outcome: "survived", result: "You document everything you can observe: which seeds, which soil, which distance from the fire pit. You notice the plants are healthier than their wild equivalents. You do not know why yet. But you know enough to try repeating it. The next camp, you deliberately scatter seeds near the fire. The experiment has begun.", statChange: { food: 10, safety: 5, health: 10 } },
+        { text: "Tell the group to stay here long enough to let the plants fully mature — leaving early wastes this find", hint: "Wait for the harvest", cost: "The group may not agree to the delay", outcome: "survived", result: "The group agrees — barely. You wait two weeks. The harvest is larger than anything your group has gathered in one location in memory. Something is different here. You do not know what to call it. But you know that staying produced more than moving would have. That knowledge will change everything.", statChange: { food: 20, safety: 5, health: 5 } },
+        { text: "Scatter seeds from this harvest near the new camp before leaving — see what happens next season", hint: "Intentional planting begins", cost: "The group thinks you are wasting food", outcome: "survived", result: "The group thinks you are strange. You scatter the seeds anyway. Next season, when you return, there are plants exactly where you scattered them. The group is quiet for a long moment. Then someone asks: can we do this on purpose? Yes. That is the answer. Yes you can.", statChange: { food: 10, safety: 5, health: 10 } }
+      ],
+      elder: [
+        { text: "Tell the story you half-remember — another group, long ago, who talked about plants near their camps", hint: "Inherited knowledge applied", cost: "The story is incomplete. You may misremember it.", outcome: "survived", result: "The story is not quite right. But the core of it — that plants grow from seeds that fall — is true. Your imperfect memory of an old story gives the group enough framework to understand what they are looking at. Old knowledge, imperfectly remembered, still has value. Sometimes direction matters more than precision.", statChange: { food: 10, safety: 5, health: 10 } },
+        { text: "Call this a gift from the spirits of the old camp — it will become a story the group tells for generations", hint: "Meaning-making", cost: "The practical lesson may get lost in the story", outcome: "barely", result: "The group is moved by your interpretation. The story of the gift becomes part of who they are. The practical lesson — seeds make plants — gets embedded in the story but slightly obscured by the spiritual framing. Both things are true. The story carries the knowledge forward in a form the group can remember and repeat.", statChange: { food: 10, safety: 10, health: 5 } },
+        { text: "Insist the group stays long enough to understand this fully before moving on", hint: "Prioritize understanding", cost: "Delay has real costs in a mobile existence", outcome: "survived", result: "The group stays. They observe. They experiment. They leave with a knowledge they did not arrive with: that seeds, deliberately placed, grow into food. The delay cost them two weeks of mobile foraging. It paid back ten times over in the seasons that followed.", statChange: { food: 15, safety: 5, health: 10 } }
+      ],
+      healer: [
+        { text: "Identify which of these plants have medicinal properties — this is a healer's discovery too", hint: "Medicinal application first", cost: "The food application goes underexplored", outcome: "survived", result: "Three of the plants are ones you have been searching for in the wild for years. If these can be grown deliberately near camp, your medical supplies become reliable instead of unpredictable. A healer with a medicine garden is a different kind of healer entirely. You begin to understand what this discovery is.", statChange: { food: 10, safety: 5, health: 20 } },
+        { text: "Notice that the plants here are healthier than wild specimens — the soil near the fire is different", hint: "Observe the mechanism", cost: "You cannot fully explain what you are seeing yet", outcome: "survived", result: "The plants near the ash are more robust. You do not know why — you do not know about nitrogen — but you observe that fire residue seems to feed plant growth. You begin mixing ash into the soil at the next camp. It works. You have discovered soil amendment without knowing that is what it is called.", statChange: { food: 10, safety: 5, health: 15 } },
+        { text: "Harvest carefully and leave some plants rooted — protect this source for future visits", hint: "Sustainable harvest", cost: "The group wants to take everything now", outcome: "survived", result: "You leave a third of the plants rooted. The group grumbles. On the next visit to this area — months later — the plants have spread. The group that argued with you eats the food that your restraint produced. Sustainable harvest is a concept born of exactly this kind of moment.", statChange: { food: 10, safety: 5, health: 10 } }
+      ],
+      toolmaker: [
+        { text: "Make digging tools immediately — if you can loosen the soil, more seeds can be planted more effectively", hint: "Tool for the new activity", cost: "You are solving a problem before the group has agreed there is a problem", outcome: "survived", result: "The digging tools are simple. The concept behind them is revolutionary. You are the first person in your group to make a tool specifically for growing food rather than finding it. The hunters look at your digging stick with something between confusion and contempt. They will understand later.", statChange: { food: 10, safety: 5, health: 5 } },
+        { text: "Make containers for storing seeds — if you can carry seeds with you, you can plant anywhere", hint: "Solve the portability problem", cost: "Containers add weight to an already burdened group", outcome: "survived", result: "The seed containers work. On the next migration, the group carries seeds from the accidental garden. They plant them at the new camp. When the seeds grow, the group is stunned. You have not solved nomadism — but you have made the first step toward making it optional.", statChange: { food: 15, safety: 5, health: 5 } },
+        { text: "Build a simple fence around the plants — protect them from animals so the harvest is not lost", hint: "Protect the investment", cost: "Time intensive for an uncertain payoff", outcome: "survived", result: "The fence works. Animals that would have eaten the plants overnight are turned away. The full harvest is protected. You have just built the world's first garden fence. The concept — that a food source can be protected and managed — is newer than it sounds.", statChange: { food: 15, safety: 10, health: 0 } }
+      ],
+      scout: [
+        { text: "Range out to see if other groups nearby have discovered the same thing — share the knowledge if you find it", hint: "Intelligence exchange", cost: "You are excited and may move too fast and share too much", outcome: "survived", result: "The neighboring group has seen something similar but did not understand it. Your group's discovery plus their location knowledge creates something neither had alone: the beginning of agricultural knowledge spreading between groups. Information traveled between people before writing existed. This is how.", statChange: { food: 10, safety: 10, health: 10 } },
+        { text: "Map every location where your group has previously camped — could this have happened elsewhere too?", hint: "Pattern recognition", cost: "Analytical work when the group wants action", outcome: "survived", result: "Your map reveals five previous camp locations where similar growth might have occurred — all abandoned before anyone noticed. The pattern is clear: wherever your group stayed long enough, food followed. The group has been farming accidentally for years without knowing it. The realization is quiet and enormous.", statChange: { food: 10, safety: 5, health: 10 } },
+        { text: "Find the best location within a day's range where this could be attempted on purpose and report back", hint: "Scout for the garden", cost: "Acting before the group has decided to stay", outcome: "barely", result: "Your location report is excellent — and arrives before the group has decided this is worth pursuing. They file your information away. Three months later, when the decision to try intentional planting finally arrives, nobody remembers your report. You were right and early. Being right and early is not always credited.", statChange: { food: 5, safety: 10, health: 5 } }
+      ]
+    }
+  },
+  {
+    id: "ch5",
+    number: 5,
+    title: "The Wolf at the Fire",
+    subtitle: "Domestication Begins",
+    scene: "The hunter brought back an injured wolf pup three weeks ago. Everyone thought it was foolish. The pup is not foolish anymore — it is a young wolf that eats scraps from the fire, sleeps at the edge of the camp, and barks before anyone else hears what is approaching. Last night it warned the group of a predator twenty minutes before the predator arrived. The group is divided: kill it before it becomes dangerous, or keep something that is already proving useful.",
+    journalPrompt: "Your role has a specific stake in this decision. What does the wolf mean to your role specifically — and what would you lose or gain from the decision your group makes?",
+    choices: {
+      hunter: [
+        { text: "Keep the wolf — it can track wounded animals you lose after the first strike", hint: "Hunting tool", cost: "A wolf that hunts with you still has its own instincts", outcome: "survived", result: "The wolf tracks. Its nose does what your eyes cannot. Three hunts later, an animal that would have escaped injured instead leads you back to itself. The wolf is not a pet. It is a hunting partner. You have not domesticated it — that word does not exist yet — but you have begun something that will take generations to complete.", statChange: { food: 15, safety: 15, health: 5 } },
+        { text: "Test it on a hunt before deciding — let it prove itself or fail in the actual conditions", hint: "Earn its place", cost: "An untrained wolf on a hunt is unpredictable", outcome: "barely", result: "The wolf is chaotic on the hunt. It startles the prey twice. It also follows a scent you would have lost. The verdict is mixed. The animal has potential and danger in equal measure. You return undecided. But you do not kill it. Something about the way it moves alongside you has already changed the calculation.", statChange: { food: 5, safety: 5, health: 0 } },
+        { text: "Kill it — a wolf is a predator and the risk is not worth the novelty", hint: "Risk elimination", cost: "You may be eliminating a partnership that would transform hunting", outcome: "restart", result: "The wolf is killed. The group moves on. Seventeen generations later, another group makes a different decision with a different wolf. The partnership that begins there — the one your group rejected — changes what hunting looks like for the next ten thousand years. Your group never knows what it gave up. Try again." }
+      ],
+      gatherer: [
+        { text: "Notice that the wolf follows you on gathering trips and flushes small animals from undergrowth", hint: "Unexpected gathering aid", cost: "A wolf near foraging areas can disrupt plants and startle prey", outcome: "survived", result: "The wolf does not mean to help you. But it does. Its movement through undergrowth flushes small animals and birds that you would never have seen. You begin guiding it — not commanding, just redirecting. Something new is happening. You are not sure what to call it. Cooperation is not quite the right word. Not yet.", statChange: { food: 10, safety: 10, health: 5 } },
+        { text: "Argue that the wolf is eating food the group needs — it is a mouth the group cannot afford to feed", hint: "Resource competition", cost: "A short-term calculation that misses long-term value", outcome: "barely", result: "The group reduces the wolf's food. The wolf is thinner. Less reliable. It still warns of danger — but less energetically. You saved food in the short term. The wolf's alertness that might have saved a life next month is slightly diminished. Short-term resource thinking has long-term costs that are invisible until they arrive.", statChange: { food: 5, safety: -5, health: 0 } },
+        { text: "Feed it consistently and observe how its behavior changes when it is reliable and well-fed", hint: "Systematic observation", cost: "Deliberate feeding costs real food", outcome: "survived", result: "The well-fed wolf is calmer, more predictable, and more alert. The direct correlation between how you treat it and how useful it is begins to be visible. This is the beginning of understanding that animals can be managed, not just hunted or feared. Your careful observation is the first step in a very long journey.", statChange: { food: -5, safety: 15, health: 10 } }
+      ],
+      elder: [
+        { text: "Tell the story of the wolf-helpers from three generations ago — your grandmother mentioned them once", hint: "Inherited knowledge again", cost: "The story is very incomplete", outcome: "survived", result: "The story is fragments. But the fragments include this: a group that lived alongside wolves for a generation survived a winter that destroyed groups around them. Your incomplete story gives the group permission to experiment with something that frightens them. Sometimes permission is what people need most.", statChange: { food: 5, safety: 15, health: 10 } },
+        { text: "Make the decision yourself — the group is split and someone has to end the debate", hint: "Leadership under pressure", cost: "You might be wrong", outcome: "survived", result: "You say: keep it. The group accepts your authority. The wolf stays. You were not certain. You made the call anyway. In the Stone Age, a leader who waits for certainty waits forever. The wolf proves useful within the week. Your willingness to decide without certainty is its own kind of wisdom.", statChange: { food: 5, safety: 15, health: 5 } },
+        { text: "Tell the group to watch the wolf for one full moon before deciding", hint: "Deliberate observation period", cost: "The debate continues for a full month", outcome: "survived", result: "The observation period is productive. The wolf warns of danger seven times in thirty days. It costs the group in food what it returns in safety tenfold. The numbers speak for themselves. The group keeps it without further debate. Data is a form of wisdom too.", statChange: { food: -5, safety: 20, health: 5 } }
+      ],
+      healer: [
+        { text: "The wolf is calming for the group — the stress of constant vigilance is reduced when it watches", hint: "Psychological health benefit", cost: "Hard to quantify. Hard to argue for.", outcome: "survived", result: "You observe something no one else is tracking: the group sleeps better. Not because the wolf solves every threat. But because the group feels watched over. The reduction in stress — in constant hypervigilance — has real physical effects. People heal faster. Think clearer. The wolf is medicine of a kind you did not expect.", statChange: { food: 0, safety: 10, health: 20 } },
+        { text: "Worry about disease — a wolf living with the group could spread illness", hint: "Health risk assessment", cost: "This is a real concern that goes underweighted", outcome: "barely", result: "Your concern is partially right. The wolf brings parasites the group is not immune to. Three people are ill for a week. They recover. The wolf stays. The health cost was real and temporary. The safety benefit is ongoing. Your caution was warranted. The group's decision to keep the wolf despite the cost was also warranted.", statChange: { food: 0, safety: 10, health: -10 } },
+        { text: "Treat the wolf's original injury fully — a healthy wolf is more useful than a half-healed one", hint: "Invest in the resource", cost: "Using healing supplies on an animal feels wrong to some", outcome: "survived", result: "The wolf heals fully. Its movement is better. Its alertness sharper. The group that watched you treat an animal begins to understand something new: that care invested in a living thing returns value. This is not quite domestication. But it is its precondition.", statChange: { food: 0, safety: 15, health: 15 } }
+      ],
+      toolmaker: [
+        { text: "Make a simple collar and lead — if you can direct the wolf's movement, it becomes more useful and less dangerous", hint: "Tool to manage the animal", cost: "The wolf may not accept it", outcome: "survived", result: "The wolf accepts the collar after three tense days. The lead is less successful — but the collar alone changes the dynamic. The group has a physical connection to the animal that feels different from living beside it. Control, even partial, changes the relationship. You have built the first piece of equipment for an animal that is not yet domesticated.", statChange: { food: 5, safety: 15, health: 5 } },
+        { text: "Build a dedicated shelter for the wolf at the camp perimeter — position it where it can watch all approaches", hint: "Strategic placement", cost: "Building anything costs time", outcome: "survived", result: "The shelter works better than expected. The wolf uses it. Its position at the perimeter creates a natural alarm system at the most vulnerable point of the camp. You built a watchtower without walls. The wolf lives in it willingly. This arrangement — animal as tool, tool as shelter — is genuinely new.", statChange: { food: 5, safety: 20, health: 5 } },
+        { text: "Observe the wolf's behavior patterns and try to predict when it will be alert versus when it rests", hint: "Understand the system before modifying it", cost: "Patience when the group wants action", outcome: "survived", result: "Your observation reveals that the wolf is most alert at dawn and dusk and least alert in deep midday. The group adjusts its most vulnerable activities — water collection, foraging near the perimeter — to the wolf's alert periods. You have not trained the wolf. You have learned from it. The relationship is more equal than anyone expected.", statChange: { food: 5, safety: 15, health: 10 } }
+      ],
+      scout: [
+        { text: "Take the wolf on your next scouting mission — see if it can detect threats you would miss", hint: "Field test", cost: "A wolf changes how game and threats respond to you", outcome: "survived", result: "The wolf smells a predator you would have walked into. It also startles prey you were tracking. The net result: one threat avoided, one hunting opportunity lost. The wolf as a scouting tool is complicated. But the threat detection alone may have saved your life today. You return converted.", statChange: { food: 0, safety: 20, health: 5 } },
+        { text: "Find out if other groups have kept wolves and what happened to them", hint: "Research the precedent", cost: "Other groups may be far away", outcome: "survived", result: "One group you find has had wolves for two generations. Their hunting success rate is noticeably higher than any group you know. They are also more settled — moving less, building more, storing more. The wolf is not the whole cause. But it is part of a pattern that suggests something you cannot quite name yet: that cooperation with animals changes what humans are capable of.", statChange: { food: 10, safety: 15, health: 5 } },
+        { text: "Argue that a wolf changes your scouting — prey smells it now before you arrive, reducing your effectiveness", hint: "Operational concern", cost: "You may be right. This matters.", outcome: "barely", result: "You are right about the prey. The wolf's scent complicates stalking. The hunting success rate dips slightly for three weeks while the group adjusts. Then the hunters develop new approaches — longer range, different wind reading, using the wolf to drive rather than stalk. Adaptation costs something. It also produces something new.", statChange: { food: -5, safety: 15, health: 5 } }
+      ]
+    }
+  },
+  {
+    id: "ch6",
+    number: 6,
+    title: "Do We Stay?",
+    subtitle: "The Decision That Changes Everything",
+    scene: "Your group has been in this location for four months — longer than you have stayed anywhere in living memory. There is a river nearby. The accidental garden has become a deliberate one. The wolf is part of the camp now. A simple structure has been built — more permanent than a lean-to. And the group is having the conversation that changes everything: do we stay here? What does staying even mean? Everything your people have ever been says move. Something new is saying: wait.",
+    journalPrompt: "This is the hardest decision your group has ever faced — not because it is dangerous, but because it is unknown. Write what your role is most afraid of losing if you stay. Then write what you might gain.",
+    choices: {
+      hunter: [
+        { text: "Vote to stay — the settlement gives you a base to range from, and you do not have to give up hunting", hint: "Staying does not mean stopping", cost: "The hunting ranges around this camp will eventually be exhausted", outcome: "survived", result: "You stay. You still hunt — but from a fixed point. The ranges change. The techniques adapt. You are still a hunter. But what that means is slowly becoming something different. Not worse. Different. Your children will hunt differently than you do. Their children will barely recognize what you call hunting. The decision has been made.", statChange: { food: 15, safety: 15, health: 10 } },
+        { text: "Refuse to commit — propose that part of the group stays and part continues moving", hint: "Divide the group", cost: "A divided group is weaker than either half alone", outcome: "barely", result: "The group splits — for a season. The mobile group returns, thinner and tired, having found nothing better. The settled group is fuller and more organized. The division resolves itself through evidence. The mobile half rejoins. Nobody says they were wrong. But everyone knows what the season proved.", statChange: { food: 10, safety: 5, health: 5 } },
+        { text: "Agree to stay only through the next season — treat it as an experiment, not a commitment", hint: "Conditional settlement", cost: "Half-commitment produces half-investment", outcome: "survived", result: "The conditional agreement produces real investment anyway. Structures get built. Gardens get planted. The wolf has puppies. By the time the conditional season ends, the idea of leaving has become genuinely uncomfortable. The experiment became a life before anyone voted to make it permanent. This is how most of the biggest human decisions actually happen.", statChange: { food: 15, safety: 10, health: 10 } }
+      ],
+      gatherer: [
+        { text: "Advocate strongly for staying — you have been waiting your whole life for a place where the plants come to you", hint: "This is what gathering has been building toward", cost: "Staying requires a different kind of work than moving", outcome: "survived", result: "You make the case. The garden you have built here, the knowledge of this soil, the plants you have learned — all of it is invested in this location. Moving abandons everything you have built. The group hears you. The vote goes for staying. This place is yours in a way no place has ever been before.", statChange: { food: 20, safety: 10, health: 10 } },
+        { text: "Propose conditions — stay if you can build a water storage system that survives a dry season", hint: "Practical requirement before committing", cost: "The condition may not be met", outcome: "survived", result: "The water storage is built — imperfectly, but functional. The condition is met. The settlement commitment follows. By setting a practical requirement before committing, you have also built something the settlement will depend on for generations. Your condition shaped what the settlement became.", statChange: { food: 15, safety: 10, health: 15 } },
+        { text: "Say nothing in the vote — let the decision belong to others and go where the group goes", hint: "Silence as decision", cost: "Your knowledge is the strongest argument for staying", outcome: "barely", result: "The group decides to stay without hearing your strongest argument for it. The settlement is built on a slightly weaker foundation than it would have been with your full advocacy. The gatherer's case for staying — based on real knowledge of this land — was never made. What you withheld cost the settlement something invisible.", statChange: { food: 10, safety: 5, health: 10 } }
+      ],
+      elder: [
+        { text: "Give the blessing — tell the group that you believe this is where your people are meant to put down roots", hint: "Elder's endorsement changes everything", cost: "If you are wrong, your legacy carries that", outcome: "survived", result: "Your blessing matters more than a vote. When the elder says stay, the group stays. You are not certain. You have never been certain. You are the elder. Certainty is not your job. Direction is. You have given direction. The group follows. Whatever comes next, you gave your people permission to try something new. That is enough.", statChange: { food: 10, safety: 15, health: 15 } },
+        { text: "Tell the group what you know about groups that settled before — both the ones that thrived and the ones that failed", hint: "Honest history", cost: "Fear of the failures may outweigh the hope of the successes", outcome: "survived", result: "The histories are honest. Some settlements failed. Some thrived. What made the difference, as best you can tell, was not location or luck — it was whether the group was willing to change how it worked. The group that stays because it is willing to change will thrive. The group that stays and resists change will not. Your people listen carefully.", statChange: { food: 10, safety: 10, health: 10 } },
+        { text: "Remind the group that your people have always moved — and that this is the first time in memory that not moving feels right", hint: "Naming the shift", cost: "Naming it makes it real and irreversible", outcome: "survived", result: "The group is quiet after you say it. Not moving feels right. That has never been true before. Something has changed — the garden, the wolf, the structure, the four months — something has shifted what feels natural. You have named it. They recognize it. The decision is made in that quiet, before anyone speaks.", statChange: { food: 10, safety: 15, health: 15 } }
+      ],
+      healer: [
+        { text: "List the health benefits of staying — regular sleep location, established medicine garden, reduced injury from constant travel", hint: "Medical case for settlement", cost: "Settlement also concentrates disease risk", outcome: "survived", result: "Your list is persuasive. The group had not thought about rest as medicine. Or about the medicine garden as a permanent resource. The health case for staying is real and you have made it clearly. You also note the disease risk — and propose the group space itself carefully across the settlement. The healer shaped how the settlement was designed.", statChange: { food: 10, safety: 10, health: 20 } },
+        { text: "Say honestly that you do not know if staying is healthier — and that the group should decide based on other factors", hint: "Intellectual honesty", cost: "The group expected guidance from you", outcome: "barely", result: "Your honesty is respected. And slightly disappointing. The group expected you to have an answer that you don't have. They decide without your medical guidance. The settlement is built without the healer's input shaping its design. The layout that emerges is less healthy than it might have been. Honest uncertainty still has costs.", statChange: { food: 5, safety: 5, health: 10 } },
+        { text: "Make the case for staying — but insist on specific health conditions being met before you endorse it", hint: "Conditional endorsement", cost: "Your conditions add complexity to an already difficult decision", outcome: "survived", result: "Your conditions — waste disposal away from the water, separate areas for sick members, a formal medicine garden — shape the settlement's design before it is built. The healthiest ancient settlements in the world were built around exactly these principles. You did not know that. You knew what you knew. It was enough.", statChange: { food: 10, safety: 10, health: 25 } }
+      ],
+      toolmaker: [
+        { text: "Start building permanent structures immediately — your vote for staying is expressed through what you build", hint: "Action as commitment", cost: "Building before the vote is settled may be presumptuous", outcome: "survived", result: "You build. Others see you building and start helping. The vote happens around the construction. By the time the decision is formally made, three permanent structures exist. The settlement is already real before it was officially decided. Your tools built the fact of the decision before anyone debated the idea of it.", statChange: { food: 10, safety: 15, health: 10 } },
+        { text: "Design the settlement layout before committing — show the group what staying could look like", hint: "Visualize the future", cost: "The design may not survive contact with the group's preferences", outcome: "survived", result: "Your layout shows the group something they could not imagine before they saw it: a real place, with specific structures, oriented toward the river, with space for the garden and the wolf's shelter. The abstract decision becomes concrete. The group votes for the design as much as for the idea. You turned a question into a picture and the picture won.", statChange: { food: 10, safety: 15, health: 10 } },
+        { text: "Point out everything that would need to be built to make settlement viable — let the group decide if the work is worth it", hint: "Realistic inventory", cost: "The list is long. It may discourage people.", outcome: "survived", result: "The list is long. The group is quiet. Then someone says: we built the garden. We built the wolf shelter. We built the fire structure. We can build these too. Your honest accounting of the work produced not discouragement but inventory. The group knew what it was signing up for. That knowledge made them better settlers.", statChange: { food: 10, safety: 10, health: 10 } }
+      ],
+      scout: [
+        { text: "Give your full report on the surrounding territory — lay out everything you know about this location's long-term viability", hint: "Intelligence as the final word", cost: "The report may raise concerns you had not expected to raise", outcome: "survived", result: "The report is thorough. Water reliable for at least three seasons of observation. Game manageable within a half-day range. Two neighboring groups within possible alliance distance. One significant seasonal threat that can be planned for. The group hears your report and votes. They vote to stay. Your information made the decision informed instead of hopeful.", statChange: { food: 10, safety: 20, health: 10 } },
+        { text: "Admit that you do not want to stay — that you were built for movement — but that you will scout the ranges around a settlement just as well as you have scouted migration routes", hint: "Personal truth with commitment", cost: "Vulnerability in the moment of decision", outcome: "survived", result: "The group hears something rare: the scout who has always said go, saying stay — with full honesty about the cost to yourself. The moment lands. The vote for staying is unanimous. You are the last person anyone expected to make the case for settlement. That is exactly why it worked.", statChange: { food: 10, safety: 15, health: 15 } },
+        { text: "Propose a final scouting mission before the decision — three days out in every direction — to make absolutely sure there is nothing better within reach", hint: "Due diligence", cost: "The group may see this as delay rather than diligence", outcome: "survived", result: "The mission happens. You find nothing better within three days in any direction. You return and report exactly that. The group needed to know you had looked. The negative finding — nothing better exists — is as important as any positive discovery you have ever made. The settlement decision rests, in part, on what you did not find.", statChange: { food: 5, safety: 20, health: 10 } }
+      ]
+    }
+  }
+];
+
+// ══════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════
+let state = {
+  screen: "art_open",
+  role: null,
+  chapterIndex: 0,
+  pendingOutcome: null,
+  survival: { food: 2, safety: 2, health: 2 }, // 2=OK, 1=LOW, 0=CRIT
+  restartChapter: false,
+};
+
+// ══════════════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════════════
+
+function go(s) { state.screen = s; render(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+
+function getRole() { return ROLES.find(r => r.id === state.role); }
+
+function statusLabel(v) { return v === 2 ? "OK" : v === 1 ? "LOW" : "CRIT"; }
+function statusClass(v) { return v === 2 ? "status-ok" : v === 1 ? "status-low" : "status-crit"; }
+function statusBarColor(v) { return v === 2 ? "#6ABF6A" : v === 1 ? "#E8C050" : "#E05050"; }
+function statusBarWidth(v) { return v === 2 ? "100%" : v === 1 ? "55%" : "15%"; }
+
+function applyStatChange(change) {
+  if (!change) return;
+  if (change.food !== undefined) {
+    if (change.food > 10) state.survival.food = Math.min(2, state.survival.food + 1);
+    if (change.food < 0) state.survival.food = Math.max(0, state.survival.food - 1);
+  }
+  if (change.safety !== undefined) {
+    if (change.safety > 10) state.survival.safety = Math.min(2, state.survival.safety + 1);
+    if (change.safety < -10) state.survival.safety = Math.max(0, state.survival.safety - 1);
+  }
+  if (change.health !== undefined) {
+    if (change.health > 10) state.survival.health = Math.min(2, state.survival.health + 1);
+    if (change.health < -10) state.survival.health = Math.max(0, state.survival.health - 1);
+  }
+}
+
+function renderTracker() {
+  const stats = [
+    { key: "food", icon: "🌾", label: "Food" },
+    { key: "safety", icon: "🛡", label: "Safety" },
+    { key: "health", icon: "❤", label: "Health" },
+  ];
+  return `<div class="tracker">${stats.map(s => {
+    const v = state.survival[s.key];
+    return `<div class="tracker-stat">
+      <span class="tracker-icon">${s.icon}</span>
+      <div class="tracker-label">${s.label}</div>
+      <div class="tracker-status ${statusClass(v)}">${statusLabel(v)}</div>
+      <div class="tracker-bar-bg"><div class="tracker-bar" style="width:${statusBarWidth(v)};background:${statusBarColor(v)}"></div></div>
+    </div>`;
+  }).join("")}</div>`;
+}
+
+function renderProgressDots() {
+  const ch = state.chapterIndex;
+  const dots = CHAPTERS.map((c, i) =>
+    `<div class="prog-dot ${i < ch ? 'done' : i === ch ? 'active' : ''}"></div>`
+  ).join("");
+  return `<div class="progress-row">${dots}<span class="prog-label">Chapter ${ch + 1} of ${CHAPTERS.length}</span></div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  SCREENS
+// ══════════════════════════════════════════════════════════════
+
+function screenArtOpen() {
+  return `
+    <div class="screen-label">Before we begin — look closely</div>
+    <div class="screen-heading">Chauvet Cave, France<br><span style="font-size:16px;color:var(--ochre)">Approximately 36,000 years old</span></div>
+
+    <div class="art-frame">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/54/Chauvethorses.jpg"
+           alt="Chauvet Cave horse paintings — approximately 36,000 years old"
+           onerror="this.style.display='none';document.getElementById('chauvet-fallback').style.display='block'" />
+      <div id="chauvet-fallback" style="display:none;padding:2rem;text-align:center;color:var(--ochre);font-family:Arial,sans-serif;font-size:13px">
+        [Chauvet Cave horses — search "Chauvet Cave horses panel" to view]
+      </div>
+      <div class="art-caption">
+        Chauvet-Pont d'Arc Cave · Ardèche, France · c. 34,000–36,000 BCE<br>
+        Charcoal on limestone · Public Domain · UNESCO World Heritage Site
+      </div>
+    </div>
+
+    <div class="scene-text">Someone made this. In a cave in what is now France. Roughly 36,000 years ago — before farming, before cities, before writing. Before almost everything we call civilization. This is where your story begins. Take 30 seconds of silence before writing anything.</div>
+
+    <div class="art-prompts">
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 1</div>
+        <div class="apt-q">One thing I find interesting...</div>
+      </div>
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 2</div>
+        <div class="apt-q">One thing that puzzles me...</div>
+      </div>
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 3</div>
+        <div class="apt-q">One question I have for the creator...</div>
+      </div>
+    </div>
+
+    <div class="info-box"><strong>Answer in your field journal.</strong> When your teacher gives the signal, continue.</div>
+
+    <button class="btn btn-fire" onclick="go('role_select')">Begin the story →</button>`;
+}
+
+function screenRoleSelect() {
+  return `
+    <div class="screen-label">Your role in the group</div>
+    <div class="screen-heading">Who are you?</div>
+    <div class="scene-text">Your entire table plays the same role. Every role is equally essential. Every role has something only it can provide — and something it cannot do alone. Choose together.</div>
+    <div class="role-grid">
+      ${ROLES.map(r => `
+        <div class="role-card" onclick="selectRole('${r.id}')">
+          <span class="rc-icon">${r.icon}</span>
+          <div class="rc-name">${r.name}</div>
+          <div class="rc-provides"><strong>You provide:</strong> ${r.provides}</div>
+          <div class="rc-fails">If you fail: ${r.fails}</div>
+        </div>`).join("")}
+    </div>`;
+}
+
+function screenChapter() {
+  const ch = CHAPTERS[state.chapterIndex];
+  const role = getRole();
+  const choices = ch.choices[state.role];
+  return `
+    ${renderProgressDots()}
+    ${renderTracker()}
+    <div class="role-badge">
+      <span class="rb-icon">${role.icon}</span>
+      <div>
+        <div class="rb-name">${role.name}</div>
+        <div class="rb-desc">${role.desc}</div>
+      </div>
+    </div>
+    <div class="screen-label">${ch.title}</div>
+    <div class="screen-heading" style="font-size:18px">${ch.subtitle}</div>
+    <div class="scene-text">${ch.scene}</div>
+    <div class="role-context">${role.context[ch.id]}</div>
+    <div class="choices-label">Discuss with your table — then choose:</div>
+    <div class="choices">
+      ${choices.map((c, i) => `
+        <button class="choice-btn" onclick="makeChoice(${i})">
+          <div class="choice-text">${c.text}</div>
+          <div class="choice-hint">${c.hint}</div>
+          <div class="choice-cost">⚠ Cost: ${c.cost}</div>
+        </button>`).join("")}
+    </div>`;
+}
+
+function screenOutcome() {
+  const ch = CHAPTERS[state.chapterIndex];
+  const o = state.pendingOutcome;
+  const isRestart = o.outcome === "restart";
+  return `
+    ${renderProgressDots()}
+    ${renderTracker()}
+    <div class="outcome-box outcome-${isRestart ? 'restart' : o.outcome}">
+      <div class="outcome-label">
+        ${isRestart ? "✗ Your group did not survive this" : o.outcome === "survived" ? "✓ Your group survived — at a cost" : "→ Your group barely made it"}
+      </div>
+      ${o.result}
+    </div>
+    ${isRestart
+      ? `<div class="restart-box">In the Stone Age, most choices were bad choices. The question was which bad choice cost you the least. Try this chapter again — your Survival Tracker stays where it is.</div>
+         <button class="btn" onclick="retryChapter()">Try this chapter again →</button>`
+      : `<div class="journal-prompt"><strong>✏ Field Journal Prompt —</strong> answer before your teacher signals to continue:<br><br>${ch.journalPrompt}</div>
+         <button class="btn btn-fire" onclick="advanceChapter()">${state.chapterIndex < CHAPTERS.length - 1 ? 'Continue →' : 'See how your story ends →'}</button>`
+    }`;
+}
+
+function screenArtClose() {
+  return `
+    <div class="screen-label">The same painting — new eyes</div>
+    <div class="screen-heading">Lascaux Cave, France<br><span style="font-size:16px;color:var(--ochre)">Approximately 17,000 years old</span></div>
+
+    <div class="art-frame">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/1/1e/Lascaux_painting.jpg"
+           alt="Lascaux Cave Hall of Bulls — approximately 17,000 years old"
+           onerror="this.style.display='none';document.getElementById('lascaux-fallback').style.display='block'" />
+      <div id="lascaux-fallback" style="display:none;padding:2rem;text-align:center;color:var(--ochre);font-family:Arial,sans-serif;font-size:13px">
+        [Lascaux Cave Hall of Bulls — search "Lascaux Hall of Bulls" to view]
+      </div>
+      <div class="art-caption">
+        Lascaux Cave · Dordogne, France · c. 17,000 BCE<br>
+        Pigment on limestone · Public Domain · UNESCO World Heritage Site
+      </div>
+    </div>
+
+    <div class="scene-text">This painting is from a different cave — Lascaux, in France. It is 17,000 years old. The Chauvet painting you looked at when you started this campaign is 36,000 years old. These two paintings are separated by 19,000 years — more time than separates Lascaux from today.</div>
+
+    <div class="scene-text">Use your three prompts in your field journal:</div>
+
+    <div class="art-prompts">
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 1</div>
+        <div class="apt-q">One thing I find interesting...</div>
+      </div>
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 2</div>
+        <div class="apt-q">One thing that puzzles me...</div>
+      </div>
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 3</div>
+        <div class="apt-q">One question I have for the creator...</div>
+      </div>
+    </div>
+
+    <div class="journal-prompt">
+      <strong>Closing journal question:</strong> You looked at a 36,000-year-old painting at the start. Now you are looking at a 17,000-year-old painting at the end. Both were made by people living the kind of life your group just lived through. What is different about these two paintings — and what does that difference tell you about what changed in those 19,000 years?
+    </div>
+
+    <button class="btn btn-fire" onclick="go('ending')">See what your group built →</button>`;
+}
+
+function screenEnding() {
+  const role = getRole();
+  const needs = [
+    "Shelter that lasts more than a season",
+    "A way to store food through winter",
+    "Protection from other groups",
+    "A way to make decisions together",
+    "A way to remember things",
+    "Someone to heal the sick",
+    "A way to trade with neighbors",
+    "Tools that don't have to be rebuilt constantly",
+    "A system for who does what work",
+    "Something to explain the floods and storms",
+  ];
+
+  return `
+    <div class="screen-label">Your group has stopped moving</div>
+    <div class="screen-heading">The Edge of Something New</div>
+
+    ${renderTracker()}
+
+    <div class="bridge-box">
+      <h3>Your group chose to stay</h3>
+      <p>You are exhausted. Uncertain. But something is different now. The river is close. The soil is dark and rich. The garden is real. The wolf is sleeping at the fire's edge. Someone has started stacking stones.</p>
+      <p>You don't know yet what any of this means. But your group is not moving. And that has never been true before.</p>
+      <p><strong>Here is what your group needs now that moving is no longer the answer:</strong></p>
+      <ul class="needs-list">
+        ${needs.map(n => `<li>${n}</li>`).join("")}
+      </ul>
+      <p style="margin-top:12px;font-size:13px;color:var(--ochre-light)">Write your group's own version of this list in your field journal — add to it, change it, make it yours. Then keep it.</p>
+    </div>
+
+    <div class="discussion-questions">
+      <h4>Class Discussion Questions</h4>
+      <p>1. Every choice in this campaign cost something — even the good ones. What does that tell you about what Stone Age survival actually felt like?</p>
+      <p>2. Agriculture and domestication were both discovered by accident. Why does that matter — does it change how impressive they are?</p>
+      <p>3. Look at your needs list. Which of those things did Mesopotamia figure out first?</p>
+      <p>4. The Chauvet painting is 36,000 years old. The Lascaux painting is 17,000 years old. What changed between them — and what stayed the same?</p>
+      <p>5. Your group stopped moving. What do you think the first generation born in a permanent settlement was like — compared to the generation that made the decision?</p>
+    </div>
+
+    <div class="next-stop">
+      <h3>Next stop: Mesopotamia</h3>
+      <p>Everything on your needs list? Someone figured it out. That is what we study next.</p>
+    </div>
+
+    <button class="btn btn-fire" onclick="restart()">Play again as a different role</button>
+    <button class="btn btn-secondary" onclick="restart()">Return to beginning</button>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ACTIONS
+// ══════════════════════════════════════════════════════════════
+
+function selectRole(id) {
+  state.role = id;
+  state.chapterIndex = 0;
+  go("chapter");
+}
+
+function makeChoice(i) {
+  const ch = CHAPTERS[state.chapterIndex];
+  const choice = ch.choices[state.role][i];
+  state.pendingOutcome = choice;
+  if (choice.outcome !== "restart") {
+    applyStatChange(choice.statChange);
+  }
+  go("outcome");
+}
+
+function retryChapter() {
+  state.pendingOutcome = null;
+  go("chapter");
+}
+
+function advanceChapter() {
+  state.pendingOutcome = null;
+  if (state.chapterIndex < CHAPTERS.length - 1) {
+    state.chapterIndex++;
+    go("chapter");
+  } else {
+    go("art_close");
+  }
+}
+
+function restart() {
+  state = {
+    screen: "art_open",
+    role: null,
+    chapterIndex: 0,
+    pendingOutcome: null,
+    survival: { food: 2, safety: 2, health: 2 },
+    restartChapter: false,
+  };
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// ══════════════════════════════════════════════════════════════
+//  RENDER
+// ══════════════════════════════════════════════════════════════
+
+function render() {
+  const el = document.getElementById("content");
+  const screens = {
+    art_open:    screenArtOpen,
+    role_select: screenRoleSelect,
+    chapter:     screenChapter,
+    outcome:     screenOutcome,
+    art_close:   screenArtClose,
+    ending:      screenEnding,
+  };
+  el.innerHTML = (screens[state.screen] || (() => "<p>Loading...</p>"))();
+}
+
+render();
+</script>
+</body>
+</html>
