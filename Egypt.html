@@ -1,0 +1,1043 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ancient Egypt — The Story of Us</title>
+<style>
+  :root {
+    --gold: #C4A000;
+    --gold-light: #FFF8DC;
+    --gold-mid: #E8C840;
+    --sand: #F5E6C8;
+    --sand-dark: #D4C090;
+    --nile: #1A6B8A;
+    --nile-light: #C8E8F5;
+    --lapis: #1A3A6B;
+    --lapis-light: #C8D4F0;
+    --clay: #8B5A2B;
+    --clay-light: #D4956A;
+    --papyrus: #F0E0B0;
+    --red: #8B2A2A;
+    --red-light: #F5DCDC;
+    --green: #2A6B3A;
+    --green-light: #C8E8D0;
+    --shadow: #0A0800;
+    --ink: #1A1200;
+    --stone: #5A5040;
+    --stone-light: #E8E0D0;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #0A0800;
+    color: var(--sand);
+    min-height: 100vh;
+  }
+
+  #app {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 3rem;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    text-align: center;
+    padding: 1.5rem 1rem 1rem;
+    border-bottom: 2px solid var(--gold);
+    margin-bottom: 1.5rem;
+    background: linear-gradient(180deg, rgba(196,160,0,0.08) 0%, transparent 100%);
+  }
+  .site-header .campaign-tag {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--gold);
+    font-family: Arial, sans-serif;
+    margin-bottom: 6px;
+  }
+  .site-header h1 {
+    font-size: 30px;
+    font-weight: bold;
+    color: var(--gold-mid);
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .site-header h2 {
+    font-size: 14px;
+    font-weight: normal;
+    color: var(--sand-dark);
+    font-family: Arial, sans-serif;
+    font-style: italic;
+  }
+
+  /* ── Stats ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+  .stat-box {
+    background: rgba(196,160,0,0.08);
+    border: 1px solid rgba(196,160,0,0.3);
+    border-radius: 6px;
+    padding: 8px 10px;
+    text-align: center;
+  }
+  .stat-icon { font-size: 16px; display: block; margin-bottom: 2px; }
+  .stat-label { font-size: 10px; color: var(--gold); letter-spacing: 0.05em; text-transform: uppercase; font-family: Arial, sans-serif; }
+  .stat-value { font-size: 18px; font-weight: bold; margin: 2px 0; }
+  .stat-track { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 4px; }
+  .stat-fill { height: 4px; border-radius: 2px; transition: width 0.5s, background 0.5s; }
+
+  /* ── Role badge ── */
+  .role-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(196,160,0,0.08);
+    border: 1px solid rgba(196,160,0,0.3);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 1.25rem;
+  }
+  .role-badge .rb-icon { font-size: 24px; }
+  .role-badge .rb-name { font-size: 15px; font-weight: bold; color: var(--gold-mid); }
+  .role-badge .rb-desc { font-size: 12px; color: var(--sand-dark); font-family: Arial, sans-serif; }
+
+  /* ── Progress ── */
+  .progress-row { display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem; }
+  .prog-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(196,160,0,0.15); border: 1.5px solid rgba(196,160,0,0.3); }
+  .prog-dot.active { background: var(--gold); border-color: var(--gold); }
+  .prog-dot.done { background: var(--clay-light); border-color: var(--clay-light); }
+  .prog-label { font-size: 11px; color: var(--sand-dark); font-family: Arial, sans-serif; }
+
+  /* ── Scene text ── */
+  .screen-label {
+    font-size: 11px;
+    color: var(--gold);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: Arial, sans-serif;
+    margin-bottom: 6px;
+  }
+  .screen-heading {
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--gold-mid);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+  .scene-text {
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--sand);
+    margin-bottom: 1rem;
+  }
+  .role-context {
+    background: rgba(196,160,0,0.1);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--gold-light);
+    margin-bottom: 1.25rem;
+    line-height: 1.65;
+    font-family: Arial, sans-serif;
+  }
+
+  /* ── Info boxes ── */
+  .nile-note {
+    background: rgba(26,107,138,0.2);
+    border-left: 3px solid var(--nile);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--nile-light);
+    margin-bottom: 1.25rem;
+    line-height: 1.65;
+    font-family: Arial, sans-serif;
+  }
+  .nile-note strong { color: #E8F8FF; font-weight: 600; }
+
+  .journal-prompt {
+    background: rgba(196,160,0,0.1);
+    border-left: 3px solid var(--gold);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: var(--gold-light);
+    margin-bottom: 1.25rem;
+    line-height: 1.7;
+    font-family: Arial, sans-serif;
+  }
+  .journal-prompt strong { color: #FFF8DC; font-weight: 600; }
+
+  .poison-pill-note {
+    background: rgba(139,42,42,0.2);
+    border-left: 3px solid var(--red);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #F5C0C0;
+    margin-bottom: 1.25rem;
+    line-height: 1.65;
+    font-family: Arial, sans-serif;
+  }
+
+  /* ── Choices ── */
+  .choices-label {
+    font-size: 11px;
+    color: var(--sand-dark);
+    letter-spacing: 0.08em;
+    text-transform: uppercase;
+    font-family: Arial, sans-serif;
+    margin-bottom: 8px;
+  }
+  .choices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+  .choice-btn {
+    background: rgba(196,160,0,0.06);
+    border: 1.5px solid rgba(196,160,0,0.25);
+    border-radius: 8px;
+    padding: 12px 16px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: Georgia, serif;
+  }
+  .choice-btn:hover { background: rgba(196,160,0,0.15); border-color: var(--gold); }
+  .choice-btn .choice-text { font-size: 14px; color: var(--sand); line-height: 1.5; }
+  .choice-btn .choice-hint { font-size: 11px; color: var(--sand-dark); margin-top: 4px; font-family: Arial, sans-serif; font-style: italic; }
+
+  /* ── Outcome ── */
+  .outcome-box {
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 1.25rem;
+    font-size: 14px;
+    line-height: 1.7;
+    font-family: Arial, sans-serif;
+  }
+  .outcome-good { background: rgba(42,107,58,0.2); border: 1.5px solid var(--green); color: var(--green-light); }
+  .outcome-bad { background: rgba(139,42,42,0.2); border: 1.5px solid var(--red); color: #F5C0C0; }
+  .outcome-neutral { background: rgba(90,80,64,0.3); border: 1.5px solid var(--stone); color: var(--stone-light); }
+  .outcome-poison { background: rgba(139,42,42,0.15); border: 1.5px solid #6B1A1A; color: #F0B0B0; }
+  .outcome-label { font-size: 11px; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; font-family: Arial, sans-serif; }
+
+  /* ── Art screens ── */
+  .art-frame {
+    border: 2px solid var(--gold);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    background: var(--shadow);
+    box-shadow: 0 0 20px rgba(196,160,0,0.15);
+  }
+  .art-frame img {
+    width: 100%;
+    display: block;
+    max-height: 360px;
+    object-fit: cover;
+    object-position: center top;
+  }
+  .art-caption {
+    padding: 8px 14px;
+    font-size: 11px;
+    color: var(--gold);
+    font-family: Arial, sans-serif;
+    font-style: italic;
+    background: rgba(10,8,0,0.8);
+    line-height: 1.5;
+  }
+
+  .art-prompts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.25rem; }
+  .art-prompt-box {
+    background: rgba(196,160,0,0.08);
+    border: 1px solid rgba(196,160,0,0.25);
+    border-radius: 6px;
+    padding: 10px 14px;
+  }
+  .art-prompt-box .apt-label { font-size: 11px; font-weight: bold; color: var(--gold); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 4px; }
+  .art-prompt-box .apt-q { font-size: 14px; color: var(--sand-dark); font-style: italic; }
+
+  /* ── Role select ── */
+  .role-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1rem; }
+  .role-card {
+    background: rgba(196,160,0,0.06);
+    border: 2px solid rgba(196,160,0,0.25);
+    border-radius: 10px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .role-card:hover { background: rgba(196,160,0,0.15); border-color: var(--gold); transform: translateY(-1px); }
+  .role-card .rc-icon { font-size: 28px; margin-bottom: 6px; display: block; }
+  .role-card .rc-name { font-size: 15px; font-weight: bold; color: var(--gold-mid); margin-bottom: 4px; }
+  .role-card .rc-own { font-size: 12px; color: var(--sand-dark); font-family: Arial, sans-serif; line-height: 1.5; margin-bottom: 6px; }
+  .role-card .rc-fear { font-size: 11px; color: #F0A080; font-family: Arial, sans-serif; font-style: italic; }
+
+  /* ── Ending ── */
+  .grapes-covered {
+    background: rgba(196,160,0,0.08);
+    border: 1px solid rgba(196,160,0,0.3);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 1.25rem;
+  }
+  .grapes-covered h4 { font-size: 12px; font-weight: bold; color: var(--gold); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 10px; }
+  .grapes-covered p { font-size: 13px; color: var(--sand-dark); line-height: 1.7; font-family: Arial, sans-serif; margin-bottom: 6px; }
+
+  .discussion-questions {
+    background: rgba(26,107,138,0.15);
+    border: 1px solid var(--nile);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 1.25rem;
+  }
+  .discussion-questions h4 { font-size: 12px; font-weight: bold; color: var(--nile-light); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 10px; }
+  .discussion-questions p { font-size: 13px; color: #A8D8F0; line-height: 1.7; font-family: Arial, sans-serif; margin-bottom: 8px; }
+
+  /* ── Buttons ── */
+  .btn {
+    background: var(--lapis);
+    color: var(--sand);
+    border: none;
+    border-radius: 8px;
+    padding: 11px 22px;
+    font-size: 14px;
+    font-weight: bold;
+    cursor: pointer;
+    font-family: Arial, sans-serif;
+    transition: background 0.15s;
+    margin-right: 8px;
+    margin-bottom: 8px;
+  }
+  .btn:hover { background: #0A2050; }
+  .btn-gold { background: var(--gold); color: var(--shadow); }
+  .btn-gold:hover { background: #A08000; }
+  .btn-secondary {
+    background: transparent;
+    color: var(--gold);
+    border: 1.5px solid var(--gold);
+  }
+  .btn-secondary:hover { background: rgba(196,160,0,0.1); }
+
+  .divider { height: 1px; background: rgba(196,160,0,0.2); margin: 1.25rem 0; }
+
+  @media (max-width: 500px) {
+    .role-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="site-header">
+    <div class="campaign-tag">The Story of Us · Campaign 2</div>
+    <h1>ANCIENT EGYPT</h1>
+    <h2>The Gift of the River · c. 3100 – 1070 BCE</h2>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  ROLES
+// ══════════════════════════════════════════════════════════════
+const ROLES = [
+  {
+    id: "pharaoh",
+    name: "The Vizier",
+    icon: "⚖️",
+    desc: "You are the Pharaoh's second — the most powerful administrator in Egypt, managing everything the god-king cannot.",
+    own: "Authority over courts, construction, taxation, and the royal granaries. The Pharaoh's ear.",
+    fear: "Failing the Pharaoh. A crisis the administration cannot solve. Being blamed for what the gods control.",
+    want: "Order. A functioning Egypt. The Nile to behave. The people to be fed and the Pharaoh to be pleased.",
+    context: {
+      ch1: "The flood season determines everything you will manage for the next year. Too little flood means famine you cannot fix. Too much means destruction you cannot prevent. You watch the Nilometer and you calculate.",
+      ch2: "Akhet is your season of opportunity. Fields are flooded, farmers are available, and the Pharaoh's monument needs labor. You are the one who organizes thousands of workers. The pyramid does not build itself.",
+      ch3: "A trade expedition to Nubia requires your authorization. The risks are yours to manage. The rewards go to the Pharaoh.",
+      ch4: "The scribes report to you. Their records are your records. What gets written is what you decide matters.",
+      ch5: "You have administered death your entire career — estates, inheritances, burial allocations. Now someone close to the Pharaoh has died. The preparations must be perfect.",
+      ch6: "The Nilometer shows disaster. The flood has not come. You serve a god-king who cannot admit failure. The people are looking for someone to blame. That person is you."
+    }
+  },
+  {
+    id: "priest",
+    name: "The Priest",
+    icon: "𓂀",
+    desc: "You serve Amun-Ra and the gods of Egypt from the great temple complex at Karnak.",
+    own: "The gods' favor — or the appearance of it. Temple lands, temple wealth, the people's fear and devotion.",
+    fear: "A crisis that makes the people question the gods. A Pharaoh who questions your authority.",
+    want: "Divine order — Ma'at — maintained. The gods honored. The temple's power preserved.",
+    context: {
+      ch1: "The flood is a gift from Hapy, god of the Nile. Your job is to ensure the people understand this — and that they understand who speaks for Hapy.",
+      ch2: "The Pharaoh's monument is an act of devotion to the gods. You bless the labor. You consecrate the site. The pyramid is yours as much as anyone's.",
+      ch3: "Trade goods from Nubia include incense, ebony, and gold — all needed for temple ritual. The expedition's success is your success.",
+      ch4: "Hieroglyphics are sacred writing. The gods communicate through them. Your scribes maintain the sacred texts that hold Egypt together.",
+      ch5: "This is your chapter. The weighing of the heart, the journey through the Duat, the judgment of Osiris — all of this flows through the temple. And through you.",
+      ch6: "The flood has not come. The people are saying the gods have abandoned Egypt. You must respond to this — carefully, powerfully, and without admitting that you have no more control over the Nile than anyone else."
+    }
+  },
+  {
+    id: "farmer",
+    name: "The Farmer",
+    icon: "🌾",
+    desc: "Your family has farmed the black land of the Nile delta for as long as anyone can remember.",
+    own: "A plot of fertile land near the river. A family. The knowledge of when to plant and when to harvest.",
+    fear: "A bad flood. A tax collector who takes too much. A drought year. Losing the land.",
+    want: "A good inundation. A harvest that leaves enough after taxes to feed your family through planting season.",
+    context: {
+      ch1: "The flood is everything to you. Your entire year — your entire life — is organized around it. You watch the river the way other people watch the sky.",
+      ch2: "Your fields are underwater. The administrators have arrived. Akhet labor tax is not optional. You are going to build something for the Pharaoh whether you choose to or not.",
+      ch3: "The trade expedition passes your village. The luxury goods heading south mean nothing to you. What you want to know is whether the expedition will bring back anything that helps a farmer.",
+      ch4: "You cannot read. The tax collector can. That asymmetry has defined your relationship with power your entire life.",
+      ch5: "You cannot afford the full burial preparation the priests prescribe. You do what you can. Whether that is enough for the afterlife judgment, you will only know when you get there.",
+      ch6: "The flood has not come. Your field is dry. The seed you were saving to plant is now the food keeping your family alive. You have been here before — in your worst nightmares."
+    }
+  },
+  {
+    id: "craftworker",
+    name: "The Craftworker",
+    icon: "🏺",
+    desc: "You work in the artisan village of Deir el-Medina, crafting tomb goods, furniture, and ceremonial objects.",
+    own: "Skilled hands. A workshop. State-provided housing, food, and materials in exchange for your craft.",
+    fear: "Losing your state contract. Illness that stops you from working. Being replaced by a less expensive craftworker.",
+    want: "Steady contracts, good materials, and the chance to make something extraordinary enough to be remembered.",
+    context: {
+      ch1: "The flood determines your materials. Good flood means good crops means Egypt has surplus means the state pays your wages on time. Bad flood ripples all the way to your workshop.",
+      ch2: "The pyramid project means massive demand for craftwork — decorative elements, tools, ceremonial goods. This is your busiest season.",
+      ch3: "Nubian trade brings ebony and ivory — materials you have been waiting for. What you make from them could end up in a royal tomb.",
+      ch4: "You cannot read. Your work speaks for you instead. But in a world organized around written records, your inability to read your own contract puts you at a permanent disadvantage.",
+      ch5: "Burial goods are your primary product. Someone important has died and the order that comes in is the largest your workshop has ever received.",
+      ch6: "No flood means no surplus means the state's payments to craftworkers are delayed, reduced, or stopped entirely. History records that the workers of Deir el-Medina went on strike during exactly this kind of crisis. You are about to understand why."
+    }
+  },
+  {
+    id: "scribe",
+    name: "The Scribe",
+    icon: "📜",
+    desc: "You trained for twelve years to master hieroglyphics and hieratic script. You are among the most educated people in Egypt.",
+    own: "Literacy. Access to every record in Egypt. The ability to make things official — or unofficial.",
+    fear: "A patron who loses power. Losing your position. Being asked to record something that could get you killed.",
+    want: "An important patron, interesting records to keep, and the quiet satisfaction of being indispensable.",
+    context: {
+      ch1: "You record the Nilometer readings. Your measurements of the flood level determine the tax rate for every farmer in the region. Numbers you write today will affect thousands of lives.",
+      ch2: "You keep the labor records for the pyramid project — who came, who worked, who was compensated. Your records are the only evidence these people existed.",
+      ch3: "The trade expedition's manifest is your document. What gets recorded as traded, what gets recorded as tribute, and what gets left off entirely — those are your choices.",
+      ch4: "This is your chapter. Writing is your entire world. But now you face a question that has no comfortable answer.",
+      ch5: "The burial texts must be perfect. A single error in the sacred hieroglyphics could, according to belief, compromise the deceased's journey through the Duat. No pressure.",
+      ch6: "The Vizier needs reports that make the crisis look manageable. Your records are the truth of what is happening. What you write and what you are asked to write may not be the same thing."
+    }
+  },
+  {
+    id: "trader",
+    name: "The Trader",
+    icon: "⛵",
+    desc: "You operate a river trading operation on the Nile, moving goods between Upper and Lower Egypt and beyond.",
+    own: "Two trading boats. Contracts with state officials and private merchants. Knowledge of the Nile's moods.",
+    fear: "A flood that destroys your boats. Trade routes disrupted by conflict. A contract that falls through.",
+    want: "Safe waters, fair contracts, and the Nile running predictably enough to plan a route three months ahead.",
+    context: {
+      ch1: "The flood is simultaneously your greatest opportunity and greatest threat. High flood means rich harvests and plenty to trade. It also means your boats are navigating water that has turned dangerous.",
+      ch2: "The pyramid project creates enormous demand for transported materials. Stone from Aswan, cedar from Lebanon, copper from Sinai — all of it moves on the Nile. All of it could move on your boats.",
+      ch3: "You are the one making the Nubian expedition happen. Your boats, your crew, your risk. Your profit — if it works.",
+      ch4: "You keep your own records in a simplified script. But the official trade records are kept by state scribes. What they write is what legally happened, regardless of what actually happened.",
+      ch5: "A wealthy client has died. Their estate includes significant goods in transit on your boats. The inheritance dispute that follows involves the temple, the Vizier's court, and you.",
+      ch6: "No flood means low water. Low water means your boats cannot navigate the upper Nile. Your entire trade network is stranded. The crisis that starts in the fields reaches you on the river."
+    }
+  }
+];
+
+// ══════════════════════════════════════════════════════════════
+//  CHAPTERS
+// ══════════════════════════════════════════════════════════════
+const CHAPTERS = [
+  {
+    id: "ch1",
+    number: 1,
+    title: "Chapter 1 — The Gift of the Nile",
+    subtitle: "Akhet Has Arrived",
+    scene: "It is the season of Akhet — the inundation. The Nile has begun to rise. Every person in Egypt stops what they are doing and watches the river. Everything that happens in Egypt for the next year depends on what the Nile does in the next three months. Too little flood and the fields will not be fertilized — famine follows. Too much and villages, animals, and people will be swept away. The priests say this is Hapy's gift. Everyone in Egypt knows there is nothing they can do about it either way. And yet — how each role responds right now shapes everything.",
+    nileNote: "<strong>The Nile and Egypt:</strong> The ancient Egyptians divided their year into three seasons entirely based on the Nile — Akhet (flood), Peret (planting), and Shemu (harvest). Unlike the Tigris and Euphrates which flooded unpredictably and destructively, the Nile's annual flood was remarkably regular, depositing rich black silt that made Egypt's soil among the most fertile in the ancient world. Herodotus called Egypt 'the gift of the Nile' — and he was right.",
+    journalPrompt: "In Mesopotamia, the flood was a threat to survive. In Egypt, the flood is the foundation of civilization. What does that difference tell you about why these two civilizations developed so differently?",
+    poisonRoles: ["farmer"],
+    choices: {
+      pharaoh: [
+        { text: "Order the Nilometer readings recorded immediately and set this year's tax rates based on the projected flood level", hint: "Administration first", outcome: "good", result: "The Nilometer readings come in strong — a good flood is predicted. You set tax rates accordingly. Farmers groan but understand. The granaries will fill. The Pharaoh will be pleased. You have turned a natural event into an administrative system — which is precisely what a Vizier exists to do.", statChange: { food: 15, divine: 10, wealth: 10, standing: 10 } },
+        { text: "Delay tax assessments until the actual flood level is confirmed — protect farmers from over-taxation in a bad year", hint: "Cautious governance", outcome: "neutral", result: "The delay is prudent. It is also unpopular with the Pharaoh's treasury officials who need to plan. The flood comes in average — neither the bounty nor the disaster you feared. Your caution was defensible. The treasury's frustration was also predictable. Good administration often satisfies no one completely.", statChange: { food: 5, divine: 5, wealth: 0, standing: 10 } },
+        { text: "Commission an additional shrine to Hapy — ensure the god of the Nile knows Egypt's gratitude", hint: "Divine relations", outcome: "good", result: "The shrine is built quickly. The priests are pleased. The flood comes in well. Whether the shrine caused the flood or the flood was coming anyway is a question nobody asks out loud. The important thing is that Egypt flourishes and the Pharaoh's Vizier is seen to have managed both the practical and the divine.", statChange: { food: 10, divine: 20, wealth: 5, standing: 10 } }
+      ],
+      priest: [
+        { text: "Lead a major public ceremony honoring Hapy — remind Egypt who controls the flood and who speaks for the gods", hint: "Assert divine authority", outcome: "good", result: "The ceremony is magnificent. Thousands gather. The offerings are generous. Three days later the flood arrives at exactly the level the priests predicted — because the Nilometer readings told you what was coming a week ago, and you calibrated your prediction accordingly. The people call it divine. You call it management. Both are true.", statChange: { food: 10, divine: 25, wealth: 10, standing: 15 } },
+        { text: "Privately consult the Nilometer readings before making any public pronouncements about the flood", hint: "Knowledge before proclamation", outcome: "good", result: "Smart. You know what the flood will do before you tell anyone what the gods intend. Your prophecy is accurate. Your authority is reinforced. The farmers who watched you correctly predict the flood level will bring their offerings to the temple for the rest of their lives.", statChange: { food: 10, divine: 20, wealth: 10, standing: 10 } },
+        { text: "Announce that the gods are testing Egypt — call for additional offerings to ensure a good flood", hint: "Generate revenue through fear", outcome: "neutral", result: "The offerings pour in. The flood comes in average regardless. You take credit for it anyway. The temple is richer. The farmers are slightly poorer. This transaction will repeat every year of your career. Whether that troubles you is a question only you can answer.", statChange: { food: 0, divine: 10, wealth: 20, standing: -5 } }
+      ],
+      farmer: [
+        { text: "Move everything you own to higher ground immediately — protect what you have before the water arrives", hint: "Protection first", outcome: "neutral", result: "You move everything. The flood comes in strong this year — your caution was warranted. Your neighbors who didn't move lose tools and stored grain. You are safe but exhausted. And now the tax collector is here, assessing a tax rate based on a good flood that your exhausted body has to somehow produce during Peret. The flood giveth. The tax collector taketh away.", statChange: { food: 10, divine: 0, wealth: -5, standing: 5 }, poison: false },
+        { text: "Pray at the local shrine and trust that a life of offering has earned you Hapy's favor", hint: "Faith over preparation", outcome: "bad", result: "You pray. The flood comes in higher than usual. Your field survives — the soil will be magnificently fertile. But your tool storage, set too low, is underwater for two weeks. The tools survive but barely. Faith and preparation, you remind yourself, are not the same thing. Egypt's gods reward both — but preparation more reliably.", statChange: { food: 5, divine: 10, wealth: -15, standing: 0 }, poison: true },
+        { text: "Watch the Nilometer reading posted at the village edge and calculate what the flood will do to your specific field", hint: "Read the signs", outcome: "neutral", result: "You read the Nilometer. You calculate correctly. You protect exactly the right things and leave the rest. The flood comes and goes. Your field is perfectly fertilized. Your tools are intact. You have done everything right. The tax collector arrives and takes thirty percent of a harvest that hasn't happened yet, based on projections you have no power to dispute. Welcome to Egypt.", statChange: { food: 10, divine: 5, wealth: -10, standing: 5 }, poison: true }
+      ],
+      craftworker: [
+        { text: "Secure your workshop and materials before the flood reaches your area", hint: "Protect the livelihood", outcome: "good", result: "Workshop secured. Materials elevated. The flood passes without damage. The state payment for your work arrives on time — a good flood means a good harvest means the treasury has funds. You spend Akhet making ceremonial flood offerings for wealthy clients. Even a natural event generates craftwork in Egypt.", statChange: { food: 10, divine: 5, wealth: 15, standing: 10 } },
+        { text: "Use Akhet downtime to create speculative work — pieces you can sell when the flood recedes and wealth flows again", hint: "Productive waiting", outcome: "good", result: "Smart. The flood season is slow for commissions but fast for preparation. When Peret arrives and wealthy Egyptians celebrate the coming harvest, you have a workshop full of beautiful objects ready for exactly that moment. Timing is a craftworker's second most important skill after craft.", statChange: { food: 5, divine: 5, wealth: 20, standing: 10 } },
+        { text: "Offer to help neighbors with flood preparation in exchange for future favors", hint: "Community investment", outcome: "good", result: "You help four families secure their homes. All four remember this. One of them is the cousin of a temple administrator. Three months later, a temple commission arrives at your workshop that you would never have received otherwise. Community investment in Egypt pays forward in ways the market never predicts.", statChange: { food: 5, divine: 10, wealth: 10, standing: 20 } }
+      ],
+      scribe: [
+        { text: "Record the Nilometer measurements precisely and calculate the projected tax rate for every farm in your district", hint: "The numbers are the power", outcome: "good", result: "Your calculations are accurate and thorough. The tax rates are set fairly based on your projections. Farmers in your district are taxed at levels they can actually meet. Three neighboring districts whose scribes overestimated will face tax revolts during harvest. Yours will not. Accurate records are the most undervalued form of justice in Egypt.", statChange: { food: 10, divine: 5, wealth: 10, standing: 20 } },
+        { text: "Record the measurements slightly higher than actual — the treasury will be pleased and your career will benefit", hint: "Favorable fiction", outcome: "bad", result: "The falsified measurements produce tax rates farmers cannot meet. During harvest, collections fall short. The Vizier investigates. The Nilometer records are examined. Discrepancies are found. A scribe whose records cannot be trusted is a scribe whose records are worthless — which means the scribe is worthless. Your career has just become significantly more precarious.", statChange: { food: -10, divine: -10, wealth: 10, standing: -25 } },
+        { text: "Record everything accurately and add detailed notes about flood patterns over the past decade for future planning", hint: "Knowledge as legacy", outcome: "good", result: "Your notes become one of the most referenced documents in the district archive. Future administrators use your pattern analysis to predict flood levels with greater accuracy. You will never know this — but a hundred years from now, scribes will copy your work as a training exercise. Good records outlast the people who made them.", statChange: { food: 5, divine: 10, wealth: 10, standing: 15 } }
+      ],
+      trader: [
+        { text: "Move your boats to safe harbor immediately — protect the fleet above everything else", hint: "Assets first", outcome: "good", result: "Boats secured. The flood comes in strong this year — several traders who didn't move their boats lose them entirely. You emerge from Akhet with your fleet intact and your competitors reduced. A good flood for the farmers means a rich trading season ahead. You are positioned perfectly for it.", statChange: { food: 5, divine: 5, wealth: 20, standing: 10 } },
+        { text: "Use the high flood water to navigate routes that are impassable in dry season — reach new trading partners", hint: "Opportunity in the flood", outcome: "good", result: "High water opens channels normally too shallow for your boats. You reach two villages that no trader has visited in years. The deals you make are modest — but the relationships you establish will generate trade for decades. The Nile's gift, you have discovered, sometimes arrives in unusual forms.", statChange: { food: 10, divine: 5, wealth: 15, standing: 15 } },
+        { text: "Contract to transport the stone and materials that pyramid construction will need once the flood recedes", hint: "Position for the coming season", outcome: "good", result: "The construction contracts are signed before the flood recedes. When Peret arrives and the pyramid project resumes, your boats are the ones moving stone from Aswan. The Nile's flood season just funded your next year of operations. Planning ahead on the river is the difference between a trader and a wealthy trader.", statChange: { food: 5, divine: 0, wealth: 25, standing: 10 } }
+      ]
+    }
+  },
+  {
+    id: "ch2",
+    number: 2,
+    title: "Chapter 2 — The God-King Calls",
+    subtitle: "Akhet Labor and the Monument",
+    scene: "The flood is receding. Across Egypt, administrators are arriving in villages with the same message: the Pharaoh requires labor for his monument. This is the public labor tax — corvée — and it applies to every able-bodied person not currently serving in another state capacity. Fields are still underwater. There is no harvest to tend. And the greatest building project in human history needs workers. How each role experiences this moment could not be more different.",
+    nileNote: "<strong>Who built the pyramids?</strong> Not slaves — workers. Archaeological evidence from the workers' village at Giza shows skilled and unskilled laborers who were paid in bread, beer, and medical care. They worked in rotating crews with names like 'Friends of Khufu' and competed to finish their section first. The pyramid was built during Akhet precisely because farmers had nothing else to do — their fields were underwater.",
+    journalPrompt: "The same event — the pyramid project — meant completely different things to different roles. What does that tell you about how social structure shapes the way people experience history?",
+    poisonRoles: ["farmer", "craftworker"],
+    choices: {
+      pharaoh: [
+        { text: "Organize the labor gangs efficiently — rotating crews, scheduled rest, consistent food and beer rations", hint: "Humane administration", outcome: "good", result: "The project runs smoothly. Workers are not happy to be here — nobody volunteers for corvée — but they are fed, treated for injuries, and rotated before exhaustion sets in. The section of the monument your district's workers complete is finished ahead of schedule. The Pharaoh notes your name favorably. Good administration looks invisible when it works.", statChange: { food: 10, divine: 10, wealth: 5, standing: 20 } },
+        { text: "Push the labor gangs harder — the Pharaoh wants the monument completed in his lifetime", hint: "Results over workers", outcome: "neutral", result: "Progress is faster. Injuries are more frequent. Two workers die — not uncommon in construction, but the records you keep will reflect it. The section is completed ahead of schedule. The Pharaoh is pleased. The workers' families are not. You have made an administrative decision that optimized for one value at the expense of another. That is most of what administration actually is.", statChange: { food: 5, divine: -5, wealth: 10, standing: 10 } },
+        { text: "Ensure the workers are treated well enough that they will speak positively of the Pharaoh in their villages", hint: "Political management", outcome: "good", result: "Word spreads through the delta villages that the Pharaoh's construction project feeds workers better than harvest season. Applications to join the skilled workforce begin arriving. Egypt has accidentally created a labor market. The Pharaoh's divine reputation benefits from the way his Vizier treats ordinary people. You understand this connection better than most.", statChange: { food: 10, divine: 15, wealth: 5, standing: 20 } }
+      ],
+      priest: [
+        { text: "Consecrate the construction site and bless the labor — make the workers understand this is sacred work", hint: "Divine framing of labor", outcome: "good", result: "The consecration ceremony is powerful. Workers who might have resented the corvée find themselves moved by the idea that their hands are building a house for a living god. Productivity increases not from fear but from genuine belief. This is the most efficient management tool in Egypt and it costs nothing but ceremony.", statChange: { food: 5, divine: 25, wealth: 5, standing: 15 } },
+        { text: "Negotiate with the Vizier for the temple to receive a portion of the monument project's resources", hint: "Extract value from the project", outcome: "neutral", result: "The negotiation succeeds — partially. The temple receives fine stone for a new sanctuary. The Vizier receives the temple's formal blessing of the project. Both parties got something. Neither party is entirely satisfied. This is the nature of every negotiation between religious and administrative power in Egypt.", statChange: { food: 0, divine: 10, wealth: 20, standing: 5 } },
+        { text: "Remind the workers privately that their labor builds their own path to the afterlife — the gods see who works faithfully", hint: "Spiritual incentive", outcome: "good", result: "The message lands. Egyptian workers are not cynical about the afterlife — they genuinely believe in it. The idea that faithful labor on the Pharaoh's monument earns divine favor is not manipulation. It is theology. And it is effective. The construction proceeds with a kind of willing energy that surprises even the experienced administrators.", statChange: { food: 5, divine: 20, wealth: 5, standing: 10 } }
+      ],
+      farmer: [
+        { text: "Go willingly — show up first, work hard, and get assigned to a skilled crew where conditions are better", hint: "Make the best of mandatory", outcome: "neutral", result: "You arrive early. The crew assignments go to those who show initiative. You end up in a relatively skilled section — better food rations, lighter physical work, a foreman who is fair. You are still building someone else's monument with your own body. But you are doing it in the best possible circumstances available to someone who had no choice about being here at all.", statChange: { food: 5, divine: 10, wealth: -5, standing: 5 }, poison: false },
+        { text: "Go, but drag your feet — do the minimum required and protect your energy for Peret when your own fields need you", hint: "Compliance without investment", outcome: "bad", result: "The foreman notices. You are assigned to the heaviest labor — the unskilled crews hauling stone. The work is brutal. You return to your family for Peret exhausted and injured. Your field is planted late. The harvest suffers. Resistance to the corvée, it turns out, is punished not by the state but by your own depleted body.", statChange: { food: -10, divine: -5, wealth: -10, standing: -10 }, poison: true },
+        { text: "Go because there is no alternative — and while you are there, learn everything you can about construction and organization", hint: "Turn obligation into knowledge", outcome: "neutral", result: "You spend Akhet watching how thousands of people are organized to accomplish something impossible. How food is distributed. How crews are rotated. How disputes are resolved. How stone moves from the quarry to the monument. You return to your farm with knowledge no farmer in your village has. What you do with it is up to you.", statChange: { food: 5, divine: 5, wealth: -5, standing: 10 }, poison: true }
+      ],
+      craftworker: [
+        { text: "Negotiate a skilled craftworker contract — you should be doing fine work, not hauling stone", hint: "Skill commands better conditions", outcome: "good", result: "Your portfolio of previous work speaks for you. The construction administrators assign you to the decorative and finish work — the painted chambers, the carved hieroglyphic inscriptions, the fitted facing stones. The work is hard but skilled. You are paid in rations above the standard rate. The pyramid will carry your work for four thousand years. Somewhat.", statChange: { food: 10, divine: 10, wealth: 15, standing: 15 } },
+        { text: "Accept the standard corvée assignment — you are not in a position to negotiate", hint: "Submit to the system", outcome: "bad", result: "The standard assignment is hauling stone. Your skilled hands haul limestone blocks for six weeks. By the time you return to your workshop, two of your regular contracts have gone to other craftworkers. The state does not distinguish between a skilled artisan and an unskilled laborer when it needs bodies. You have learned this the expensive way.", statChange: { food: -5, divine: 0, wealth: -15, standing: -5 }, poison: true },
+        { text: "Use your workshop's state contract to argue for an exemption — skilled state craftworkers may be exempt from general corvée", hint: "Find the administrative loophole", outcome: "neutral", result: "The exemption argument is legally sound but administratively complicated. After two weeks of paperwork and waiting, you are granted a partial exemption — you contribute a week of skilled labor rather than six weeks of general labor. You have discovered that the Egyptian bureaucracy can be navigated, just slowly and with significant effort.", statChange: { food: 5, divine: 5, wealth: 5, standing: 10 }, poison: false }
+      ],
+      scribe: [
+        { text: "Volunteer to manage the labor records for the construction project — this is a significant career opportunity", hint: "Seize the administrative role", outcome: "good", result: "The construction records are among the most complex administrative documents in Egypt. Managing them puts you in daily contact with the Vizier's office, the chief architects, the supply chain administrators. Your network expands enormously. When the project is complete, you are among the most experienced administrative scribes in the country.", statChange: { food: 10, divine: 10, wealth: 10, standing: 25 } },
+        { text: "Record the labor accurately — who worked, what they were paid, what injuries occurred", hint: "Honest record-keeping", outcome: "good", result: "Your records are meticulous. When a worker's family later disputes a payment, your records settle it fairly. When an overseer is accused of withholding rations, your records confirm it. You have created the most reliable account of what actually happened on this construction project. Four thousand years from now, archaeologists will cite your work.", statChange: { food: 5, divine: 10, wealth: 10, standing: 20 } },
+        { text: "Record what the administrators tell you to record — the official version is not your concern", hint: "Compliant record-keeping", outcome: "neutral", result: "You record the official version. It is not inaccurate exactly — it is selective. Injuries underreported. Rations overstated. The monument is complete and the records show it was built smoothly and fairly. The workers who were there know otherwise. But they cannot read, and you can. That asymmetry is the foundation of every administrative record in Egypt.", statChange: { food: 5, divine: -5, wealth: 10, standing: 5 } }
+      ],
+      trader: [
+        { text: "Contract to supply the construction site with food, beer, and materials — this is the opportunity of a generation", hint: "Profit from the project", outcome: "good", result: "The supply contract is enormous. Bread, beer, fish, linen — thousands of workers consume vast quantities every day. Your boats run constantly between the delta farms and the Giza plateau. You make more money during this construction project than in the previous five years combined. The pyramid is the greatest economic stimulus in Egyptian history.", statChange: { food: 10, divine: 5, wealth: 25, standing: 15 } },
+        { text: "Transport the stone from the Aswan quarries — dangerous Nile navigation but extraordinary profit", hint: "High risk, high reward", outcome: "neutral", result: "The stone transport is technically demanding and occasionally dangerous. One of your boats runs aground in a low-water channel. The delay costs you a penalty payment. The overall contract is still profitable — just less so than you projected. High-risk contracts in Egypt are like the flood itself: you can plan carefully and still be surprised.", statChange: { food: 5, divine: 0, wealth: 15, standing: 10 } },
+        { text: "Supply cedar from Lebanon through your Phoenician trading contacts — Egypt cannot build this without imported wood", hint: "Specialized supply", outcome: "good", result: "Egypt has no forests. The cedar beams required for the monument's interior — the roofing, the boat pits, the ceremonial sledges — must come from Lebanon. Your Phoenician contacts make you the only trader in Egypt who can supply this material. The Vizier thanks you personally. You have just become indispensable to the most important construction project in the world.", statChange: { food: 5, divine: 10, wealth: 20, standing: 20 } }
+      ]
+    }
+  },
+  {
+    id: "ch3",
+    number: 3,
+    title: "Chapter 3 — The River Road",
+    subtitle: "The Expedition to Nubia",
+    scene: "The Nile flows south as well as north. For thousands of years, Egypt has looked upstream — into the land the Egyptians call Kush — and seen what it needs and cannot produce itself: gold, ebony, ivory, incense, and enslaved people taken in military campaigns. A trade and tribute expedition is being organized to travel south into Nubia. The expedition will be profitable — but it will also remind Nubia of Egypt's military reach. How each role participates in this moment reveals how Egypt's economy and power actually worked.",
+    nileNote: "<strong>Egypt and Nubia:</strong> Nubia (modern Sudan) sat directly upstream from Egypt on the Nile. The relationship was complex — trade partner, military target, and eventually part of the Egyptian empire. Nubia had gold that Egypt desperately needed for trade, tribute, and burial goods. Egypt had grain that Nubia needed. The Nile made this exchange possible in both directions.",
+    journalPrompt: "Egypt needed what Nubia had. Nubia needed what Egypt had. But the relationship was not equal. What makes a trade relationship unequal — and what does that inequality have to do with power?",
+    poisonRoles: [],
+    choices: {
+      pharaoh: [
+        { text: "Frame the expedition as tribute collection — remind Nubia that Egypt's military could arrive instead of traders", hint: "Power as negotiating tool", outcome: "good", result: "The message is clear without being explicit. The Nubian chiefs know what the alternative to cooperative tribute looks like — they have seen Egyptian military campaigns before. The expedition returns with gold, ebony, and incense. The tribute is generous. The relationship is not friendship. But it functions, and Egypt gets what it needs.", statChange: { food: 5, divine: 10, wealth: 20, standing: 15 } },
+        { text: "Send a diplomatic mission alongside the traders — maintain Nubia as a willing partner rather than a resentful subject", hint: "Diplomacy over intimidation", outcome: "good", result: "The diplomatic approach costs more initially — gifts must be given, not just received. But the Nubian chiefs who feel respected are more reliable suppliers than those who feel coerced. The expedition returns with agreed trade terms that will hold for a generation. Sustainable relationships are worth more than one profitable intimidation.", statChange: { food: 5, divine: 5, wealth: 15, standing: 20 } },
+        { text: "Use the expedition to assess Nubian military capacity — gather intelligence alongside trade goods", hint: "Trade as reconnaissance", outcome: "neutral", result: "The intelligence is valuable. Nubia is stronger than the last assessment suggested. The military option is more expensive than it appeared. The trade relationship suddenly looks more attractive. Sometimes the most useful thing a diplomatic expedition can discover is why diplomacy is the better choice.", statChange: { food: 5, divine: 5, wealth: 10, standing: 10 } }
+      ],
+      priest: [
+        { text: "Request incense and ritual materials as the temple's portion of the expedition's return", hint: "Temple needs first", outcome: "good", result: "Nubian incense is the finest in the known world. The temple's rituals require it — the smoke carries prayers to the gods. Your request is granted. The temple's ceremonies become richer. The gods, presumably, are pleased. You have secured the temple's liturgical supply chain for another generation.", statChange: { food: 5, divine: 20, wealth: 10, standing: 10 } },
+        { text: "Bless the expedition formally and declare it an act of divine will — Amun-Ra commands Egypt to receive what Nubia offers", hint: "Divine authorization of commerce", outcome: "good", result: "The divine framing is politically useful. The expedition is not exploitation — it is fulfillment of cosmic order. Ma'at requires that each thing occupy its proper place. Egypt's proper place, according to the priests, is at the top of that order. The expedition proceeds with full religious legitimacy. Whether the Nubians agree is a separate question.", statChange: { food: 5, divine: 15, wealth: 5, standing: 15 } },
+        { text: "Question privately whether Egypt's treatment of Nubia is consistent with Ma'at — the cosmic principle of justice and order", hint: "The uncomfortable question", outcome: "neutral", result: "You ask the question privately, to yourself, in the temple's inner sanctuary where no one can hear. The answer you arrive at is complicated. Ma'at commands order — and Egypt's domination of Nubia is ordered and systematic. Whether order and justice are the same thing is a question Egyptian theology does not fully resolve. You file it away and proceed with the blessing.", statChange: { food: 0, divine: 10, wealth: 0, standing: 5 } }
+      ],
+      farmer: [
+        { text: "Watch the expedition pass your village with curiosity — try to understand what they are bringing back and why", hint: "Witness and learn", outcome: "neutral", result: "The boats pass laden with goods you have never seen. Ebony so dark it looks like shadow. Ivory larger than your arm. Incense whose smell reaches your field before the boats do. Gold — more gold than you have seen in your life, though not more than you might see in the temple on a feast day. You have just watched Egypt's economy pass by your doorstep. Most of it will never touch your life.", statChange: { food: 0, divine: 5, wealth: 0, standing: 5 } },
+        { text: "Offer food from your harvest stores to provision the expedition — build a relationship with the traders", hint: "Participate in the economy", outcome: "neutral", result: "The traders take your grain and dried fish at a fair price. The transaction is small but real. You have participated in the Nile's economy rather than merely watched it pass. The trader notes your name. Nothing may come of it. Or it might — in Egypt, as in every civilization, relationships are the foundation of economic opportunity.", statChange: { food: -5, divine: 0, wealth: 10, standing: 5 } },
+        { text: "Ask the expedition's administrators if they need seasonal labor on the return journey", hint: "Find paid work beyond the farm", outcome: "good", result: "They do. The return journey needs unloading crews at every stop. You spend two weeks working the river — paid in food and a small silver weight. You return to your farm having seen more of Egypt in two weeks than in your entire previous life. The work was hard. The experience was irreplaceable.", statChange: { food: 10, divine: 0, wealth: 10, standing: 10 } }
+      ],
+      craftworker: [
+        { text: "Negotiate to receive Nubian ebony and ivory directly — these materials will transform your workshop's output", hint: "Source the best materials", outcome: "good", result: "The ebony and ivory arrive at your workshop. You spend the next season making objects unlike anything you have produced before. The dark wood inlaid with ivory catches light differently than anything native Egyptian materials can achieve. Your work attracts the attention of a temple administrator. Your career has just changed.", statChange: { food: 5, divine: 5, wealth: 20, standing: 20 } },
+        { text: "Create demonstration pieces to show what you could make with Nubian materials — attract the expedition's patronage", hint: "Create demand for your skills", outcome: "good", result: "The demonstration pieces are compelling. The expedition's organizers commission a set of ceremonial objects to be made from the materials they bring back. You have created your own market by showing people what they didn't know they wanted. This is how craftworkers build careers in any civilization.", statChange: { food: 5, divine: 5, wealth: 15, standing: 15 } },
+        { text: "Focus on the Egyptian materials you know — Nubian goods are unpredictable and working with new materials takes time you don't have", hint: "Stick to what you know", outcome: "neutral", result: "Your Egyptian-material work is excellent and reliable. The Nubian expedition's materials go to other workshops. Two years later, when Nubian-inlaid objects become fashionable in elite circles, those other workshops are the ones with the commissions. Reliability is a virtue. So is adaptability. The question is which one the market rewards this season.", statChange: { food: 5, divine: 0, wealth: 10, standing: 5 } }
+      ],
+      scribe: [
+        { text: "Document the expedition's trade manifest carefully — record what was given, what was received, and at what terms", hint: "Record the transaction", outcome: "good", result: "Your manifest becomes the official record of the expedition's terms. Future expeditions reference your document to establish what Nubia has previously agreed to. You have written the legal foundation of Egypt's Nubian trade relationship for the next generation. The expedition administrators barely noticed you working. The documents you produced will outlast them all.", statChange: { food: 5, divine: 5, wealth: 10, standing: 20 } },
+        { text: "Record the expedition as 'tribute' rather than 'trade' — the political distinction matters enormously", hint: "Words shape power", outcome: "neutral", result: "Tribute implies Nubia's subordination. Trade implies partnership. The word you choose in this document will be cited by Egyptian officials for generations when dealing with Nubia. You chose tribute. Egypt's position is stronger on paper. Whether the Nubians accept that framing is something they will express, eventually, with their own actions rather than your words.", statChange: { food: 0, divine: 5, wealth: 10, standing: 10 } },
+        { text: "Ask to accompany the expedition as its official scribe — see Nubia yourself", hint: "Experience beyond Egypt's borders", outcome: "good", result: "The request is granted. You travel further south than any scribe in your district has been in a generation. You document Nubian culture, geography, and customs with the careful eye of someone who knows that written records are the only form of memory that outlasts the person who made them. You return changed. Egypt looks different from outside it.", statChange: { food: 10, divine: 10, wealth: 5, standing: 20 } }
+      ],
+      trader: [
+        { text: "Lead the Nubian expedition yourself — you know the river, the traders, and the risks better than any state official", hint: "Expertise commands the role", outcome: "good", result: "The expedition is yours to run. Your knowledge of the Nile's southern channels, the seasonal water levels, the Nubian trading families your father dealt with — all of it gives you advantages no state-appointed administrator would have. The expedition returns with more and better goods than any previous mission. Your reputation becomes the expedition's reputation.", statChange: { food: 10, divine: 5, wealth: 25, standing: 20 } },
+        { text: "Partner with the state expedition rather than run it — take the transport contract and let officials handle the negotiations", hint: "Profitable support role", outcome: "good", result: "The transport contract is substantial and low-risk. The state officials handle the politically complicated tribute negotiations. You handle the river. Everyone does what they do best. The profit is significant without the political exposure. There is wisdom in knowing which risks are yours to take and which belong to someone else.", statChange: { food: 5, divine: 0, wealth: 20, standing: 10 } },
+        { text: "Use the expedition to establish your own private trade relationships with Nubian merchants — outside the state system", hint: "Build independent network", outcome: "neutral", result: "The private relationships are established carefully, quietly. The Nubian merchants are interested — state-controlled trade benefits Egypt more than Nubia, and private arrangements can be more equitable. You have the beginning of a trade network that operates alongside the official one. This is valuable and slightly dangerous. The line between private trade and smuggling is one the Vizier's office draws, not you.", statChange: { food: 5, divine: -5, wealth: 20, standing: 5 } }
+      ]
+    }
+  },
+  {
+    id: "ch4",
+    number: 4,
+    title: "Chapter 4 — The Written Wall",
+    subtitle: "What Hieroglyphics Reveal",
+    scene: "A wall in the temple complex has been designated for a major inscription — the official record of the Pharaoh's achievements, carved into stone in hieroglyphics that will last for millennia. Every role has a different relationship to this wall. The literate see power in it. The illiterate see something they cannot access. The priests see sacred text. The scribes see the technical challenge of making it permanent. What gets written on this wall — and what does not — will be the only record future generations have of this moment in Egypt's history.",
+    nileNote: "<strong>Hieroglyphics:</strong> Egyptian writing used more than 700 distinct symbols representing sounds, objects, and concepts. It required years of training to master and was controlled almost entirely by scribes trained in the per-ankh — the 'house of life' attached to temples. Unlike Mesopotamian cuneiform which was invented primarily for commerce, Egyptian hieroglyphics served religious and royal purposes first — making writing inseparable from divine and political power.",
+    journalPrompt: "In Mesopotamia, writing was invented for record-keeping and commerce. In Egypt, writing was primarily sacred and royal. What does that difference tell you about what each civilization valued most?",
+    poisonRoles: ["farmer", "craftworker"],
+    choices: {
+      pharaoh: [
+        { text: "Commission an inscription that emphasizes the Pharaoh's military victories — power projected through stone", hint: "Immortalize strength", outcome: "good", result: "The military victories are carved in precise hieroglyphics across thirty meters of temple wall. Enemies are shown smaller than Egyptian soldiers. The Pharaoh stands taller than everyone. Future visitors to the temple will have no doubt about Egypt's power or its Pharaoh's divine authority. Stone, unlike memory, does not diminish with time.", statChange: { food: 5, divine: 15, wealth: 5, standing: 20 } },
+        { text: "Commission an inscription that emphasizes the Pharaoh's building achievements and gifts to the gods", hint: "Immortalize piety", outcome: "good", result: "The temple inscription focuses on monuments built, offerings made, gods honored. This is the version of the Pharaoh that the priests prefer — one whose greatness is measured in devotion rather than conquest. The inscription will be read at every religious ceremony in this temple for centuries. The Pharaoh's piety becomes eternal.", statChange: { food: 5, divine: 20, wealth: 5, standing: 15 } },
+        { text: "Commission an inscription that records the actual administrative achievements — the flood management, the trade expeditions, the workers fed", hint: "Immortalize governance", outcome: "neutral", result: "The administrative record is unusual for a temple wall — most inscriptions celebrate divine and military matters. But this Pharaoh's actual achievement is stability, and you convince the scribes to record it. Future historians who find this wall will call it one of the most honest royal inscriptions in Egyptian history. Current Egyptians find it slightly boring.", statChange: { food: 10, divine: 5, wealth: 10, standing: 10 } }
+      ],
+      priest: [
+        { text: "Ensure the inscription includes the correct sacred formulae — the hieroglyphics must be ritually effective, not just aesthetically impressive", hint: "Ritual accuracy over decoration", outcome: "good", result: "The inscription is not just beautiful — it is ritually functional. Every symbol placed in accordance with sacred tradition. The priests who perform ceremonies at this wall do not need to add prayers — the wall itself is the prayer. You have made a piece of architecture into a religious instrument. This is what hieroglyphics are for.", statChange: { food: 5, divine: 25, wealth: 5, standing: 15 } },
+        { text: "Add your own priestly titles to the inscription's margin — ensure the temple's role in these achievements is recorded", hint: "Claim credit for the gods' work", outcome: "neutral", result: "Your titles appear in the margin, smaller than the royal cartouche but permanent. Historians who study this inscription a thousand years from now will know your name. The Vizier notices the addition and says nothing. The Pharaoh either doesn't notice or doesn't care. Priestly ambition, like the Nile, finds its level eventually.", statChange: { food: 0, divine: 10, wealth: 5, standing: 10 } },
+        { text: "Insist that a separate section of the inscription honor the gods rather than the Pharaoh — the gods made this possible, not the king", hint: "Theology over politics", outcome: "neutral", result: "The negotiation with the Vizier is tense. A compromise is reached — the gods are honored in the central panel, the Pharaoh in the flanking panels. The arrangement is theologically correct and politically acceptable. Neither you nor the Vizier got exactly what you wanted. Egypt has been negotiating this balance between divine and royal power for centuries.", statChange: { food: 0, divine: 15, wealth: 0, standing: 10 } }
+      ],
+      farmer: [
+        { text: "Stand and look at the wall — try to understand what it says even though you cannot read it", hint: "Reach toward what is locked away", outcome: "neutral", result: "You stand before the wall for a long time. The images you can read — the Pharaoh standing over smaller figures, the gods receiving offerings, the careful rows of symbols that mean something to someone. What exactly, you will never know. A priest passes and tells you the wall records the Pharaoh's greatness. You nod. The wall says what they want it to say, and you have no way to check. This is the point.", statChange: { food: 0, divine: 5, wealth: 0, standing: 0 }, poison: true },
+        { text: "Ask a scribe to explain what the inscription says — use curiosity to bridge the literacy gap", hint: "Seek knowledge actively", outcome: "neutral", result: "The scribe explains — briefly, condescendingly, but accurately. The inscription records military victories and divine offerings. You ask a question that stops the scribe: who built the wall? The scribe checks. No workers are mentioned. You built the wall, in a sense. The wall records everything that happened except the people who made it happen. The scribe has no response to this.", statChange: { food: 0, divine: 5, wealth: 0, standing: 10 }, poison: true },
+        { text: "Ignore the inscription — it has nothing to do with your life and the planting season is coming", hint: "Pragmatism over curiosity", outcome: "neutral", result: "You are right that it has nothing to do with your immediate life. You are wrong that it has nothing to do with your life at all. The inscription records the Pharaoh's version of everything that happened — the flood, the construction, the trade. Your version is not recorded anywhere. In ten generations, the wall's version will be the only version. The pragmatic choice and the historically significant choice are not always the same.", statChange: { food: 5, divine: 0, wealth: 0, standing: -5 }, poison: true }
+      ],
+      craftworker: [
+        { text: "Compete for the commission to carve the inscription — your stonework is among the finest in Egypt", hint: "Claim the professional opportunity", outcome: "good", result: "You win the commission. The carving takes four months of meticulous work — hieroglyphics cut into granite require both artistic precision and physical endurance. When the inscription is complete, it is the finest carving on the temple complex. You cannot read what it says. But every craftworker who examines it for the next three thousand years will know that whoever carved this was extraordinary.", statChange: { food: 5, divine: 10, wealth: 20, standing: 20 } },
+        { text: "Ask the scribes to teach you to read your own work — demand to know what you are carving", hint: "Challenge the literacy barrier", outcome: "bad", result: "The scribes refuse politely, then firmly. Literacy is not a craftworker's tool — it is a scribe's professional monopoly. The knowledge that lets you carve perfect hieroglyphics is manual and visual, not linguistic. You know the shapes. You do not know the meanings. The refusal is not malicious. It is the system working exactly as designed. You carve what you are told, perfectly, without understanding it.", statChange: { food: -5, divine: -5, wealth: 10, standing: -10 }, poison: true },
+        { text: "Focus entirely on the quality of the carving — your legacy is in the craft, not the content", hint: "Master your domain", outcome: "good", result: "The carving is transcendent. Every symbol is perfectly formed, every line exactly cut. Archaeologists who examine this inscription four thousand years from now will describe the carving style as 'among the finest examples of New Kingdom relief work.' They will not know your name. They will know your hands.", statChange: { food: 5, divine: 5, wealth: 15, standing: 15 } }
+      ],
+      scribe: [
+        { text: "Draft the inscription text carefully — this document will define how this Pharaoh is remembered forever", hint: "The weight of permanence", outcome: "good", result: "You write and rewrite the text seventeen times before it is cut into stone. Every word is chosen for both its meaning and its hieroglyphic form — some symbols are more ritually powerful in certain positions. The final inscription is a masterwork of both language and sacred design. Four thousand years from now, the tourists who photograph it will not know your name. The inscription itself is your signature.", statChange: { food: 5, divine: 15, wealth: 10, standing: 20 } },
+        { text: "Quietly omit the records of the failed flood management from two years ago — the official record should not include embarrassments", hint: "Shape the historical record", outcome: "neutral", result: "The omission is easy — you simply do not write it. The flood failure happened. People remember it. But the stone record will not include it, and stone outlasts memory. You have made a professional decision that every official scribe in every civilization makes: the official record is not the same as the complete record. Whether that is history or propaganda depends on who is reading it.", statChange: { food: 0, divine: -5, wealth: 10, standing: 5 } },
+        { text: "Insist on recording only what actually happened — the inscription should be historically accurate, not politically convenient", hint: "Historical integrity", outcome: "neutral", result: "The Vizier looks at your draft for a long time. He does not ask you to change it. He does not thank you for your honesty. He approves it with a single word and leaves. The inscription records both the achievements and the difficulties of this Pharaoh's reign. It is unusual. It is more useful to historians than the standard version. You will never know that you made a choice that mattered.", statChange: { food: 5, divine: 10, wealth: 5, standing: 15 } }
+      ],
+      trader: [
+        { text: "Commission a smaller inscription of your own on a less prominent wall — record your trading achievements", hint: "Claim your place in the record", outcome: "good", result: "Wealthy traders have done this before. Your smaller inscription records the Nubian expedition, the stone transport contracts, the cedar imports. It is not the main inscription. But it is yours. Somewhere on this temple wall, in smaller hieroglyphics that most visitors will walk past without noticing, your name and your work will exist for as long as the stone stands.", statChange: { food: 5, divine: 5, wealth: 10, standing: 20 } },
+        { text: "Donate significantly to the temple in exchange for being mentioned in the main inscription", hint: "Buy a place in history", outcome: "neutral", result: "The donation is accepted. Your name appears in the inscription's listing of those who contributed to the temple's projects. It is a small mention, in a subordinate clause, after the gods and the Pharaoh and the priests. But it is there. Permanence, in Egypt, has always had a price. You have paid it.", statChange: { food: 0, divine: 10, wealth: -15, standing: 15 } },
+        { text: "Focus on the practical — the inscription benefits your business by demonstrating the temple's prosperity to trading partners", hint: "Instrumentalize the sacred", outcome: "good", result: "You are correct. A magnificent temple inscription signals a prosperous Egypt to every trading partner who sees it. The Phoenician traders who will visit next season will note the quality of Egyptian stonework and the evident wealth of its institutions. Your business benefits indirectly from a royal religious commission you had nothing to do with. Egypt's economy works in ways even the Pharaoh does not fully understand.", statChange: { food: 5, divine: 5, wealth: 15, standing: 10 } }
+      ]
+    }
+  },
+  {
+    id: "ch5",
+    number: 5,
+    title: "Chapter 5 — The Weight of the Heart",
+    subtitle: "What Egyptians Believed About Death",
+    scene: "A significant person in your community has died. Not the Pharaoh — someone whose death affects your role directly. The preparations for their journey through the Duat — the Egyptian underworld — must begin immediately. In Egypt, death is not an ending. It is a transition that requires careful preparation, proper ritual, and the right resources. The elaborate system surrounding death reveals more about what Egyptians valued in life than almost anything else.",
+    nileNote: "<strong>The Egyptian afterlife:</strong> Egyptians believed the soul faced a judgment after death — the weighing of the heart against the feather of Ma'at. A heart heavy with wrongdoing would be devoured by Ammit, a creature part lion, part hippo, part crocodile. A balanced heart earned eternal life in the Field of Reeds — an idealized version of Egypt with no floods, no tax collectors, and abundant harvests. The system promised equality in death that did not exist in life.",
+    journalPrompt: "The Egyptian afterlife promised equality — everyone's heart was weighed against the same feather regardless of their social position. But the preparation for that judgment was deeply unequal. What does that contradiction tell you about Egyptian society?",
+    poisonRoles: ["priest"],
+    choices: {
+      pharaoh: [
+        { text: "Commission the full burial preparation — no expense spared, the proper rites must be performed perfectly", hint: "Administrative duty to the dead", outcome: "good", result: "The full preparation is organized and funded. Every ritual performed correctly. Every text inscribed. Every organ preserved in its proper canopic jar. You have administered death with the same efficiency you bring to taxation and construction. The deceased's family is grateful. The priests are professionally satisfied. The gods, presumably, are prepared to receive this soul.", statChange: { food: 5, divine: 20, wealth: -10, standing: 15 } },
+        { text: "Attend the ceremony personally — show that the administration honors its people in death as in life", hint: "Political presence at personal moment", outcome: "good", result: "Your presence at the ceremony is noted and appreciated. It costs you nothing but time and earns you significant loyalty from the deceased's family and their community. You have made an administrative decision to be present at a human moment. This is rarer in Egypt's bureaucracy than it should be, and all the more valued for it.", statChange: { food: 5, divine: 15, wealth: 0, standing: 20 } },
+        { text: "Ensure the burial goods are properly inventoried — the estate will need to be administered after the mourning period", hint: "Administration over sentiment", outcome: "neutral", result: "The inventory is done. The estate is orderly. The family is slightly put off by your efficiency during their grief. You are not wrong that the estate needs managing. The timing of how you manage it reveals something about what you prioritize. Efficiency and compassion are both administrative virtues. Egypt's bureaucracy has always been better at the first than the second.", statChange: { food: 5, divine: 5, wealth: 10, standing: 5 } }
+      ],
+      priest: [
+        { text: "Perform the full ritual sequence — the Opening of the Mouth, the weighing ceremony, the journey through the Duat — with complete belief and dedication", hint: "Faith in practice", outcome: "neutral", result: "You perform every ritual with precision and genuine devotion. The belief that sustains you through the ceremony is real. And yet — watching the family spend everything they have on these preparations, watching the poor neighbors who cannot afford the same rites, something sits uneasily. The system you believe in and the system you administer are not perfectly aligned. They never have been. You do your job with integrity and carry the discomfort privately.", statChange: { food: 0, divine: 20, wealth: 10, standing: 10 }, poison: true },
+        { text: "Perform the rituals professionally but acknowledge privately that the poor family across the street cannot afford what you are providing — and do nothing about it", hint: "The system's inequality made visible", outcome: "neutral", result: "The wealthy receive the full ritual. The poor family's deceased gets the abbreviated version — simpler texts, no canopic jars, a less elaborate opening of the mouth. Both will face the same judgment in the Duat. Whether the quality of preparation affects the outcome is a theological question the priests have not fully resolved. You perform the expensive version with the knowledge that you are administering a two-tiered system. This knowledge is the weight you carry.", statChange: { food: 0, divine: 10, wealth: 15, standing: 5 }, poison: true },
+        { text: "Quietly provide reduced-cost burial preparations to a poor family who cannot afford the full rites", hint: "Compassion within the system", outcome: "good", result: "The gesture costs the temple some revenue and earns you something harder to measure. The poor family's gratitude is real. Word spreads through the community that this priest sees the people rather than just the transactions. Your temple's reputation for genuine care, rather than just professional ritual, grows. Whether the gods notice, you will find out eventually.", statChange: { food: 5, divine: 20, wealth: -10, standing: 20 } }
+      ],
+      farmer: [
+        { text: "Do what you can afford — basic preparations, proper prayers, the best burial goods your family can manage", hint: "Dignified within means", outcome: "neutral", result: "The burial is modest but genuine. The prayers are sincere. Whether the heart weighs more or less favorably for the quality of preparation is something no one alive can say. You have honored the dead as well as you can with what you have. In a society where proper burial is linked to eternal life, this is not a small thing. It is everything you are able to give.", statChange: { food: -10, divine: 10, wealth: -15, standing: 5 } },
+        { text: "Borrow from neighbors to afford better burial preparations — the afterlife stakes are too high to economize", hint: "Debt for the dead", outcome: "bad", result: "The debt is taken on. The burial is better. The debt will take two harvest seasons to repay — if both harvests are good. If the Nile disappoints once in those two years, the debt becomes a crisis. You have made a rational decision within the belief system you inhabit. The economic consequences will arrive in the living world regardless of what happens in the Duat.", statChange: { food: -15, divine: 15, wealth: -20, standing: 5 } },
+        { text: "Accept that you cannot match what the wealthy provide — trust that a good life weighs more than expensive preparations", hint: "Faith over resources", outcome: "neutral", result: "The simple burial is conducted with care and prayer. You tell yourself — and genuinely believe — that a life of honest work and fair dealing has prepared this heart better than gold and linen. Egyptian theology does not entirely contradict you. The feather of Ma'at weighs against deeds, not possessions. Whether the priests who administer the system agree with your interpretation is a different question.", statChange: { food: 0, divine: 15, wealth: 0, standing: 5 } }
+      ],
+      craftworker: [
+        { text: "Create the burial goods yourself — your finest work, made with love rather than commission", hint: "Craft as devotion", outcome: "good", result: "The objects you make for this burial are unlike anything you have made for a commission. No deadline. No client approval. No budget constraint except your own materials. You make what you would want in your own tomb — what you believe a soul deserves for the journey. When the burial is sealed, your finest work goes into the darkness with someone you loved. This is what craft is actually for.", statChange: { food: 5, divine: 20, wealth: -5, standing: 15 } },
+        { text: "Commission the burial goods from another craftworker — your grief makes it impossible to work on this", hint: "Know your limits", outcome: "neutral", result: "The decision to step back is honest and right. The other craftworker does good work. The burial goods are appropriate. You attend the ceremony and grieve properly rather than hiding in your workshop. Knowing when your skills are not the right tool for the moment is its own kind of wisdom.", statChange: { food: 0, divine: 10, wealth: -10, standing: 10 } },
+        { text: "Use the burial commission to produce work that honors both the deceased and your craft — grief and professionalism together", hint: "Integrate grief into work", outcome: "good", result: "The work that emerges from this commission is the best of your career. Grief, when it flows into craft rather than away from it, produces objects that communicate something beyond technical skill. The priests who receive the burial goods notice. They ask who made them. Your name enters the temple's record of master craftworkers. The deceased, somehow, has advanced your career.", statChange: { food: 5, divine: 15, wealth: 10, standing: 20 } }
+      ],
+      scribe: [
+        { text: "Inscribe the burial texts with absolute precision — a single error could compromise the soul's journey", hint: "Technical perfection as devotion", outcome: "good", result: "Every hieroglyphic placed with the care of someone who believes what they are writing. The Book of the Dead passages are copied from the temple's master texts without variation. The spells that protect the soul through the Duat's twelve gates are correct in every particular. You have done the most important work a scribe can do — made the sacred permanent and reliable.", statChange: { food: 5, divine: 20, wealth: 10, standing: 15 } },
+        { text: "Personalize the burial texts — add passages specific to this person's life and character", hint: "Humanity within tradition", outcome: "good", result: "The personalized passages are technically non-standard but ritually valid. The priests review and accept them. The family is moved to see their loved one's actual character reflected in the sacred texts rather than generic formulas. You have done something unusual for a scribe — made an official document that tells the truth about a specific human being.", statChange: { food: 5, divine: 15, wealth: 5, standing: 20 } },
+        { text: "Complete the burial texts quickly and efficiently — there are other commissions waiting", hint: "Professional detachment", outcome: "neutral", result: "The texts are completed correctly and on time. They are not your best work but they are adequate. The family does not know the difference. The gods, presumably, can tell. You file this burial with all the others and move to the next commission. This is most of what being a professional means — delivering reliable work consistently, including when you have no emotional investment in the outcome.", statChange: { food: 5, divine: 5, wealth: 15, standing: 5 } }
+      ],
+      trader: [
+        { text: "Fund the burial preparations generously — use your wealth to ensure a proper transition for someone who mattered to you", hint: "Wealth deployed with meaning", outcome: "good", result: "The funeral is the finest your community has seen in a generation. The preparations are complete. The ceremony is moving. You have spent significantly — but money that sits in a trading account accumulates. Money given to the people and purposes that matter produces something money cannot buy back. You have used your wealth for its highest purpose.", statChange: { food: 5, divine: 20, wealth: -20, standing: 20 } },
+        { text: "Navigate the estate carefully — the deceased had goods in transit on your boats and the inheritance needs resolution", hint: "Business and grief together", outcome: "neutral", result: "The estate is complicated. The goods in transit are delivered to the family correctly. The legal documentation is filed with the Vizier's court. You handle everything properly and efficiently. The family is grateful for your competence during a difficult time. You grieve in the spaces between transactions, which is where traders have always grieved.", statChange: { food: 5, divine: 10, wealth: 5, standing: 10 } },
+        { text: "Import the finest canopic jars and burial linen available — use your trade network to ensure the best preparation materials", hint: "Trade expertise serves the dead", outcome: "good", result: "Your access to quality materials others cannot obtain makes the burial preparation significantly better than local resources alone would allow. The priests are impressed by the quality of the canopic jars. The family is grateful for what your network made possible. Trade, it turns out, is not merely commerce — it is the movement of quality across distance, available to those who built the relationships to access it.", statChange: { food: 5, divine: 15, wealth: -10, standing: 20 } }
+      ]
+    }
+  },
+  {
+    id: "ch6",
+    number: 6,
+    title: "Chapter 6 — The Flood Does Not Come",
+    subtitle: "When the Gift Is Withheld",
+    scene: "It is Akhet. The Nile should be rising. It is not. The Nilometer shows water levels well below normal and falling. The priests are performing emergency rituals. The Vizier's office is running calculations that produce only bad numbers. The farmers are watching the dry fields where water should be standing. Every system Egypt built around the assumption of the annual flood — the tax system, the labor system, the food storage system, the religious calendar — is now running on an assumption that is failing. What each role does in this moment reveals what Egypt is actually made of.",
+    nileNote: "<strong>When the Nile failed:</strong> Egypt experienced several catastrophic low-flood periods in its history. The collapse of the Old Kingdom around 2150 BCE was accompanied by a decades-long drought that caused mass famine, political fragmentation, and social breakdown. Ancient texts describe people eating their children. The 'gift of the Nile' was not guaranteed — and when it was withheld, everything Egypt had built around it revealed how completely it depended on one river.",
+    journalPrompt: "Egypt built an entire civilization around the Nile's annual gift. When that gift didn't come, everything built around it trembled. Think back to every chapter of this campaign. Which GRAPES categories does a failed flood affect — and how?",
+    poisonRoles: ["pharaoh", "farmer"],
+    choices: {
+      pharaoh: [
+        { text: "Open the royal granaries and begin emergency distribution — you planned for this, though you hoped you would never need to", hint: "Crisis management through preparation", outcome: "good", result: "The emergency reserves were maintained precisely for this moment. Distribution begins within days. The crisis is real but managed. Egypt does not starve this season. The Pharaoh's divine authority holds because the administration behind it was competent enough to plan for the worst. You are exhausted. Egypt is fed. This is enough.", statChange: { food: 10, divine: 10, wealth: -20, standing: 20 } },
+        { text: "Maintain the appearance of divine order — announce that the Pharaoh has intervened with the gods and the flood will come", hint: "Manage perception", outcome: "bad", result: "The announcement buys two weeks. The flood does not come. The people who believed you are now hungrier and angrier than they were before. The Pharaoh's divine authority rests on the assumption that it functions. When it is revealed as performance, the damage is severe. Perception management works until reality arrives. Reality has arrived.", statChange: { food: -15, divine: -20, wealth: 0, standing: -25 }, poison: true },
+        { text: "Implement immediate rationing across all districts — painful now to avoid catastrophic later", hint: "Hard truth over comfortable delay", outcome: "neutral", result: "Rationing is announced. The people are unhappy. Some districts resist. The Vizier's enforcement teams are deployed. The rationing holds — mostly. Six months later, when neighboring regions that did not ration are in full famine, Egypt is hungry but functional. The hard decision made at the right time is the definition of good governance. It is also consistently the most unpopular decision any leader makes.", statChange: { food: 10, divine: 5, wealth: -10, standing: 5 }, poison: true }
+      ],
+      priest: [
+        { text: "Perform emergency rituals publicly — demonstrate that the temple is responding to the crisis with the full weight of divine intervention", hint: "Religious crisis response", outcome: "neutral", result: "The rituals are magnificent. Elaborate. Expensive. The flood does not come. You perform another round of rituals. The flood still does not come. The people begin asking questions that priests have no good answers to. You perform the rituals a third time with complete sincerity and genuine faith — because the alternative to faith in this moment is despair, and Egypt cannot afford despair right now.", statChange: { food: 0, divine: 10, wealth: -10, standing: 5 } },
+        { text: "Declare that Egypt has angered the gods — demand increased offerings and strict observance of religious law", hint: "Frame crisis as spiritual failure", outcome: "bad", result: "The declaration is theologically defensible and politically disastrous. Hungry people who are told their hunger is their own fault for insufficient piety do not become more pious. They become angry. The temple's wealth grows briefly as desperate people sacrifice what they cannot afford. Three months later, two temple officials are attacked by a crowd in the delta. The gods' representatives have miscalculated the people's patience.", statChange: { food: -5, divine: -15, wealth: 15, standing: -20 } },
+        { text: "Privately consult agricultural knowledge and historical records — find practical solutions while maintaining the religious framework publicly", hint: "Pragmatism behind the curtain of faith", outcome: "good", result: "The historical records show previous low-flood years and how Egypt survived them. You share this information with the Vizier's office through appropriate channels while publicly maintaining the ritual response. The practical knowledge helps. The ritual response maintains order. You are doing two jobs simultaneously — managing a crisis and managing the meaning people make of it. Both are necessary.", statChange: { food: 10, divine: 15, wealth: 5, standing: 15 } }
+      ],
+      farmer: [
+        { text: "Plant what you can in the areas that received any water at all — a reduced harvest is better than no harvest", hint: "Adapt immediately", outcome: "neutral", result: "You plant everything you have in the best soil available. The harvest is a third of normal. Your family will eat — reduced portions, monotonous diet, but food. Neighbors who waited for a normal flood to materialize have nothing to plant in. Adaptation when the system fails is the skill that kept farming communities alive through every crisis Egypt ever faced.", statChange: { food: 5, divine: 5, wealth: -10, standing: 5 }, poison: false },
+        { text: "Appeal to the Vizier's office for emergency food distribution — the tax system should support farmers when the Nile fails", hint: "Use the system you paid into", outcome: "neutral", result: "The appeal is filed. The emergency distribution exists but is administered slowly and unevenly. You receive some support — less than you need, more than some neighbors. The system designed for this moment works imperfectly in the moment it is needed. This is true of every emergency system in every civilization. The question is whether imperfect support is better than no support. It is. Barely.", statChange: { food: 10, divine: 0, wealth: 0, standing: 5 }, poison: true },
+        { text: "Begin eating your seed grain to survive — sacrifice the next planting season to get through this one", hint: "Survival over future", outcome: "bad", result: "The seed grain feeds your family through the worst months. When planting season comes, you have nothing to plant. You must borrow seed from a wealthier farmer at punishing interest rates. The crisis that began with a failed flood ends with your family in debt that will take years to clear — if future floods cooperate. The farmer's margin for error has always been exactly this thin. Now you know it.", statChange: { food: 10, divine: -5, wealth: -20, standing: -10 }, poison: true }
+      ],
+      craftworker: [
+        { text: "Shift production to practical goods — tools and containers that help people manage scarcity", hint: "Adapt to crisis market", outcome: "good", result: "Storage vessels. Efficient grinding stones. Irrigation scoops. The luxury market collapses when people are worried about food. The practical goods market expands. Your workshop pivots within a week. The revenue is lower per item but the volume is sustained. Craftworkers who can read a market and change their output survive economic crises. Those who cannot make beautiful objects nobody can currently afford to buy.", statChange: { food: 5, divine: 0, wealth: 10, standing: 10 } },
+        { text: "Continue luxury production — the wealthy still have money and someone needs to serve them", hint: "Serve the solvent", outcome: "neutral", result: "The wealthy still commission work during famines. They have always done so. Your workshop continues serving clients who are insulated from the immediate crisis by their resources. The moral dimension of this is something you think about occasionally, briefly, and then return to work. Your family eats. The craftworker's ethics during a famine are complicated by the fact that the craftworker's family also needs to eat.", statChange: { food: 5, divine: -5, wealth: 15, standing: 0 } },
+        { text: "Organize the craftworker community to collectively negotiate with the state for emergency support", hint: "Collective action", outcome: "good", result: "The organized craftworkers — following a tradition that will eventually lead to the world's first recorded labor strike at Deir el-Medina — present a collective demand for emergency rations to the state administrators. The demand is partially met. The organization itself is more valuable than the immediate rations. You have discovered that collective voice accomplishes what individual appeals cannot.", statChange: { food: 10, divine: 5, wealth: 5, standing: 20 } }
+      ],
+      scribe: [
+        { text: "Document everything — the crisis, the responses, the human cost — with complete accuracy", hint: "Historical record in real time", outcome: "good", result: "Your documentation of this famine is the most complete record of a Nile failure in Egyptian history. The numbers of affected families. The distribution failures. The villages that organized mutual aid. The temples that hoarded. The administrators who managed well and those who didn't. The record is honest and damning and valuable. Future administrators who face similar crises will have something real to learn from. If they read it.", statChange: { food: 5, divine: 5, wealth: 5, standing: 20 } },
+        { text: "Falsify the records to show the crisis as less severe than it is — protect the Pharaoh's reputation", hint: "Protect power at the cost of truth", outcome: "bad", result: "The falsified records protect the Pharaoh in the short term. Future administrators working from your records will underestimate how bad a Nile failure can get — and underprepare for it. The next famine will be worse because of what you wrote today. You will not live to see this. The person who suffers it will not know your name. The connection between your pen and their suffering is real and invisible.", statChange: { food: -5, divine: -10, wealth: 10, standing: -10 } },
+        { text: "Provide accurate data to the Vizier and quietly inform a temple administrator about the worst-affected areas", hint: "Information to those who can act on it", outcome: "good", result: "The Vizier uses your accurate data to direct emergency distribution effectively. The temple administrator mobilizes temple grain stores to the areas you identified. Your information, flowing to two different power centers simultaneously, does more good than either could have done alone. This is the scribe's highest function — not just recording reality but helping the people who can change it understand it clearly.", statChange: { food: 10, divine: 10, wealth: 5, standing: 15 } }
+      ],
+      trader: [
+        { text: "Import grain from the Levant and sell it at controlled prices — profit modestly, feed many", hint: "Trade as crisis solution", outcome: "good", result: "The Levantine grain arrives on your boats. You sell at a price that covers costs and a modest margin — enough to fund the operation but not enough to be called profiteering. The Vizier's office notices and formally acknowledges your contribution. You have demonstrated that trade networks, in a crisis, can move food faster than state bureaucracy. This insight will shape Egyptian trade policy for a generation.", statChange: { food: 20, divine: 10, wealth: 10, standing: 25 } },
+        { text: "Import grain and sell at maximum market price — scarcity creates value and you have capital to deploy", hint: "Profit from crisis", outcome: "bad", result: "The profit is substantial. The reputation damage is permanent. In a society where the Pharaoh's divine authority rests partly on ensuring Egypt is fed, a trader who profits visibly from famine is a trader who has made an enemy of the administration and the temple simultaneously. The silver is real. The enemies are real. One of them will matter more to your future than the other.", statChange: { food: 10, divine: -15, wealth: 25, standing: -20 } },
+        { text: "Use your trade network to identify where grain stores exist and share that information with the Vizier's office", hint: "Intelligence over profit", outcome: "good", result: "Your network knows things the state does not — where private hoards exist, which Levantine cities have surplus grain available, which Nubian chiefs might trade food for Egyptian goods. You share this intelligence without extracting maximum financial value from it. The Vizier's office distributes more effectively because of you. Your long-term relationship with the administration is worth more than the short-term profit you declined.", statChange: { food: 15, divine: 10, wealth: 5, standing: 20 } }
+      ]
+    }
+  }
+];
+
+// ══════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════
+let state = {
+  screen: "art_open",
+  role: null,
+  chapterIndex: 0,
+  pendingOutcome: null,
+  stats: { food: 50, divine: 50, wealth: 50, standing: 50 },
+};
+
+// ══════════════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════════════
+function go(s) { state.screen = s; render(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+function getRole() { return ROLES.find(r => r.id === state.role); }
+function clamp(v) { return Math.max(0, Math.min(100, v)); }
+
+function applyStats(change) {
+  if (!change) return;
+  for (let k in change) {
+    if (state.stats[k] !== undefined) {
+      state.stats[k] = clamp(state.stats[k] + change[k]);
+    }
+  }
+}
+
+function statColor(v) {
+  if (v >= 60) return "#6ABF6A";
+  if (v >= 35) return "#E8C840";
+  return "#E05050";
+}
+
+function renderStats() {
+  const defs = [
+    { key: "food", label: "Food", icon: "🌾" },
+    { key: "divine", label: "Divine Favor", icon: "𓂀" },
+    { key: "wealth", label: "Wealth", icon: "⚖️" },
+    { key: "standing", label: "Standing", icon: "𓋹" },
+  ];
+  return `<div class="stats-row">${defs.map(d => {
+    const v = state.stats[d.key];
+    return `<div class="stat-box">
+      <span class="stat-icon">${d.icon}</span>
+      <div class="stat-label">${d.label}</div>
+      <div class="stat-value" style="color:${statColor(v)}">${Math.round(v)}</div>
+      <div class="stat-track"><div class="stat-fill" style="width:${v}%;background:${statColor(v)}"></div></div>
+    </div>`;
+  }).join("")}</div>`;
+}
+
+function renderProgress() {
+  const dots = CHAPTERS.map((c, i) =>
+    `<div class="prog-dot ${i < state.chapterIndex ? 'done' : i === state.chapterIndex ? 'active' : ''}"></div>`
+  ).join("");
+  return `<div class="progress-row">${dots}<span class="prog-label">Chapter ${state.chapterIndex + 1} of ${CHAPTERS.length}</span></div>`;
+}
+
+function isDead() { return state.stats.food <= 0 || state.stats.divine <= 0; }
+
+// ══════════════════════════════════════════════════════════════
+//  SCREENS
+// ══════════════════════════════════════════════════════════════
+
+function screenArtOpen() {
+  return `
+    <div class="screen-label">Before we begin — look closely</div>
+    <div class="screen-heading">The Weighing of the Heart</div>
+    <div class="art-frame">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/e/ee/BD_Weighing_of_the_Heart.jpg"
+           alt="The Weighing of the Heart — Egyptian Book of the Dead"
+           onerror="this.style.display='none';document.getElementById('art-fallback').style.display='block'" />
+      <div id="art-fallback" style="display:none;padding:2rem;text-align:center;color:var(--gold);font-family:Arial,sans-serif;font-size:13px">
+        [The Weighing of the Heart — search "Book of the Dead Weighing Heart" to view]
+      </div>
+      <div class="art-caption">
+        The Weighing of the Heart · Papyrus of Hunefer · c. 1275 BCE · New Kingdom Egypt<br>
+        British Museum · Public Domain · One of the most important scenes in Egyptian religious art
+      </div>
+    </div>
+    <div class="scene-text">This image was painted over 3,000 years ago. Before you begin your story in ancient Egypt, look at it carefully. Take 30 seconds of silence first. Then answer the three prompts in your field journal:</div>
+    <div class="art-prompts">
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 1</div>
+        <div class="apt-q">One thing I find interesting...</div>
+      </div>
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 2</div>
+        <div class="apt-q">One thing that puzzles me...</div>
+      </div>
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 3</div>
+        <div class="apt-q">One question I have for the creator...</div>
+      </div>
+    </div>
+    <div class="nile-note"><strong>Answer in your field journal.</strong> When your teacher gives the signal, continue.</div>
+    <button class="btn btn-gold" onclick="go('role_select')">Enter ancient Egypt →</button>`;
+}
+
+function screenRoleSelect() {
+  return `
+    <div class="screen-label">Choose your role — your table decides together</div>
+    <div class="screen-heading">Who are you in ancient Egypt?</div>
+    <div class="scene-text">Every person at your table plays the same role. The same events will affect each role — but in completely different ways. Choose together.</div>
+    <div class="role-grid">
+      ${ROLES.map(r => `
+        <div class="role-card" onclick="selectRole('${r.id}')">
+          <span class="rc-icon">${r.icon}</span>
+          <div class="rc-name">${r.name}</div>
+          <div class="rc-own"><strong>You control:</strong> ${r.own}</div>
+          <div class="rc-fear">⚠ You fear: ${r.fear}</div>
+        </div>`).join("")}
+    </div>`;
+}
+
+function screenChapter() {
+  const ch = CHAPTERS[state.chapterIndex];
+  const role = getRole();
+  const choices = ch.choices[state.role];
+  const isPoisonChapter = ch.poisonRoles.includes(state.role);
+
+  return `
+    ${renderProgress()}
+    ${renderStats()}
+    <div class="role-badge">
+      <span class="rb-icon">${role.icon}</span>
+      <div>
+        <div class="rb-name">${role.name}</div>
+        <div class="rb-desc">${role.desc}</div>
+      </div>
+    </div>
+    <div class="screen-label">${ch.title}</div>
+    <div class="screen-heading" style="font-size:18px">${ch.subtitle}</div>
+    <div class="scene-text">${ch.scene}</div>
+    <div class="role-context">${role.context[ch.id]}</div>
+    ${isPoisonChapter ? `<div class="poison-pill-note">⚠ There may be no good option for your role in this chapter. Choose the least bad one — and think about why.</div>` : ""}
+    <div class="nile-note">${ch.nileNote}</div>
+    <div class="choices-label">Discuss with your table — then choose:</div>
+    <div class="choices">
+      ${choices.map((c, i) => `
+        <button class="choice-btn" onclick="makeChoice(${i})">
+          <div class="choice-text">${c.text}</div>
+          <div class="choice-hint">${c.hint}</div>
+        </button>`).join("")}
+    </div>`;
+}
+
+function screenOutcome() {
+  const ch = CHAPTERS[state.chapterIndex];
+  const o = state.pendingOutcome;
+  const outcomeClass = o.poison ? "outcome-poison" : `outcome-${o.outcome}`;
+  const outcomeLabel = o.outcome === "good" ? "✓ What happened" : o.outcome === "bad" ? "✗ What happened" : o.poison ? "⚠ The impossible choice" : "→ What happened";
+
+  return `
+    ${renderProgress()}
+    ${renderStats()}
+    <div class="outcome-box ${outcomeClass}">
+      <div class="outcome-label">${outcomeLabel}</div>
+      ${o.result}
+    </div>
+    <div class="journal-prompt">
+      <strong>✏ Field Journal Prompt —</strong> answer before your teacher signals to continue:<br><br>
+      ${ch.journalPrompt}
+    </div>
+    <button class="btn btn-gold" onclick="advanceChapter()">
+      ${state.chapterIndex < CHAPTERS.length - 1 ? 'Continue →' : 'See how your story ends →'}
+    </button>`;
+}
+
+function screenGameOver() {
+  return `
+    <div style="text-align:center;padding:2rem 1rem">
+      <div style="font-size:48px;margin-bottom:1rem">𓂀</div>
+      <div class="screen-heading">Your story in Egypt ends here</div>
+      ${renderStats()}
+      <div class="nile-note" style="text-align:left;margin-bottom:1.25rem">
+        ${state.stats.food <= 0
+          ? "Your family's food stores are gone. In ancient Egypt, as in every civilization, survival depends on the most basic resource. Without food, nothing else — not divine favor, not wealth, not social standing — can sustain you."
+          : "You have lost the favor of the gods — which in Egypt means you have lost the favor of the Pharaoh, the priests, and every institution that makes Egyptian society function. In a civilization where the Pharaoh is a living god, being outside divine favor means being outside society itself."}
+      </div>
+      <div class="journal-prompt" style="text-align:left">What does a 'game over' in Egypt teach us about what this civilization depended on most?</div>
+      <br>
+      <button class="btn btn-gold" onclick="restart()">Start again as a different role</button>
+    </div>`;
+}
+
+function screenArtClose() {
+  return `
+    <div class="screen-label">Closing — one more image</div>
+    <div class="screen-heading">Abu Simbel<br><span style="font-size:16px;color:var(--clay-light)">Built by Rameses II · c. 1264 BCE</span></div>
+    <div class="art-frame">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/a/a9/Abu_Simbel_great_temple_03.jpg"
+           alt="Abu Simbel Great Temple — four colossal statues of Rameses II"
+           onerror="this.style.display='none';document.getElementById('abu-fallback').style.display='block'" />
+      <div id="abu-fallback" style="display:none;padding:2rem;text-align:center;color:var(--gold);font-family:Arial,sans-serif;font-size:13px">
+        [Abu Simbel Great Temple — search "Abu Simbel Rameses II" to view]
+      </div>
+      <div class="art-caption">
+        Great Temple of Rameses II · Abu Simbel, Nubia (modern Sudan) · c. 1264 BCE<br>
+        Four colossal statues of Rameses II, each 20 meters tall · Carved directly into the cliff face<br>
+        UNESCO World Heritage Site · Public Domain
+      </div>
+    </div>
+    <div class="scene-text">You opened this campaign looking at a papyrus painting of the afterlife — intricate, personal, human-scaled. Now you are looking at four statues twenty meters tall, carved into a cliff in Nubia, built to be seen by anyone approaching Egypt from the south. Use your three prompts in your field journal:</div>
+    <div class="art-prompts">
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 1</div>
+        <div class="apt-q">One thing I find interesting...</div>
+      </div>
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 2</div>
+        <div class="apt-q">One thing that puzzles me...</div>
+      </div>
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 3</div>
+        <div class="apt-q">One question I have for the creator...</div>
+      </div>
+    </div>
+    <div class="journal-prompt">
+      <strong>Year-long comparison question:</strong> You opened this campaign with a painting made on papyrus. You are closing it with statues carved into a cliff face in another country. How does this artwork feel different from the cave paintings you saw at the start of the year — and what does that difference tell you about what changed between the Stone Age and ancient Egypt?
+    </div>
+    <button class="btn btn-gold" onclick="go('ending')">See what your story revealed →</button>`;
+}
+
+function screenEnding() {
+  const role = getRole();
+  const avg = Math.round(Object.values(state.stats).reduce((a, b) => a + b, 0) / 4);
+  let verdict, verdictText;
+
+  if (avg >= 65) {
+    verdict = `${role.name} — Your place in Egypt is secure`;
+    verdictText = "Your choices aligned with the systems and values of ancient Egyptian civilization. You understood that Egypt was built on the Nile, organized around the Pharaoh, and sustained by the labor and faith of millions of people who rarely appear in the official records.";
+  } else if (avg >= 45) {
+    verdict = `${role.name} — Your story is Egypt's story`;
+    verdictText = "You survived — which is what most Egyptians did. Not triumph, not catastrophe, but the daily navigation of a civilization built on a river that gave and took away without asking permission. This is the life most ancient Egyptians actually lived.";
+  } else {
+    verdict = `${role.name} — Egypt's systems were not designed for your survival`;
+    verdictText = "The Egyptian system functioned beautifully for some and brutally for others. Your story raises the question every student of history must ask: when we call a civilization great, who exactly do we mean?";
+  }
+
+  return `
+    <div class="screen-label">End of the Egypt Campaign</div>
+    <div class="screen-heading" style="font-size:20px">${verdict}</div>
+    ${renderStats()}
+    <div class="scene-text">${verdictText}</div>
+
+    <div class="grapes-covered">
+      <h4>What this campaign covered</h4>
+      <p><strong>Geography:</strong> The Nile's annual flood — Akhet, Peret, Shemu — shaped every aspect of Egyptian life from taxation to religion to the construction calendar.</p>
+      <p><strong>Achievements:</strong> Pyramid construction, hieroglyphics, the Nilometer, irrigation and flood management, the Egyptian calendar.</p>
+      <p><strong>Religion:</strong> The Pharaoh as living god, the weighing of the heart, the Duat, Ma'at, the temple's economic and spiritual power.</p>
+      <p><strong>Economics:</strong> The Nile as trade highway, the Nubian gold trade, the tributary relationship, grain as currency and survival.</p>
+      <p><strong>Social Structure:</strong> The Pharaoh and Vizier at the top, priests and scribes with literacy-based power, craftworkers in the middle, farmers bearing the weight of everything.</p>
+    </div>
+
+    <div class="discussion-questions">
+      <h4>Class Discussion Questions</h4>
+      <p>1. In Mesopotamia, the flood was a threat. In Egypt, it was a gift. How did that difference shape everything else about these two civilizations?</p>
+      <p>2. Which role had the most power in Egypt — and which had the least? Were those the same as in Mesopotamia?</p>
+      <p>3. The afterlife system promised equality — everyone's heart weighed the same way. But preparation for death was deeply unequal. What does that contradiction tell you about Egyptian society?</p>
+      <p>4. The farmer experienced almost every chapter as a poison pill — limited choices, bad outcomes regardless. What does that tell you about who built Egypt and who benefited from it?</p>
+      <p>5. When the flood failed, every GRAPES category was affected. Which one do you think collapsed first — and which held longest?</p>
+    </div>
+
+    <button class="btn btn-gold" onclick="restart()">Play again as a different role</button>
+    <button class="btn btn-secondary" onclick="restart()">Return to start</button>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ACTIONS
+// ══════════════════════════════════════════════════════════════
+function selectRole(id) {
+  state.role = id;
+  state.chapterIndex = 0;
+  go("chapter");
+}
+
+function makeChoice(i) {
+  const ch = CHAPTERS[state.chapterIndex];
+  const choice = ch.choices[state.role][i];
+  applyStats(choice.statChange);
+  state.pendingOutcome = choice;
+  if (isDead()) { go("gameover"); return; }
+  go("outcome");
+}
+
+function advanceChapter() {
+  state.pendingOutcome = null;
+  if (state.chapterIndex < CHAPTERS.length - 1) {
+    state.chapterIndex++;
+    go("chapter");
+  } else {
+    go("art_close");
+  }
+}
+
+function restart() {
+  state = {
+    screen: "art_open",
+    role: null,
+    chapterIndex: 0,
+    pendingOutcome: null,
+    stats: { food: 50, divine: 50, wealth: 50, standing: 50 },
+  };
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// ══════════════════════════════════════════════════════════════
+//  RENDER
+// ══════════════════════════════════════════════════════════════
+function render() {
+  const el = document.getElementById("content");
+  const screens = {
+    art_open:    screenArtOpen,
+    role_select: screenRoleSelect,
+    chapter:     screenChapter,
+    outcome:     screenOutcome,
+    gameover:    screenGameOver,
+    art_close:   screenArtClose,
+    ending:      screenEnding,
+  };
+  el.innerHTML = (screens[state.screen] || (() => "<p>Loading...</p>"))();
+}
+
+render();
+</script>
+</body>
+</html>
