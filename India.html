@@ -1,0 +1,1142 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ancient India — The Story of Us</title>
+<style>
+  :root {
+    --saffron: #C8600A;
+    --saffron-light: #FDF0D5;
+    --saffron-mid: #E8901A;
+    --lotus: #8B1A4A;
+    --lotus-light: #F5D0E0;
+    --river: #1A6B5A;
+    --river-light: #C8EDE0;
+    --lapis: #1A3A7A;
+    --lapis-light: #C8D8F8;
+    --gold: #B8900A;
+    --gold-light: #FFF8DC;
+    --stone: #5A4A3A;
+    --stone-light: #EAE0D0;
+    --red: #8B2020;
+    --red-light: #F5D8D8;
+    --green: #1A6B2A;
+    --green-light: #C8EDD0;
+    --shadow: #0A0500;
+    --ink: #1A1000;
+    --cream: #F5EDD5;
+    --cream-dark: #D8C8A8;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #0A0500;
+    color: var(--cream);
+    min-height: 100vh;
+  }
+
+  #app {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 3rem;
+  }
+
+  /* ── Header ── */
+  .site-header {
+    text-align: center;
+    padding: 1.5rem 1rem 1rem;
+    border-bottom: 2px solid var(--saffron);
+    margin-bottom: 1.5rem;
+    background: linear-gradient(180deg, rgba(200,96,10,0.1) 0%, transparent 100%);
+  }
+  .campaign-tag {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--saffron-mid);
+    font-family: Arial, sans-serif;
+    margin-bottom: 6px;
+  }
+  .site-header h1 {
+    font-size: 30px;
+    font-weight: bold;
+    color: var(--saffron-mid);
+    letter-spacing: 0.06em;
+    margin-bottom: 4px;
+  }
+  .site-header h2 {
+    font-size: 14px;
+    font-weight: normal;
+    color: var(--cream-dark);
+    font-family: Arial, sans-serif;
+    font-style: italic;
+  }
+
+  /* ── Stats ── */
+  .stats-row {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 8px;
+    margin-bottom: 1.25rem;
+  }
+  .stat-box {
+    background: rgba(200,96,10,0.08);
+    border: 1px solid rgba(200,96,10,0.25);
+    border-radius: 6px;
+    padding: 8px 10px;
+    text-align: center;
+  }
+  .stat-icon { font-size: 16px; display: block; margin-bottom: 2px; }
+  .stat-label { font-size: 10px; color: var(--saffron-mid); letter-spacing: 0.05em; text-transform: uppercase; font-family: Arial, sans-serif; }
+  .stat-value { font-size: 18px; font-weight: bold; margin: 2px 0; }
+  .stat-track { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 4px; }
+  .stat-fill { height: 4px; border-radius: 2px; transition: width 0.5s, background 0.5s; }
+
+  /* ── Karma display ── */
+  .karma-scale {
+    background: rgba(200,96,10,0.1);
+    border: 1.5px solid var(--saffron);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 1.25rem;
+    font-family: Arial, sans-serif;
+  }
+  .karma-scale-label { font-size: 11px; font-weight: bold; color: var(--saffron-mid); text-transform: uppercase; letter-spacing: 0.06em; margin-bottom: 6px; }
+  .karma-bar-bg { height: 8px; background: rgba(255,255,255,0.1); border-radius: 4px; margin-bottom: 4px; }
+  .karma-bar-fill { height: 8px; border-radius: 4px; transition: width 0.5s; background: linear-gradient(90deg, #C82020, #E8901A, #2A8B2A); }
+  .karma-labels { display: flex; justify-content: space-between; font-size: 10px; color: var(--cream-dark); }
+
+  /* ── Role badge ── */
+  .role-badge {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    background: rgba(200,96,10,0.08);
+    border: 1px solid rgba(200,96,10,0.25);
+    border-radius: 8px;
+    padding: 10px 14px;
+    margin-bottom: 1.25rem;
+  }
+  .rb-icon { font-size: 24px; }
+  .rb-name { font-size: 15px; font-weight: bold; color: var(--saffron-mid); }
+  .rb-desc { font-size: 12px; color: var(--cream-dark); font-family: Arial, sans-serif; }
+
+  /* ── Progress ── */
+  .progress-row { display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem; }
+  .prog-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(200,96,10,0.15); border: 1.5px solid rgba(200,96,10,0.3); }
+  .prog-dot.active { background: var(--saffron); border-color: var(--saffron); }
+  .prog-dot.done { background: var(--saffron-mid); border-color: var(--saffron-mid); opacity: 0.6; }
+  .prog-label { font-size: 11px; color: var(--cream-dark); font-family: Arial, sans-serif; }
+
+  /* ── Scene text ── */
+  .screen-label {
+    font-size: 11px;
+    color: var(--saffron-mid);
+    letter-spacing: 0.1em;
+    text-transform: uppercase;
+    font-family: Arial, sans-serif;
+    margin-bottom: 6px;
+  }
+  .screen-heading {
+    font-size: 22px;
+    font-weight: bold;
+    color: var(--saffron-mid);
+    margin-bottom: 1rem;
+    line-height: 1.3;
+  }
+  .scene-text {
+    font-size: 15px;
+    line-height: 1.85;
+    color: var(--cream);
+    margin-bottom: 1rem;
+  }
+  .role-context {
+    background: rgba(200,96,10,0.1);
+    border-left: 3px solid var(--saffron);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    font-size: 14px;
+    font-style: italic;
+    color: var(--saffron-light);
+    margin-bottom: 1.25rem;
+    line-height: 1.65;
+    font-family: Arial, sans-serif;
+  }
+
+  /* ── Info boxes ── */
+  .river-note {
+    background: rgba(26,107,90,0.2);
+    border-left: 3px solid var(--river);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--river-light);
+    margin-bottom: 1.25rem;
+    line-height: 1.65;
+    font-family: Arial, sans-serif;
+  }
+  .river-note strong { color: #E8FFF8; font-weight: 600; }
+
+  .dharma-note {
+    background: rgba(139,26,74,0.15);
+    border-left: 3px solid var(--lotus);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: var(--lotus-light);
+    margin-bottom: 1.25rem;
+    line-height: 1.65;
+    font-family: Arial, sans-serif;
+  }
+  .dharma-note strong { color: #FFE8F0; font-weight: 600; }
+
+  .journal-prompt {
+    background: rgba(200,96,10,0.1);
+    border-left: 3px solid var(--saffron);
+    border-radius: 0 6px 6px 0;
+    padding: 12px 14px;
+    font-size: 14px;
+    color: var(--saffron-light);
+    margin-bottom: 1.25rem;
+    line-height: 1.7;
+    font-family: Arial, sans-serif;
+  }
+  .journal-prompt strong { color: #FFF8DC; font-weight: 600; }
+
+  .poison-note {
+    background: rgba(139,32,32,0.2);
+    border-left: 3px solid var(--red);
+    border-radius: 0 6px 6px 0;
+    padding: 10px 14px;
+    font-size: 13px;
+    color: #F8C8C8;
+    margin-bottom: 1.25rem;
+    line-height: 1.65;
+    font-family: Arial, sans-serif;
+  }
+
+  /* ── Discussion timer ── */
+  .discussion-box {
+    background: var(--lapis);
+    border-radius: 10px;
+    padding: 16px 20px;
+    margin-bottom: 1.25rem;
+  }
+  .disc-header { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-family: Arial, sans-serif; opacity: 0.8; margin-bottom: 6px; color: white; }
+  .disc-prompt { font-size: 15px; line-height: 1.6; margin-bottom: 14px; font-style: italic; color: white; }
+  .timer-row { display: flex; align-items: center; gap: 14px; }
+  .timer-display { font-size: 32px; font-weight: bold; font-family: Arial, sans-serif; min-width: 60px; color: white; }
+  .timer-track { flex: 1; height: 8px; background: rgba(255,255,255,0.3); border-radius: 4px; }
+  .timer-fill { height: 8px; background: white; border-radius: 4px; transition: width 1s linear; }
+  .continue-btn { background: white; color: var(--lapis); border: none; border-radius: 6px; padding: 8px 16px; font-size: 13px; font-weight: bold; cursor: pointer; font-family: Arial, sans-serif; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .continue-btn.ready { opacity: 1; pointer-events: all; }
+
+  /* ── Choices ── */
+  .choices-label { font-size: 11px; color: var(--cream-dark); letter-spacing: 0.08em; text-transform: uppercase; font-family: Arial, sans-serif; margin-bottom: 8px; }
+  .choices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+  .choice-btn {
+    background: rgba(200,96,10,0.06);
+    border: 1.5px solid rgba(200,96,10,0.25);
+    border-radius: 8px;
+    padding: 12px 16px;
+    text-align: left;
+    cursor: pointer;
+    transition: all 0.15s;
+    font-family: Georgia, serif;
+  }
+  .choice-btn:hover { background: rgba(200,96,10,0.15); border-color: var(--saffron); }
+  .choice-text { font-size: 14px; color: var(--cream); line-height: 1.5; }
+  .choice-hint { font-size: 11px; color: var(--cream-dark); margin-top: 4px; font-family: Arial, sans-serif; font-style: italic; }
+
+  /* ── Outcome ── */
+  .outcome-box {
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 1.25rem;
+    font-size: 14px;
+    line-height: 1.7;
+    font-family: Arial, sans-serif;
+  }
+  .outcome-good { background: rgba(26,107,42,0.2); border: 1.5px solid var(--green); color: var(--green-light); }
+  .outcome-bad { background: rgba(139,32,32,0.2); border: 1.5px solid var(--red); color: #F8C8C8; }
+  .outcome-neutral { background: rgba(90,74,58,0.3); border: 1.5px solid var(--stone); color: var(--stone-light); }
+  .outcome-poison { background: rgba(139,32,32,0.15); border: 1.5px solid #6B1A1A; color: #F0B8B8; }
+  .outcome-label { font-size: 11px; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; font-family: Arial, sans-serif; }
+  .karma-change { font-size: 12px; font-family: Arial, sans-serif; margin-top: 8px; padding-top: 8px; border-top: 1px solid rgba(255,255,255,0.15); }
+
+  /* ── Art screens ── */
+  .art-frame {
+    border: 2px solid var(--saffron);
+    border-radius: 8px;
+    overflow: hidden;
+    margin-bottom: 1.25rem;
+    background: var(--shadow);
+    box-shadow: 0 0 20px rgba(200,96,10,0.15);
+  }
+  .art-frame img {
+    width: 100%;
+    display: block;
+    max-height: 360px;
+    object-fit: cover;
+    object-position: center;
+  }
+  .art-caption {
+    padding: 8px 14px;
+    font-size: 11px;
+    color: var(--saffron-mid);
+    font-family: Arial, sans-serif;
+    font-style: italic;
+    background: rgba(10,5,0,0.8);
+    line-height: 1.5;
+  }
+
+  .art-prompts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.25rem; }
+  .art-prompt-box {
+    background: rgba(200,96,10,0.08);
+    border: 1px solid rgba(200,96,10,0.25);
+    border-radius: 6px;
+    padding: 10px 14px;
+  }
+  .apt-label { font-size: 11px; font-weight: bold; color: var(--saffron-mid); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 4px; }
+  .apt-q { font-size: 14px; color: var(--cream-dark); font-style: italic; }
+
+  /* ── Role select ── */
+  .role-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1rem; }
+  .role-card {
+    background: rgba(200,96,10,0.06);
+    border: 2px solid rgba(200,96,10,0.25);
+    border-radius: 10px;
+    padding: 14px;
+    cursor: pointer;
+    transition: all 0.15s;
+  }
+  .role-card:hover { background: rgba(200,96,10,0.15); border-color: var(--saffron); transform: translateY(-1px); }
+  .rc-icon { font-size: 28px; margin-bottom: 6px; display: block; }
+  .rc-name { font-size: 15px; font-weight: bold; color: var(--saffron-mid); margin-bottom: 4px; }
+  .rc-own { font-size: 12px; color: var(--cream-dark); font-family: Arial, sans-serif; line-height: 1.5; margin-bottom: 6px; }
+  .rc-fear { font-size: 11px; color: #F0A880; font-family: Arial, sans-serif; font-style: italic; }
+
+  /* ── Ending ── */
+  .karma-verdict {
+    background: rgba(200,96,10,0.1);
+    border: 1.5px solid var(--saffron);
+    border-radius: 10px;
+    padding: 16px 18px;
+    margin-bottom: 1.25rem;
+    text-align: center;
+  }
+  .karma-verdict h3 { font-size: 18px; color: var(--saffron-mid); margin-bottom: 8px; }
+  .karma-verdict p { font-size: 14px; color: var(--cream-dark); line-height: 1.75; font-family: Arial, sans-serif; }
+
+  .achievements-box {
+    background: rgba(26,107,90,0.15);
+    border: 1px solid var(--river);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 1.25rem;
+  }
+  .achievements-box h4 { font-size: 12px; font-weight: bold; color: var(--river-light); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 10px; }
+  .achievements-box p { font-size: 13px; color: #A8EDD8; line-height: 1.7; font-family: Arial, sans-serif; margin-bottom: 6px; }
+
+  .discussion-questions {
+    background: rgba(139,26,74,0.12);
+    border: 1px solid var(--lotus);
+    border-radius: 8px;
+    padding: 14px 16px;
+    margin-bottom: 1.25rem;
+  }
+  .discussion-questions h4 { font-size: 12px; font-weight: bold; color: var(--lotus-light); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 10px; }
+  .discussion-questions p { font-size: 13px; color: #F8D8E8; line-height: 1.7; font-family: Arial, sans-serif; margin-bottom: 8px; }
+
+  /* ── Buttons ── */
+  .btn { background: var(--saffron); color: white; border: none; border-radius: 8px; padding: 11px 22px; font-size: 14px; font-weight: bold; cursor: pointer; font-family: Arial, sans-serif; transition: background 0.15s; margin-right: 8px; margin-bottom: 8px; }
+  .btn:hover { background: #A04A00; }
+  .btn-lotus { background: var(--lotus); color: white; }
+  .btn-lotus:hover { background: #6B0A3A; }
+  .btn-secondary { background: transparent; color: var(--saffron-mid); border: 1.5px solid var(--saffron-mid); }
+  .btn-secondary:hover { background: rgba(200,96,10,0.1); }
+
+  .divider { height: 1px; background: rgba(200,96,10,0.2); margin: 1.25rem 0; }
+
+  @media (max-width: 500px) {
+    .role-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="site-header">
+    <div class="campaign-tag">The Story of Us · Campaign 3</div>
+    <h1>ANCIENT INDIA</h1>
+    <h2>From the Indus to the Ganges · c. 2600 BCE – 550 CE</h2>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script>
+// ══════════════════════════════════════════════════════════════
+//  ROLES
+// ══════════════════════════════════════════════════════════════
+const ROLES = [
+  {
+    id: "brahmin",
+    name: "Brahmin",
+    icon: "🕉️",
+    desc: "You are a priest and scholar — at the top of the varna system, keeper of sacred knowledge and ritual.",
+    own: "Knowledge of the Vedas, authority to perform sacred rituals, the highest social standing in Indian society.",
+    fear: "Any challenge to the idea that the varna system is divinely ordered — because your position depends on that idea being unquestioned.",
+    want: "A society ordered by dharma, with each varna fulfilling its proper role. And the Brahmin, naturally, at the top.",
+    context: {
+      ch1: "The Indus Valley puzzles you. A sophisticated civilization with no obvious priests, no temples, no evidence of the sacred hierarchy you were born into. What held it together? And more importantly — why did it fall?",
+      ch2: "The Aryan migration brings the Vedas — the sacred texts that will form the foundation of everything you believe and everything that justifies your position in society.",
+      ch3: "The varna system is being formalized. Your position at the top is not just social — it is cosmic. Dharma itself demands this order. You are its guardian.",
+      ch4: "A man named Siddhartha Gautama has left his palace, achieved enlightenment, and is teaching that caste is irrelevant to spiritual liberation. He is drawing enormous crowds. This is a direct challenge to everything you represent.",
+      ch5: "The emperor Ashoka has converted to Buddhism. An emperor who once fought brutal wars now preaches nonviolence and travels to Buddhist pilgrimage sites. The political ground beneath the varna system has shifted.",
+      ch6: "The Gupta Empire patronizes both Hindu scholarship and Buddhist monasteries. The golden age of achievement benefits your class enormously — Sanskrit literature, mathematics, astronomy. But Buddhism is being slowly absorbed into Hindu theology. The challenge is being neutralized."
+    }
+  },
+  {
+    id: "kshatriya",
+    name: "Kshatriya",
+    icon: "⚔️",
+    desc: "You are a warrior and ruler — the second varna, the class that governs and protects through military power.",
+    own: "Military skill, political authority, the right to rule. Warriors and kings come from your varna.",
+    fear: "A world where military power is devalued — where the sword matters less than the prayer or the ledger.",
+    want: "Glory in battle, strong kingdoms, and a social order where the warrior's role is honored and necessary.",
+    context: {
+      ch1: "The Indus Valley had no evidence of armies or weapons caches. A civilization that apparently didn't need warriors. This is either deeply admirable or deeply suspicious.",
+      ch2: "The Indo-Aryan migration is a story of your people — warriors and herders who moved into the subcontinent and whose culture will shape India for millennia.",
+      ch3: "In the varna system, you are second only to the Brahmin. Your dharma is to fight, protect, and rule. The sword and the throne are yours by cosmic right.",
+      ch4: "The Buddha teaches ahimsa — nonviolence. He teaches that attachment to power and glory causes suffering. He teaches that a warrior's life, however glorious, keeps the soul bound to the cycle of rebirth. This is uncomfortable.",
+      ch5: "Ashoka was the greatest warrior-king of his age. He conquered the Kalinga kingdom at the cost of 100,000 lives. Then he saw the battlefield aftermath and converted to Buddhism. He laid down the sword. You are trying to understand what that means for you.",
+      ch6: "The Gupta kings are Kshatriyas who patronize Hindu culture. The golden age is partly your achievement — great rulers enabled great thinkers. Your varna's place is restored. But the memory of Ashoka's conversion does not leave."
+    }
+  },
+  {
+    id: "vaishya",
+    name: "Vaishya",
+    icon: "⚖️",
+    desc: "You are a merchant and farmer — the third varna, the economic engine of Indian civilization.",
+    own: "Trade networks, agricultural land, commercial knowledge. You produce and move the wealth of India.",
+    fear: "Political instability that disrupts trade routes. New rulers who don't understand commerce. Religious movements that devalue material success.",
+    want: "Stable roads, reliable contracts, and a civilization prosperous enough that people can afford to buy what you sell.",
+    context: {
+      ch1: "The Indus Valley was a merchant civilization — standardized weights, planned cities, sophisticated trade networks reaching Mesopotamia. These were your kind of people.",
+      ch2: "The Indo-Aryan migration disrupts existing trade networks. New people, new routes, new power structures. Your established relationships are suddenly uncertain.",
+      ch3: "In the varna system you are third. Below priests and warriors. But wealth has a way of accumulating regardless of social position — and wealth creates its own kind of power.",
+      ch4: "Buddhism has an interesting relationship with merchants. The Buddha himself was supported by wealthy traders who found his message appealing. Monks need food. Monasteries need building. Your capital is useful to the new movement.",
+      ch5: "Ashoka's empire means stable roads, unified laws, and suppression of banditry. For a merchant, a peaceful empire is almost always better than a warring one. The conversion is good for business.",
+      ch6: "The Gupta golden age produces exactly the conditions you thrive in — stable governance, flourishing cities, international trade. The mathematical innovations of this period — including the concept of zero — will eventually transform commerce worldwide."
+    }
+  },
+  {
+    id: "shudra",
+    name: "Shudra",
+    icon: "🌾",
+    desc: "You are a laborer and servant — the fourth varna, the foundation on which all other varnas rest.",
+    own: "Your labor, your skill with your hands, the knowledge passed down through generations of your community.",
+    fear: "A system that defines your worth by your birth and offers almost no path to anything different.",
+    want: "Dignity. Enough to eat. The possibility — even the distant possibility — that your children's lives might be different from yours.",
+    context: {
+      ch1: "The Indus Valley's relative equality is striking. No obvious hierarchy of labor. Everyone seems to have had access to the same standardized goods. Whatever system organized that civilization, it was not the one you were born into.",
+      ch2: "The Indo-Aryan migration brings a social structure that will eventually crystallize into the varna system. You are watching the architecture of your constraint being built in real time.",
+      ch3: "Your dharma, according to those who benefit from this system, is to serve the other three varnas without complaint. This is not a choice. It is declared to be the cosmic order. You were born into this position. You will die in it. So will your children.",
+      ch4: "The Buddha teaches that the soul has no caste. That spiritual liberation is available to everyone regardless of birth. That the varna system is a human construct, not a divine one. For the first time in your life, someone with enormous moral authority is saying the system that defines you is wrong.",
+      ch5: "Ashoka's edicts speak of compassion for all living beings. His rock edicts appear in your village. They do not eliminate the varna system — but they speak of your dignity in a way no emperor has before.",
+      ch6: "The Gupta golden age produces magnificent achievements. Most of them are not produced by or for the Shudra varna. The zero was conceptualized by Brahmin mathematicians. The Sanskrit literature was written for elite audiences. The golden age glitters above you."
+    }
+  },
+  {
+    id: "monk",
+    name: "Buddhist Monk",
+    icon: "☸️",
+    desc: "You have left your previous life behind to follow the Buddha's Eightfold Path toward liberation from suffering.",
+    own: "Your robe, your begging bowl, your practice. The community of the sangha. The Buddha's teachings.",
+    fear: "That attachment — to comfort, to recognition, to the movement's success — will pull you back into the very suffering the path is meant to end.",
+    want: "Liberation. Nirvana. The end of the cycle of rebirth through right understanding, right action, and right intention.",
+    context: {
+      ch1: "The Indus Valley is ancient history — but you are aware that human civilizations have risen and fallen long before the dharma was taught. What makes this time different?",
+      ch2: "The Vedic tradition that arrived with the Indo-Aryan migration is the tradition the Buddha himself was born into — and explicitly challenged. You are the inheritor of that challenge.",
+      ch3: "The varna system is what the Buddha rejected. He taught in Magahi, the language of ordinary people — not Sanskrit, the language of the Brahmin elite. He welcomed Shudras into the sangha. This was revolutionary.",
+      ch4: "This is your chapter. The Buddha has achieved enlightenment and is beginning to teach. You are among the first to hear the Four Noble Truths and the Eightfold Path. Everything begins here.",
+      ch5: "Ashoka's conversion is the greatest moment in Buddhism's history to this point. An emperor endorses the dharma. Monasteries are built. Pilgrimage routes are established. The message spreads across Asia. This is extraordinary — and it is also a kind of test.",
+      ch6: "The Gupta Empire patronizes Buddhist monasteries but also aggressively promotes Hindu Brahmanical culture. Slowly, the Buddha is being incorporated into Hindu theology as an avatar of Vishnu. The revolutionary teaching is being absorbed by the system it challenged. How do you respond to success that looks like absorption?"
+    }
+  },
+  {
+    id: "advisor",
+    name: "Royal Advisor",
+    icon: "📜",
+    desc: "You serve the king — providing counsel on statecraft, military strategy, economics, and the delicate management of religious authority.",
+    own: "The king's ear. Access to all of the kingdom's information. The ability to shape decisions without being responsible for them.",
+    fear: "A king who doesn't listen. Religious authorities who claim power over the throne. A court intrigue that removes you from your position.",
+    want: "A stable, prosperous kingdom and a king wise enough to take good advice.",
+    context: {
+      ch1: "The Indus Valley's governance mystery is relevant to your work — how did they maintain order without an obvious royal administration? Was there something to learn from them, or was their system's invisibility itself the weakness that ended them?",
+      ch2: "The Indo-Aryan migration creates political upheaval. New power structures are forming. Your skills at navigating the space between military, religious, and commercial interests have never been more necessary.",
+      ch3: "The Brahmin priests claim that their authority derives from the gods and supersedes the king's in spiritual matters. This creates a permanent tension you must navigate — advising a king who technically rules beneath the cosmic authority of a priest.",
+      ch4: "The Buddhist movement is growing. Your king is interested. The Brahmin advisors are alarmed. You must assess whether Buddhism is a spiritual movement, a political challenge, a social revolution, or all three — and advise accordingly.",
+      ch5: "Ashoka's conversion is either the most inspiring or most alarming event in your professional life depending on which kingdom you serve. An emperor who commits to nonviolence has just fundamentally changed the calculus of power in the subcontinent.",
+      ch6: "The Gupta golden age requires exactly your skills — balancing religious patronage, military protection, commercial development, and scholarly achievement. This is the best possible time to be a royal advisor. The karma of good governance produces its own golden age."
+    }
+  }
+];
+
+// ══════════════════════════════════════════════════════════════
+//  CHAPTERS
+// ══════════════════════════════════════════════════════════════
+const CHAPTERS = [
+  {
+    id: "ch1",
+    number: 1,
+    title: "Chapter 1 — The Mystery of the Indus",
+    subtitle: "A Civilization That Doesn't Fit",
+    scene: "You are studying the ruins of Mohenjo-daro and Harappa — two great cities of the Indus Valley civilization, built around 2600 BCE along the Indus River in what is now Pakistan. The cities are extraordinary. Grid streets. Standardized brick sizes. A sophisticated drainage system more advanced than anything in Egypt or Mesopotamia at the same time. Standardized weights and measures suggesting organized trade. And almost nothing else. No palace. No temple. No royal tomb. No monument to a ruler. No weapons cache. No evidence of a king, a pharaoh, a priest-king, or any obvious hierarchy at all. How did this work? And why did it end?",
+    riverNote: "<strong>Another river, another civilization:</strong> The Indus River system — particularly the Indus and the ancient Saraswati — made the same offer to early settlers that the Nile and the Tigris-Euphrates made: fertile soil, fresh water, and the possibility of surplus. By now you recognize this pattern. What is different about the Indus Valley civilization is not why it began — but how it organized itself while it lasted, and the mystery of why it ended.",
+    journalPrompt: "The Indus Valley civilization was highly organized but left almost no evidence of kings, priests, or rulers. Compare this to Egypt or Mesopotamia. What does the absence of monuments to power tell us — and what questions does it raise?",
+    discussAfter: false,
+    poisonRoles: [],
+    choices: {
+      brahmin: [
+        { text: "Conclude that the absence of temples means this civilization lacked spiritual foundation — which explains its collapse", hint: "Religious framework as explanation", outcome: "neutral", result: "Your interpretation is intellectually tidy. A civilization without visible religious hierarchy is, in your framework, a civilization without cosmic order. It could not endure. But archaeologists who study Mohenjo-daro find evidence of ritual bathing tanks, small figurines that may be religious objects, and an apparent reverence for order itself. The absence of your kind of temple does not mean the absence of the sacred. It means a different relationship with it.", karmaChange: -5, statChange: { food: 0, wealth: 5, standing: 5 } },
+        { text: "Study the standardized weights and measures carefully — this level of economic organization requires some form of central authority", hint: "Follow the evidence of administration", outcome: "good", result: "The standardization is remarkable. Every weight found across hundreds of miles of Indus Valley sites follows the same system. This required enforcement — or an incredibly powerful shared culture. You cannot determine which. But the question itself is important: power does not always announce itself with monuments. Sometimes the most powerful institution is the one that makes everyone agree without anyone being told to.", karmaChange: 5, statChange: { food: 5, wealth: 10, standing: 10 } },
+        { text: "Focus on what ended this civilization — understanding collapse is more useful than understanding the civilization itself", hint: "Study endings", outcome: "neutral", result: "The collapse of the Indus Valley — around 1900 BCE — is still debated. Climate change, river shifts, overextension, migration. What is clear is that a sophisticated civilization vanished leaving almost no written record of what it was or why it ended. This is a sobering reminder that even highly organized societies can disappear without explanation. Your study of their ending will inform how you think about protecting the civilization you belong to.", karmaChange: 0, statChange: { food: 5, wealth: 5, standing: 5 } }
+      ],
+      kshatriya: [
+        { text: "Note the absence of weapons and fortifications — this civilization was either very peaceful or very confident", hint: "A warrior reads for military evidence", outcome: "neutral", result: "The Indus cities had walls — but the walls appear designed for flood control rather than defense. Weapons are scarce in the archaeological record. Either this civilization maintained peace through means other than military force, or its threats came from nature rather than enemies. As a warrior, you find this either admirable or baffling. Possibly both.", karmaChange: 0, statChange: { food: 5, wealth: 5, standing: 5 } },
+        { text: "Conclude that the lack of military hierarchy explains the collapse — without warriors, civilization cannot protect itself", hint: "Military necessity argument", outcome: "bad", result: "The theory is appealing but the evidence doesn't support it. The Indus Valley collapse shows no evidence of military conquest. The cities were not destroyed — they were gradually abandoned. The collapse appears to have been environmental and economic, not military. A civilization can end without being defeated. This is an uncomfortable thought for someone whose identity rests on the protection warrior power provides.", karmaChange: -5, statChange: { food: 0, wealth: 0, standing: -5 } },
+        { text: "Look for evidence of how disputes were resolved without obvious military authority — this is genuinely puzzling", hint: "Open curiosity about a different system", outcome: "good", result: "The question has no clean answer in the archaeological record. But asking it opens something important: the assumption that military hierarchy is necessary for civilization is an assumption, not a fact. The Indus Valley suggests that for at least 700 years, a highly organized society functioned without the warriors being visibly in charge. What you do with that information is up to you.", karmaChange: 10, statChange: { food: 5, wealth: 5, standing: 10 } }
+      ],
+      vaishya: [
+        { text: "Focus on the trade evidence — Indus seals have been found in Mesopotamia, meaning these were your kind of people", hint: "Recognize a merchant civilization", outcome: "good", result: "The Indus seals found at Mesopotamian sites confirm long-distance trade across thousands of miles. Cotton textiles, carnelian beads, and timber moved from the Indus to the Persian Gulf. This civilization traded before India had a written history that recorded it. You feel an unexpected kinship with these ancient merchants who built their city around commerce rather than conquest or religion.", karmaChange: 5, statChange: { food: 5, wealth: 20, standing: 10 } },
+        { text: "Study the standardized weights — commercial standardization at this scale required trust or enforcement, and you want to know which", hint: "Commercial infrastructure analysis", outcome: "good", result: "The weights are consistent across vast distances suggesting either a powerful central authority or an extraordinarily strong commercial culture of shared standards. Merchants today know that consistent measures are worth more than any army — trade collapses without them. The Indus Valley understood this. Whether they enforced it through authority or maintained it through culture is a question you find genuinely interesting.", karmaChange: 5, statChange: { food: 5, wealth: 15, standing: 10 } },
+        { text: "Note that the collapse of trade networks likely preceded the collapse of the civilization itself", hint: "Economic collapse theory", outcome: "neutral", result: "Trade disruption — possibly caused by climate change affecting river routes — appears in the archaeological record before the cities emptied. The merchants left first. Or the conditions that sustained merchants disappeared first. Either way, the commercial infrastructure's failure anticipated the civilization's failure. This is a pattern you will see repeated in every civilization you study.", karmaChange: 0, statChange: { food: 5, wealth: 10, standing: 5 } }
+      ],
+      shudra: [
+        { text: "Notice that the Indus Valley workers' houses were comparable in size to the larger buildings — the gap between rich and poor was smaller here", hint: "Read the archaeology for equality", outcome: "good", result: "The houses at Mohenjo-daro do vary in size but not dramatically. The famous Great Bath was accessible to the whole city. The drainage system served every neighborhood. Whatever hierarchy existed here, it was not written into the built environment as dramatically as the pyramids write Egypt's hierarchy into stone. For the first time in your studies of ancient civilization, you see something closer to equality. You are not sure what to make of it.", karmaChange: 10, statChange: { food: 10, wealth: 5, standing: 10 } },
+        { text: "Wonder whether a laborer's life in the Indus Valley was better or worse than yours — and find you cannot tell", hint: "Personal comparison across time", outcome: "neutral", result: "The archaeological record of the Indus Valley tells you almost nothing about the inner life of its workers. You know they had drainage. You know their tools were standardized. You know the city was organized. What you do not know is whether they felt the weight of a system pressing down on them, or whether the absence of visible hierarchy meant the absence of felt hierarchy. The mystery of the Indus Valley is partly that it does not tell you what you most want to know.", karmaChange: 5, statChange: { food: 5, wealth: 0, standing: 5 } },
+        { text: "Focus on the Great Bath — a public structure serving the whole city suggests the city belonged to everyone, not just its rulers", hint: "Public infrastructure as equality", outcome: "good", result: "The Great Bath at Mohenjo-daro is enormous — a public pool with sophisticated waterproofing, changing rooms, and a drainage system. It served the city. Not a palace. Not a temple to a specific ruler. A public bath. The idea that a civilization's greatest architectural achievement was built for everyone rather than for the powerful is one you find surprisingly moving.", karmaChange: 10, statChange: { food: 10, wealth: 5, standing: 15 } }
+      ],
+      monk: [
+        { text: "Meditate on what the Indus Valley's mysterious collapse means for attachment to civilization itself", hint: "Impermanence as teaching", outcome: "good", result: "The Buddha taught that all conditioned things are impermanent. A civilization that lasted 700 years and then vanished — leaving behind only artifacts and questions — is a powerful illustration of this truth. You sit with the ruins and feel, not sadness, but clarity. Everything built will eventually be returned to dust. The question is what you do with the time between.", karmaChange: 15, statChange: { food: 5, wealth: 0, standing: 10 } },
+        { text: "Note that the absence of royal monuments suggests a society less organized around ego and power than Egypt or Mesopotamia", hint: "Non-attachment in governance", outcome: "good", result: "Whether the Indus Valley society was actually less ego-driven or simply left less obvious traces of its hierarchy, you cannot say. But the absence of pharaoh-scale self-glorification is notable. A civilization that organized itself without requiring visible monuments to its rulers achieved something the Buddha might have recognized — governance without the performance of power. Or it simply had power that expressed itself differently.", karmaChange: 10, statChange: { food: 5, wealth: 5, standing: 10 } },
+        { text: "Look for evidence of the spiritual practices of these people — every civilization reaches toward something beyond itself", hint: "Seek the sacred", outcome: "good", result: "The Indus Valley figurines — small terracotta figures, some appearing to show a seated figure in a meditative pose — suggest spiritual practice of some kind. The ritual bathing tank suggests purification. Something sacred organized this society even if it left no temple. The form of the sacred was different from what came after. But the reaching toward it — that was the same.", karmaChange: 15, statChange: { food: 5, wealth: 0, standing: 15 } }
+      ],
+      advisor: [
+        { text: "Study the Indus governance mystery carefully — a civilization without visible rulers is either brilliantly organized or fatally fragile", hint: "Governance analysis", outcome: "good", result: "Your analysis produces no clean conclusion. The standardization suggests central authority. The absence of monuments suggests authority that didn't need to announce itself. The collapse suggests something failed — but what? You file the Indus Valley under 'unsolved governance mystery' and note that the most dangerous thing about an invisible system is that you cannot reform what you cannot see.", karmaChange: 5, statChange: { food: 5, wealth: 10, standing: 15 } },
+        { text: "Focus on the city planning — whoever designed Mohenjo-daro was thinking about governance at an urban scale", hint: "Infrastructure as policy", outcome: "good", result: "The grid streets, the drainage system, the standardized bricks — someone planned this. Urban planning at this scale is governance made physical. The city's layout is a political document. Whoever decided where the Great Bath went, how wide the streets would be, and how the drainage would flow was making decisions that affected every life in the city. You recognize the work. It is your work, transposed 4,000 years back.", karmaChange: 5, statChange: { food: 5, wealth: 10, standing: 20 } },
+        { text: "Note that the civilization's collapse offers a warning — sustainable governance requires adaptability, and the Indus Valley may have lacked it", hint: "Institutional resilience", outcome: "neutral", result: "The climate changed. The rivers shifted. The trade routes adjusted. And the Indus Valley civilization, for all its sophisticated organization, could not adapt quickly enough. Whether this was a failure of governance or simply the limits of Bronze Age crisis management is unclear. But the lesson you draw is one you will carry into every court you advise: a civilization that cannot adapt to changing conditions is a civilization living on borrowed time.", karmaChange: 5, statChange: { food: 5, wealth: 5, standing: 10 } }
+      ]
+    }
+  },
+  {
+    id: "ch2",
+    number: 2,
+    title: "Chapter 2 — New People, New Ideas",
+    subtitle: "The Indo-Aryan Migration",
+    scene: "Around 1500 BCE, nomadic peoples from the Central Asian steppes — the Indo-Aryans — begin moving into the Indian subcontinent through the mountain passes of the northwest. They bring horses, chariots, a rich oral tradition of hymns called the Vedas, and a worldview organized around fire sacrifices, warrior values, and a pantheon of nature gods. They are not invaders sweeping away everything before them — the process is gradual, a migration over centuries. But their arrival changes India profoundly. Two worldviews are meeting. The civilization that emerges from this encounter will eventually produce Hinduism, the caste system, and the philosophical tradition that the Buddha will one day challenge.",
+    riverNote: "<strong>The rivers shift:</strong> The Indo-Aryan migration gradually shifts the center of Indian civilization from the Indus River system in the northwest to the Ganges River plain in the northeast. The Ganges — wider, more reliably flooding, surrounded by deep forests that the migrants cleared for agriculture — becomes the new heartland. By the time of the Mauryan Empire, the Ganges plain is the center of Indian political, religious, and cultural life. The river, again, shapes everything.",
+    journalPrompt: "Two different cultures are meeting — the existing Indus Valley peoples and the incoming Indo-Aryans. When two cultures meet, each one changes. What might each group have gained from the other — and what might each have lost?",
+    discussAfter: false,
+    poisonRoles: ["vaishya"],
+    choices: {
+      brahmin: [
+        { text: "Embrace the Vedic tradition fully — these sacred hymns contain the foundation of cosmic truth", hint: "The sacred texts as foundation", outcome: "good", result: "The Rigveda, the Samaveda, the Yajurveda — the oral hymns that have been passed down through generations of your people — are beginning to be systematized. You are part of that systematization. The knowledge that was carried in memory is being organized into a tradition that will endure for millennia. You understand that you are not just preserving texts. You are constructing the framework through which all of India will understand reality.", karmaChange: 5, statChange: { food: 5, wealth: 5, standing: 20 } },
+        { text: "Incorporate local spiritual practices carefully — the existing population's traditions may contain useful wisdom", hint: "Synthesis over replacement", outcome: "good", result: "The gods of the Indus Valley are not the gods of the Vedas. But some of what the local people practice — ritual bathing, reverence for certain animals, particular forms of meditation — can be incorporated into the emerging tradition. The religion that will become Hinduism is not a replacement of what existed. It is an accumulation. Your willingness to incorporate rather than reject produces a more durable tradition.", karmaChange: 10, statChange: { food: 5, wealth: 5, standing: 15 } },
+        { text: "Establish clear boundaries between Brahmin knowledge and common knowledge — not everything should be accessible to everyone", hint: "Sacred hierarchy of knowledge", outcome: "neutral", result: "The Vedas are preserved in Sanskrit — a language increasingly reserved for ritual and elite education. The sacred knowledge is protected by limiting access to it. This decision will shape Indian intellectual history for thousands of years. It preserves the texts. It also concentrates their power in your hands. Whether this is wisdom or self-interest — or both — is a question the tradition will wrestle with for a very long time.", karmaChange: -5, statChange: { food: 0, wealth: 10, standing: 20 } }
+      ],
+      kshatriya: [
+        { text: "Establish your military dominance in the new territory through organized campaigns", hint: "Warrior expansion", outcome: "neutral", result: "The Indo-Aryan warrior tradition is formidable — horses, chariots, organized military structure. The existing populations largely absorb or accommodate the newcomers rather than being militarily defeated. Your dominance is established not through a single conquest but through the gradual assertion of a superior military and organizational culture. It is less glorious than battle. It is more effective.", karmaChange: -5, statChange: { food: 5, wealth: 10, standing: 15 } },
+        { text: "Learn from the existing agricultural population — warriors need farmers to feed armies", hint: "Practical alliance", outcome: "good", result: "The Indo-Aryans are initially pastoralists — cattle herders, not farmers. The agricultural knowledge of the existing population is invaluable. You negotiate access to land and agricultural surplus in exchange for military protection. This exchange — warrior protection for agricultural production — is the foundation of every feudal arrangement in history. You are inventing it.", karmaChange: 5, statChange: { food: 15, wealth: 10, standing: 10 } },
+        { text: "Champion the emerging varna structure — warriors deserve a recognized and honored position in the new social order", hint: "Institutionalize warrior status", outcome: "good", result: "The emerging varna system gives the Kshatriya class formal recognition — second only to the Brahmin, above the merchant and the laborer. You negotiate this position carefully. The priests claimed cosmic authority. You claimed earthly power. The arrangement — priests above warriors in theory, warriors controlling actual force — will define Indian politics for millennia.", karmaChange: 0, statChange: { food: 5, wealth: 10, standing: 20 } }
+      ],
+      vaishya: [
+        { text: "Attempt to maintain your existing trade relationships despite the migration disruption", hint: "Preserve what you have", outcome: "bad", result: "The trade routes you relied on have shifted. The partners you traded with are navigating their own upheaval. Some relationships survive. Many don't. The disruption costs you significantly. You are rebuilding from a weaker position than you started. This is the merchant's recurring nightmare — political upheaval that has nothing to do with commerce destroying commercial relationships that took years to build.", karmaChange: -5, statChange: { food: -5, wealth: -15, standing: -5 }, poison: true },
+        { text: "Pivot quickly to serve the new arrivals — they need goods and you can provide them", hint: "Adapt to the new market", outcome: "neutral", result: "The Indo-Aryans need agricultural tools, leather goods, metal implements. You have access to these. The pivot costs you your existing relationships but builds new ones. You survive the transition — barely. The lesson, as always, is that a merchant who can adapt is more durable than a merchant who cannot. But adaptation has costs that those who stayed loyal to you will remember.", karmaChange: 0, statChange: { food: 5, wealth: 5, standing: -5 }, poison: true },
+        { text: "Position yourself as the commercial bridge between the two groups — each needs what the other has", hint: "Become indispensable to both sides", outcome: "good", result: "The Indo-Aryans have horses, cattle, and military goods. The existing population has agricultural surpluses, craft traditions, and established trade networks. You move between them. The disruption that threatened you becomes an opportunity. The merchant who can navigate between two worlds is worth more than the merchant who serves only one.", karmaChange: 10, statChange: { food: 10, wealth: 20, standing: 10 } }
+      ],
+      shudra: [
+        { text: "Continue the agricultural work that has always defined your community — whoever rules above, the fields still need tending", hint: "Continuity through upheaval", outcome: "neutral", result: "The migration happens above you in the social hierarchy. New rulers arrive. New religious traditions are proclaimed. Your fields require the same work they always required. You plant. You harvest. You feed whoever claims authority. The upheaval that transforms India's political and religious landscape barely touches the rhythm of your agricultural labor. This is simultaneously your protection and your prison.", karmaChange: 0, statChange: { food: 10, wealth: 0, standing: -5 } },
+        { text: "Try to understand the Vedic tradition being introduced — knowledge is the one thing that cannot be taken from you", hint: "Seek understanding", outcome: "neutral", result: "The Vedas are in Sanskrit — a language you do not speak and are not taught. The sacred knowledge of the incoming tradition is explicitly not for you. The Brahmin teachers who might explain it turn you away. You understand the stories that filter down through oral tradition — the gods, the great battles, the cosmic order. But the texts themselves remain closed. Knowledge, it turns out, can absolutely be withheld.", karmaChange: 5, statChange: { food: 5, wealth: 0, standing: 0 } },
+        { text: "Notice that the new social order being constructed seems to assign you a permanent position at the bottom", hint: "Read what is being built", outcome: "good", result: "The varna categories that are emerging from the encounter between Indo-Aryan and existing populations are not neutral descriptions of what people do. They are being used to justify what people are worth. You can see this being constructed around you. Naming what is happening does not change it. But seeing clearly is always the first step toward anything else.", karmaChange: 10, statChange: { food: 5, wealth: 0, standing: 5 } }
+      ],
+      monk: [
+        { text: "Study the Vedic tradition carefully — you cannot challenge what you do not understand", hint: "Know what you will one day reject", outcome: "good", result: "The Vedas contain genuine wisdom — hymns of extraordinary beauty, philosophical insights about the nature of reality, observations about the cosmos that will influence Indian thought for millennia. They also contain the foundations of a social hierarchy that will cause enormous suffering. Both things are true. The tradition the Buddha will one day challenge is worth understanding before the challenge is made.", karmaChange: 10, statChange: { food: 5, wealth: 0, standing: 10 } },
+        { text: "Notice the beauty in the Vedic hymns alongside their social function — sacred text and social control are not mutually exclusive", hint: "Hold complexity", outcome: "good", result: "The Rigveda's hymn to creation — Nasadiya Sukta — is one of the most intellectually honest texts in any religious tradition. 'Who really knows? Who will here proclaim it? Whence was it produced? Whence is this creation? The gods came afterwards, with the creation of this universe. Who then knows whence it has arisen?' The tradition that produced this question also produced the varna system. Both emerge from the same texts. This complexity will matter.", karmaChange: 15, statChange: { food: 5, wealth: 0, standing: 10 } },
+        { text: "Focus on the philosophical questions the Vedic tradition raises — what is the nature of the self, what is reality, what persists after death", hint: "The philosophical inheritance", outcome: "good", result: "The Upanishads — the philosophical texts that will emerge from the Vedic tradition — ask exactly these questions. The concept of Atman (the individual self) and Brahman (the universal reality) are wrestling with the same questions the Buddha will later approach from a different angle. The philosophical tradition the Buddha enters is rich, sophisticated, and already asking the hardest questions. He will not abandon it. He will transform it.", karmaChange: 10, statChange: { food: 5, wealth: 0, standing: 15 } }
+      ],
+      advisor: [
+        { text: "Help the emerging power structure formalize itself — chaos is the enemy of good governance regardless of who is in charge", hint: "Stability as primary value", outcome: "neutral", result: "You serve order. The specific form of order matters less to you than its existence. The incoming culture and the existing population need to coexist with enough stability for governance to function. You help draft the arrangements — who controls which land, who answers to whom, what disputes go to which authority. The resulting order is imperfect. All orders are imperfect. But it holds.", karmaChange: -5, statChange: { food: 5, wealth: 5, standing: 15 } },
+        { text: "Counsel your king to absorb the best of the incoming culture while protecting the existing institutions", hint: "Synthesis as strategy", outcome: "good", result: "The king who can take the military organization of the Indo-Aryans and combine it with the agricultural and commercial knowledge of the existing population ends up stronger than either group alone. Your counsel produces exactly this outcome. The resulting kingdom is more durable than either predecessor. Synthesis, when it works, always produces more than the sum of its parts.", karmaChange: 10, statChange: { food: 10, wealth: 10, standing: 20 } },
+        { text: "Document everything — this moment of cultural encounter will shape India for millennia and the record matters", hint: "Historical consciousness", outcome: "good", result: "The records you keep become the administrative foundation of the emerging political order. They also become, centuries later, the historical evidence that allows scholars to understand how India changed. You do not know this. You are simply doing your job carefully. Good administration and good history are often the same work.", karmaChange: 5, statChange: { food: 5, wealth: 5, standing: 20 } }
+      ]
+    }
+  },
+  {
+    id: "ch3",
+    number: 3,
+    title: "Chapter 3 — The Order of Things",
+    subtitle: "When the Varna System Solidifies",
+    scene: "Over centuries, the social categories that emerged from the encounter between Indo-Aryan and existing Indian cultures have hardened into the varna system — the four-tier hierarchy that organizes all of Indian society. Brahmin priests at the top. Kshatriya warriors and rulers second. Vaishya merchants and farmers third. Shudra laborers and servants at the bottom. And below all four varnas, a group declared outside the system entirely — those who do work considered ritually impure. The system is justified by dharma — cosmic duty — and reinforced by the belief that a person's varna is determined by their karma from a previous life. You were born into your position because of what you did before. This is not presented as injustice. It is presented as cosmic order.",
+    riverNote: "<strong>The Ganges plain:</strong> The varna system crystallizes as Indian civilization shifts to the Ganges River plain. The deep forests are cleared. Agriculture expands. Cities grow. The surplus that civilization requires is produced by Shudra labor, organized by Vaishya commerce, protected by Kshatriya military power, and given cosmic justification by Brahmin religious authority. The river makes the surplus possible. The varna system determines who benefits from it.",
+    journalPrompt: "The varna system was justified as cosmic order — dharma required each person to fulfill their born role. Who benefits most from a system that claims inequality is divinely ordained? Who benefits least?",
+    discussAfter: true,
+    discussPrompt: "Your table just experienced the varna system from one perspective. The table next to you experienced it from a completely different one. Before you continue — spend 90 seconds comparing: what choices did you have that they didn't? What did they have that you didn't?",
+    poisonRoles: ["shudra", "advisor"],
+    choices: {
+      brahmin: [
+        { text: "Formalize the theological justification for the varna system — dharma requires this order, and the texts confirm it", hint: "Sacred authority over social structure", outcome: "good", result: "The texts you compile, teach, and interpret make the varna system not merely a social arrangement but a cosmic necessity. To challenge the varna order is to challenge dharma itself — which is to challenge the gods. This is extraordinarily effective social control. And it is, you genuinely believe, true. The cosmic order you are describing is the order you were born into. The two facts feel, to you, like confirmation rather than conflict.", karmaChange: -10, statChange: { food: 5, wealth: 10, standing: 25 } },
+        { text: "Teach that each varna has its own dharma — the Shudra who fulfills their duty serves the cosmic order as fully as the Brahmin who fulfills his", hint: "Dignity within the system", outcome: "neutral", result: "This teaching is both sincere and convenient. Sincere because you genuinely believe in the dharmic order. Convenient because it makes the system easier for those at the bottom to accept. Whether it constitutes genuine respect for the Shudra or sophisticated management of potential resentment is a question the tradition will never fully resolve.", karmaChange: 0, statChange: { food: 5, wealth: 5, standing: 15 } },
+        { text: "Privately question whether birth alone should determine varna — surely quality of character matters too", hint: "The seeds of doubt", outcome: "neutral", result: "You keep the question private. The social consequences of asking it publicly are severe. But the question itself is important — and it is already being asked by others in the tradition. The philosophical strain within Hinduism that emphasizes karma-of-action over karma-of-birth will eventually produce the Bhagavad Gita's complex answer to exactly this question. You are not alone in your doubt. You are just early.", karmaChange: 10, statChange: { food: 0, wealth: 0, standing: 5 } }
+      ],
+      kshatriya: [
+        { text: "Embrace your dharma as warrior and ruler — the varna system gives you authority that would otherwise require constant military assertion", hint: "Legitimate authority over force", outcome: "good", result: "The varna system is, for you, a practical improvement over pure military dominance. Your authority is now cosmic rather than merely physical. You rule not because you are the strongest but because dharma requires it. Whether the cosmic justification is true or simply useful is a question you rarely need to ask — the result is the same either way.", karmaChange: -5, statChange: { food: 5, wealth: 10, standing: 20 } },
+        { text: "Chafe at the Brahmin's claim that priests outrank warriors — the sword protects the scripture, not the other way around", hint: "Warrior versus priest authority", outcome: "neutral", result: "The tension between Kshatriya and Brahmin authority runs through Indian history like a fault line. You protect the priests. The priests justify your rule. Neither can do without the other. But neither fully accepts the other's claim to supremacy. This tension will eventually produce the Upanishads — some of whose most important philosophical conversations happen between Brahmin teachers and Kshatriya questioners who refuse to simply accept the received wisdom.", karmaChange: 5, statChange: { food: 5, wealth: 5, standing: 10 } },
+        { text: "Use your political position to ensure the varna system serves the kingdom's stability — social order is a military asset", hint: "Social control as statecraft", outcome: "neutral", result: "A society where everyone knows their role and fulfills it is, from a governance perspective, highly stable. The varna system produces predictability. Predictability enables planning. Planning enables expansion. The military utility of social order is not a cynical observation — it is the reason every successful empire has found some version of it.", karmaChange: -5, statChange: { food: 10, wealth: 10, standing: 15 } }
+      ],
+      vaishya: [
+        { text: "Work within the third varna's position — wealth accumulates regardless of social rank, and wealth has its own power", hint: "Economic power below social rank", outcome: "good", result: "The Vaishya position — third in the varna hierarchy — turns out to be practically advantageous in specific ways. Commerce generates wealth. Wealth generates influence. Influence can purchase what rank alone cannot. You are not at the top of the social order. You are close to the top of the economic order. In a civilization that increasingly depends on commercial exchange, that gap narrows over time.", karmaChange: 0, statChange: { food: 5, wealth: 20, standing: 10 } },
+        { text: "Fund the construction of temples and ritual spaces — religious patronage purchases social standing", hint: "Buy your way up", outcome: "good", result: "The Brahmin priests need resources to perform their elaborate rituals. You have resources. The exchange — your wealth for their ritual services and public acknowledgment — is one of the most consistent transactions in Indian social history. You cannot change your varna. You can change how you are treated within it. Religious patronage is the most reliable mechanism for doing so.", karmaChange: 5, statChange: { food: 5, wealth: -10, standing: 20 } },
+        { text: "Note that the varna system's rigidity creates economic inefficiencies — the best person for a job may not be born to the right varna", hint: "Economic critique of social rigidity", outcome: "neutral", result: "Your observation is economically accurate and socially dangerous. The varna system does not optimize for talent — it optimizes for birth. The best mathematician born into a Shudra family cannot become a court advisor. The most skilled farmer born into a Brahmin family is socially required to pursue priestly learning. You note the inefficiency privately and adapt your business practices accordingly.", karmaChange: 5, statChange: { food: 5, wealth: 10, standing: 0 } }
+      ],
+      shudra: [
+        { text: "Accept your dharma as the teaching prescribes — fulfillment of your duty is its own form of spiritual merit", hint: "Find meaning within the system", outcome: "neutral", result: "The teaching that Shudra dharma, faithfully fulfilled, accumulates karma toward a better rebirth is genuinely believed by many in your community. The system is unjust by most measures. It also provides a framework of meaning that makes survival possible. Accepting it is not the same as endorsing it. It is what survival sometimes requires.", karmaChange: 0, statChange: { food: 5, wealth: 0, standing: 0 }, poison: true },
+        { text: "Find the cracks in the system — local relationships, informal economies, small dignities that exist outside the formal hierarchy", hint: "Survive in the margins", outcome: "neutral", result: "Every rigid system has margins. You find yours — a neighbor who treats you with genuine respect, a skill that makes you indispensable to your local community, a small plot of land cultivated in the hours the formal system does not claim. These are not freedom. But they are a life, lived with more agency than the varna system intends for you.", karmaChange: 5, statChange: { food: 10, wealth: 5, standing: 5 }, poison: true },
+        { text: "Listen carefully when traveling monks speak about dharma — sometimes a different voice describes a different order", hint: "Seek alternative teaching", outcome: "good", result: "The traveling teachers who pass through your village do not all say the same thing. Some reinforce the varna order. Some — the heterodox ones, the ones the Brahmin establishment disapproves of — teach that the soul has no caste, that the suffering you experience is neither cosmically necessary nor cosmically just, that another way of understanding the world exists. You listen. You remember.", karmaChange: 15, statChange: { food: 5, wealth: 0, standing: 5 }, poison: true }
+      ],
+      monk: [
+        { text: "Study the philosophical tradition carefully — the answers to the varna system's injustice must come from within the tradition's own logic", hint: "Reform from within the philosophy", outcome: "good", result: "The Upanishads — the philosophical culmination of the Vedic tradition — contain the seeds of the varna system's internal critique. The concept that all beings share the same Atman — the same ultimate self — sits uneasily with the idea that some beings are worth more than others by birth. You find this tension and pull at it carefully. The thread, when it unravels, will eventually produce the Buddha's teaching.", karmaChange: 15, statChange: { food: 5, wealth: 0, standing: 10 } },
+        { text: "Speak publicly about the equality of souls — risk the social consequences", hint: "Early challenge to the system", outcome: "neutral", result: "The public teaching is received with interest by some and hostility by others. The Brahmin establishment dismisses you. The Shudra communities listen carefully. You have not yet found the full teaching — the Four Noble Truths have not yet been formulated. But you are practicing the courage that the full teaching will require. The consequences are significant. The seeds are planted.", karmaChange: 10, statChange: { food: -5, wealth: 0, standing: -5 } },
+        { text: "Sit with a Shudra laborer and share a meal — let the action speak before the teaching", hint: "Embodied challenge to hierarchy", outcome: "good", result: "The act is small and enormous simultaneously. Sharing food across varna lines violates ritual purity rules that the Brahmin establishment considers cosmic law. You are not yet the Buddha. But you are practicing the central insight of what Buddhism will teach — that the sacred is not protected by keeping people separate. It is found in the connection between them.", karmaChange: 20, statChange: { food: 5, wealth: 0, standing: 5 } }
+      ],
+      advisor: [
+        { text: "Navigate between Brahmin authority and Kshatriya power — your effectiveness depends on your relationship with both", hint: "Political survival between two powers", outcome: "neutral", result: "Your role requires you to serve the king while respecting the priests' authority. The two claims are not always compatible. You develop the art of saying different things to different audiences while maintaining a coherent policy direction. This is either sophisticated diplomacy or simple hypocrisy. In practice, it is both, and the distinction between them is thinner than anyone in either court would admit.", karmaChange: -5, statChange: { food: 5, wealth: 5, standing: 10 }, poison: true },
+        { text: "Advise the king to use the varna system as an administrative tool — clarity of social roles simplifies governance", hint: "Instrumental use of social structure", outcome: "neutral", result: "The varna system does simplify certain administrative decisions. Tax collection, labor organization, military recruitment — all are easier when social roles are clearly defined and people accept them as divinely ordained. Your advice is pragmatic. It is also advice that helps maintain a system that harms the people at its bottom. You are aware of this. You file it under 'political reality' and move on.", karmaChange: -10, statChange: { food: 5, wealth: 10, standing: 15 }, poison: true },
+        { text: "Note privately that the varna system creates governance risks — rigidity prevents the best people from reaching positions where they can help", hint: "Institutional critique from inside", outcome: "good", result: "The most talented military strategist you have ever met was born into a Vaishya family and cannot serve as a general. The most insightful political mind in the kingdom is a Shudra woman who cannot enter the court. You make quiet arrangements — consulting people you are not supposed to consult, creating informal channels that bypass the formal hierarchy. The system constrains you. You constrain it back, where you can.", karmaChange: 10, statChange: { food: 5, wealth: 5, standing: 10 } }
+      ]
+    }
+  },
+  {
+    id: "ch4",
+    number: 4,
+    title: "Chapter 4 — The Middle Path",
+    subtitle: "When the Buddha Begins to Teach",
+    scene: "Around 500 BCE, a prince named Siddhartha Gautama from the Shakya clan in what is now Nepal leaves his palace, abandons his wealth and family, and spends years seeking the answer to a question: why do beings suffer, and is there a way to end it? After years of extreme asceticism that nearly kills him, he sits beneath a Bodhi tree in Bodh Gaya and achieves enlightenment. He becomes the Buddha — the awakened one. He then spends the remaining 45 years of his life teaching the Four Noble Truths and the Eightfold Path. The teaching is revolutionary: suffering is caused by attachment and craving; the path to liberation requires right understanding, right action, and right intention; and — critically — this path is available to everyone, regardless of caste. The varna system, the Buddha teaches, is a human construct. The soul has no caste.",
+    riverNote: "<strong>The Ganges as witness:</strong> The Buddha teaches, achieves enlightenment, gives his first sermon, and dies all within the Ganges plain. The great cities of Varanasi, Bodh Gaya, Sarnath, and Kushinagar — where the Buddha's story unfolds — all sit along or near the Ganges. The river that made the agricultural surplus possible also makes the urban concentration possible — and it is in these cities that the Buddha finds his first audiences, including the merchants and traders whose patronage will help spread the dharma.",
+    journalPrompt: "The Buddha taught that the path to liberation was available to everyone regardless of caste. For which role in this campaign was that teaching most revolutionary — and why?",
+    discussAfter: false,
+    poisonRoles: ["brahmin"],
+    choices: {
+      brahmin: [
+        { text: "Dismiss the Buddha's teaching as heterodox — the Vedas are the foundation of cosmic truth and this teaching contradicts them", hint: "Defend the tradition", outcome: "neutral", result: "The dismissal is the expected response and the strategically safe one. But it is not effective. The Buddha is drawing enormous crowds. His arguments are philosophically sophisticated — he knows the Vedic tradition from the inside and is not making amateur errors. Dismissing him requires engaging him, and engaging him risks giving his ideas more attention than ignoring him would. The tradition that dismisses the Buddha is not wrong about its own foundations. It is wrong about whether dismissal is sufficient.", karmaChange: -15, statChange: { food: 0, wealth: 0, standing: -10 }, poison: true },
+        { text: "Engage with the Buddha's teaching philosophically — find its weaknesses through argument rather than authority", hint: "Intellectual challenge", outcome: "neutral", result: "The philosophical debate is real and productive — on both sides. The Buddha's students are well-trained. Your students are well-trained. The arguments that emerge from this encounter sharpen both traditions. Some of the most sophisticated Hindu philosophical writing emerges in direct response to Buddhist challenges. The Buddha does not defeat Brahmin philosophy. He forces it to become better.", karmaChange: 0, statChange: { food: 0, wealth: 0, standing: 0 }, poison: true },
+        { text: "Acknowledge privately that the Buddha has identified something real — the karma-of-birth explanation has always been the weakest part of the tradition", hint: "Private honesty", outcome: "good", result: "The acknowledgment costs you nothing publicly. It costs you something privately — the comfortable certainty that the system you benefit from is cosmically just. Once you admit the weakness, you cannot un-admit it. The question of whether birth-determined caste is actually dharma or actually social control dressed in theological language will follow you for the rest of your career. This is not comfortable. It is honest.", karmaChange: 20, statChange: { food: 0, wealth: 0, standing: 5 } }
+      ],
+      kshatriya: [
+        { text: "Listen to the Buddha's teaching with genuine openness — the question of suffering is relevant to a warrior", hint: "Personal resonance", outcome: "good", result: "The Buddha was born a Kshatriya prince. His teaching begins with his own experience of the suffering that wealth and power cannot prevent. You recognize this. The battlefield produces its own encounters with suffering that no varna position can protect against. The teaching that suffering has a cause and a path to its end speaks to something in you that the warrior tradition has never fully addressed.", karmaChange: 15, statChange: { food: 5, wealth: 0, standing: 10 } },
+        { text: "Note that the Buddha's teaching of ahimsa creates a philosophical problem for the warrior class — how do you reconcile nonviolence with your dharma?", hint: "The warrior's dilemma", outcome: "neutral", result: "The tension between ahimsa (nonviolence) and Kshatriya dharma (the duty to fight) is one of the central problems of Indian philosophy. The Bhagavad Gita — which will be written centuries later — is essentially one long answer to this question. You are living in the moment when the question is first being asked this sharply. There is no clean answer. There may never be.", karmaChange: 10, statChange: { food: 0, wealth: 0, standing: 5 } },
+        { text: "Support the Buddhist monasteries — a ruler who patronizes wisdom movements earns loyalty across social boundaries", hint: "Political patronage of Buddhism", outcome: "good", result: "Buddhist monasteries welcome supporters from all varnas. A Kshatriya ruler who funds monasteries earns the goodwill of merchants, farmers, and laborers who find the Buddhist message appealing. The political calculus is sound. The spiritual encounter is real. Both motivations can be true simultaneously. The Buddha would probably prefer the spiritual motivation. He would not refuse the donation either way.", karmaChange: 5, statChange: { food: 5, wealth: -5, standing: 20 } }
+      ],
+      vaishya: [
+        { text: "Become a major patron of the Buddhist monasteries — merchants were among the Buddha's most important early supporters", hint: "Strategic religious patronage", outcome: "good", result: "The relationship between Buddhism and the merchant class is one of the most important partnerships in Indian history. Buddhist ethics — honest dealing, compassion, non-exploitation — align well with the interests of a merchant class seeking reliable trading partners. Buddhist monasteries become centers of literacy, record-keeping, and commercial law. Your patronage is both spiritually and commercially motivated. The Buddha would say that is fine.", karmaChange: 10, statChange: { food: 5, wealth: 10, standing: 20 } },
+        { text: "Note that Buddhism's rejection of caste opens markets previously closed by ritual purity rules", hint: "Commercial benefit of equality", outcome: "good", result: "The varna system creates commercial inefficiencies — ritual purity rules restrict who can handle what goods and who can trade with whom. Buddhism's rejection of these categories opens commercial possibilities. A Buddhist merchant can trade with anyone. The spiritual and commercial benefits of the teaching align in ways that explain the merchant class's enthusiastic early support for the sangha.", karmaChange: 5, statChange: { food: 5, wealth: 20, standing: 10 } },
+        { text: "Support both Buddhist and Hindu institutions — religious diversity is good for commerce", hint: "Hedge your spiritual bets", outcome: "neutral", result: "You fund a temple and a monastery in the same year. Both communities thank you publicly. Your business relationships span both communities. Whether you believe the dharma or the Vedas more sincerely is a question you do not spend much time on. What you believe most sincerely is that a merchant who belongs to no faction belongs to all factions. This is not cynicism. It is the accumulated wisdom of generations of traders.", karmaChange: 0, statChange: { food: 5, wealth: 5, standing: 15 } }
+      ],
+      shudra: [
+        { text: "Seek out the Buddha's teaching — he teaches that the soul has no caste", hint: "The revolutionary message", outcome: "good", result: "You walk to where the Buddha is teaching. Nobody stops you. The sangha welcomes everyone. You sit among merchants, former warriors, and Brahmin scholars who have left their privileges behind. The Buddha teaches the Four Noble Truths. He does not ask what varna you were born into. For the first time in your life, a teaching of cosmic significance treats you as if your birth does not determine your worth. The experience is difficult to describe. You try anyway.", karmaChange: 20, statChange: { food: 5, wealth: 0, standing: 15 } },
+        { text: "Join the sangha — leave the varna system behind by entering a community that does not recognize it", hint: "Exit the system entirely", outcome: "good", result: "The sangha is not paradise — it has its own hierarchies of seniority and practice. But it is a hierarchy based on how long you have practiced and how sincerely, not on what family you were born into. The difference is enormous. You are not a Shudra in the sangha. You are a monk in training. This is not a small thing. It may be the largest thing that has ever happened to you.", karmaChange: 20, statChange: { food: 0, wealth: -5, standing: 20 } },
+        { text: "Share the Buddha's teaching with your community — others need to hear that the system that defines them is not cosmically inevitable", hint: "Spread the message", outcome: "good", result: "You bring the teaching back to your village. Some people are afraid of the Brahmin reaction. Some are skeptical — they have heard promises before. Some listen with the same hungry attention you brought to your first hearing. The Buddha's message spreads partly through exactly this — people who found in it something they needed carrying it to others who might need the same thing.", karmaChange: 20, statChange: { food: 5, wealth: 0, standing: 15 } }
+      ],
+      monk: [
+        { text: "Fully commit to the Eightfold Path — right understanding, right intention, right speech, right action, right livelihood, right effort, right mindfulness, right concentration", hint: "Complete commitment", outcome: "good", result: "The path is not a philosophy. It is a practice. Right understanding without right action is incomplete. Right action without right mindfulness collapses into habit. The eight parts support each other — remove one and the others weaken. You begin the practice knowing you will not perfect it in this lifetime. You begin anyway. This is what the middle path requires — not perfection, but sincere practice in the right direction.", karmaChange: 25, statChange: { food: 5, wealth: 0, standing: 15 } },
+        { text: "Teach in the local language rather than Sanskrit — the dharma belongs to everyone", hint: "Radical accessibility", outcome: "good", result: "The Buddha taught in Magahi — the language ordinary people spoke — rather than Sanskrit — the language of Brahmin privilege. You follow this example. The dharma reaches farmers, merchants, servants, and warriors who would never have access to Vedic teaching. The teaching spreads faster because it is accessible. The Brahmin establishment is furious. The Buddha would say that is a sign you are doing something right.", karmaChange: 20, statChange: { food: 5, wealth: 0, standing: 20 } },
+        { text: "Sit with the question of how to respond to the varna system — with direct opposition or with an alternative model", hint: "Strategic compassion", outcome: "good", result: "The Buddha does not primarily argue against the varna system. He simply creates a community where it does not apply. The alternative model is the argument. The sangha's existence — with its open membership, its internal hierarchy of practice rather than birth — demonstrates daily that another way of organizing human community is possible. You choose to embody the alternative rather than fight the system directly. It is a wiser strategy than direct opposition would have been.", karmaChange: 20, statChange: { food: 5, wealth: 0, standing: 15 } }
+      ],
+      advisor: [
+        { text: "Advise your king to observe the Buddhist movement carefully before committing — it is significant but its political implications are still unclear", hint: "Cautious assessment", outcome: "neutral", result: "The advice is sound. Buddhism is drawing enormous popular support. Whether this support will translate into political challenge to existing authority or simply provide a parallel community structure that complements the kingdom is not yet clear. Your king follows your advice. He observes. When the moment of decision comes, he will be better informed than he would have been otherwise.", karmaChange: 0, statChange: { food: 5, wealth: 0, standing: 15 } },
+        { text: "Recommend that the king patronize Buddhist institutions — popular religious movements need royal support or royal suppression, never neutral tolerance", hint: "Political engagement with religion", outcome: "good", result: "The king who patronizes Buddhism earns the loyalty of a rapidly growing popular movement. The king who suppresses it makes enemies of a movement with significant merchant and commoner support. You recommend patronage. The king follows your advice. Decades later, when Ashoka's conversion transforms Buddhism into an imperial religion, your kingdom's early relationship with the sangha proves to be a significant political asset.", karmaChange: 5, statChange: { food: 5, wealth: 5, standing: 20 } },
+        { text: "Note that Buddhism's teaching of compassion for all beings has political implications your king may not have considered", hint: "The political philosophy of ahimsa", outcome: "good", result: "A king who takes ahimsa seriously cannot fight offensive wars. Cannot execute criminals with the casual brutality that most ancient justice systems employ. Cannot extract maximum labor from the Shudra population without considering their suffering. Buddhism is not just a spiritual teaching. It is a political philosophy. You make sure your king understands this before he decides how enthusiastically to embrace it.", karmaChange: 10, statChange: { food: 5, wealth: 5, standing: 15 } }
+      ]
+    }
+  },
+  {
+    id: "ch5",
+    number: 5,
+    title: "Chapter 5 — The Emperor's Choice",
+    subtitle: "Ashoka Converts",
+    scene: "Around 260 BCE, the Mauryan Emperor Ashoka — the most powerful ruler India has known — conducts a military campaign against the kingdom of Kalinga. The battle is decisive and devastating. 100,000 people die in combat. 150,000 are deported. Countless others die of war-related causes. Ashoka tours the battlefield aftermath. What he sees changes him. He converts to Buddhism. He publicly renounces offensive warfare. He erects pillars and rock edicts across his empire proclaiming his commitment to dhamma — compassionate governance. He sends Buddhist missionaries across Asia. He visits the poor, the sick, and the suffering in person. The most powerful man in India has put down the sword. What does that mean for you?",
+    riverNote: "<strong>The Mauryan Empire and the Ganges:</strong> The Mauryan Empire — founded by Ashoka's grandfather Chandragupta — controls the entire Ganges plain and much of the subcontinent. Its capital Pataliputra sits on the Ganges. The empire's size is made possible by the Ganges plain's agricultural surplus, its river trade routes, and the military organization that the Indo-Aryan tradition provided. Ashoka's conversion does not end the empire. It changes what the empire is for.",
+    journalPrompt: "Ashoka was the most powerful man in India. He chose compassion over conquest. What does that choice cost him — and what does it produce? Could any ruler today make a similar choice?",
+    discussAfter: true,
+    discussPrompt: "Ashoka's conversion affected every role differently. Before you continue — spend 90 seconds comparing with the table next to you: how did your role experience this moment? What did it make possible for you — and what did it threaten?",
+    poisonRoles: ["kshatriya"],
+    choices: {
+      brahmin: [
+        { text: "Adapt to the new imperial reality — Ashoka's edicts promote dhamma that can be interpreted to include Brahmin values", hint: "Reframe to survive", outcome: "neutral", result: "Ashoka's dhamma is not specifically Buddhist — it emphasizes compassion, honesty, and respect for all life and all religious traditions including Brahminism. You find room within it. The adaptation requires some intellectual flexibility and some genuine compromise. But the Brahmin tradition that cannot adapt to changing political conditions is a tradition that will not survive changing political conditions.", karmaChange: 0, statChange: { food: 5, wealth: 5, standing: 10 } },
+        { text: "Engage Ashoka's court with Brahmin scholarship — the emperor respects learning and you have much to offer", hint: "Intellectual engagement with power", outcome: "good", result: "Ashoka's court is intellectually engaged and genuinely curious. Your scholarship earns respect even from an emperor committed to Buddhist dhamma. The relationship between Brahmin scholarship and imperial patronage is complex — Ashoka does not promote the varna system, but he does not suppress Brahmin learning. You find your place in a court that is more religiously pluralistic than any that preceded it.", karmaChange: 10, statChange: { food: 5, wealth: 10, standing: 15 } },
+        { text: "Support Ashoka's edicts publicly — the promotion of compassion and truth aligns with the best of the Vedic tradition", hint: "Genuine alignment", outcome: "good", result: "The edicts Ashoka carves into rock across India promote honesty, compassion, respect for parents and teachers, and care for animals and the poor. These values appear in the Vedic tradition as well as the Buddhist one. Your public support is sincere and politically wise simultaneously. Sometimes the right thing and the strategic thing are the same thing.", karmaChange: 15, statChange: { food: 5, wealth: 5, standing: 20 } }
+      ],
+      kshatriya: [
+        { text: "Try to convince Ashoka that dharmic kingship still requires military readiness — compassion without strength invites invasion", hint: "The warrior's argument", outcome: "bad", result: "Ashoka listens respectfully and does not change his position. He maintains a military but does not use it offensively. He believes — and the historical record partially supports him — that the moral authority of a compassionate emperor is itself a form of power. Your argument about military necessity is not wrong. But Ashoka is demonstrating that it is not the only form of power, and possibly not the highest form.", karmaChange: -10, statChange: { food: 0, wealth: 0, standing: -10 }, poison: true },
+        { text: "Respect Ashoka's decision even if you cannot fully endorse it — an emperor who inspires loyalty through genuine virtue is worth more than one who commands through fear", hint: "Honest assessment", outcome: "neutral", result: "You do not convert. You do not abandon your warrior identity. But you recognize something in Ashoka's choice that demands respect — the willingness to let the experience of consequence change a decision already made. You saw the battlefield. You know what 100,000 dead looks like. You chose differently afterward. You are not sure that choice was wrong.", karmaChange: 10, statChange: { food: 5, wealth: 5, standing: 10 }, poison: true },
+        { text: "Quietly ask whether Ashoka's renunciation of offensive warfare means the Kshatriya class has lost its primary justification", hint: "Existential question", outcome: "neutral", result: "The question is uncomfortable and important. If the emperor has decided that conquest is not worth its costs, and if the empire is large enough that internal security does not require constant warfare, then the traditional warrior's role is in genuine tension with the direction of the civilization. This is not the end of the Kshatriya class. But it is the beginning of a question that will take centuries to resolve.", karmaChange: 10, statChange: { food: 0, wealth: 0, standing: 5 }, poison: true }
+      ],
+      vaishya: [
+        { text: "Welcome Ashoka's commitment to compassionate governance — a peaceful empire is a prosperous empire", hint: "Commerce benefits from peace", outcome: "good", result: "Ashoka's conversion produces exactly the conditions a merchant most needs. Stable roads. Consistent laws across a vast empire. Suppression of banditry. A ruler who sees the wellbeing of all his subjects — including merchants — as a genuine responsibility. The moral transformation of India's most powerful ruler turns out to be very good for business. The dharma, in this case, is also the dividend.", karmaChange: 10, statChange: { food: 5, wealth: 20, standing: 15 } },
+        { text: "Fund the spread of Buddhist monasteries along your trade routes — monasteries provide rest, literacy, and moral community for traveling merchants", hint: "Infrastructure investment", outcome: "good", result: "The monasteries you help build along the major trade routes become the service infrastructure of ancient India's commercial network. Monks who keep records. Monks who can read contracts. Monks who provide shelter and moral community for travelers far from home. Your investment is both spiritual and commercial. The Buddha would say that is fine — right livelihood includes commerce conducted with integrity.", karmaChange: 10, statChange: { food: 5, wealth: 10, standing: 20 } },
+        { text: "Expand your trade networks into the new territories Ashoka has pacified — peace creates commercial opportunity", hint: "Capitalize on the peace dividend", outcome: "good", result: "The territories Ashoka has brought into the empire — previously independent kingdoms with their own commercial regulations — are now subject to standardized Mauryan law. Your trade network expands. The peace dividend is real and substantial. Whether Ashoka intended to benefit merchants specifically is irrelevant. The compassionate empire and the commercial empire turn out to want the same things.", karmaChange: 5, statChange: { food: 5, wealth: 25, standing: 10 } }
+      ],
+      shudra: [
+        { text: "Read Ashoka's rock edicts carefully — for the first time, an emperor is speaking to you directly as a subject deserving of care", hint: "Imperial recognition", outcome: "good", result: "Ashoka's edicts address all his subjects — including the poor, the sick, the prisoner, and the laborer. He speaks of their suffering with apparent genuine concern. He funds hospitals and rest houses accessible to everyone. He does not end the varna system. But he speaks of your dignity in a way no emperor has before. The edict carved into the rock near your village will outlast both of you. Someone thought you deserved to be addressed. That is not nothing.", karmaChange: 15, statChange: { food: 10, wealth: 5, standing: 10 } },
+        { text: "Join the expanding Buddhist sangha — Ashoka's support makes it safer and more accessible than ever before", hint: "Enter the open door", outcome: "good", result: "The emperor's endorsement of Buddhism has made the sangha politically safe to join. The monasteries are well-funded. The teachings are spreading. You join a community that sees your soul rather than your birth. The question of whether this changes your material circumstances is complicated. The question of whether it changes your sense of your own worth is not.", karmaChange: 20, statChange: { food: 5, wealth: 0, standing: 20 } },
+        { text: "Remain cautious — emperors have made promises to the poor before", hint: "Hard-earned skepticism", outcome: "neutral", result: "Your skepticism is earned. Ashoka's intentions appear genuine. His edicts are carved in stone rather than spoken in a ceremony. His hospitals are built. His roads are improved. Whether his successors will maintain his commitments is a reasonable question. You benefit from what he builds while reserving judgment on what it means. This is wisdom, not ingratitude.", karmaChange: 5, statChange: { food: 10, wealth: 5, standing: 5 } }
+      ],
+      monk: [
+        { text: "Embrace Ashoka's conversion with gratitude but maintain the sangha's independence from political power", hint: "Spiritual independence from state patronage", outcome: "good", result: "Imperial patronage is a gift and a danger simultaneously. The monasteries Ashoka funds are extraordinary. The political dependence they create is a long-term vulnerability. You receive the gifts gratefully and work to ensure that the sangha's spiritual authority does not become dependent on imperial approval. The dharma existed before Ashoka. It must be able to exist after him.", karmaChange: 20, statChange: { food: 10, wealth: 10, standing: 15 } },
+        { text: "Support Ashoka's missionary program — carry the dharma to Sri Lanka, Central Asia, and beyond", hint: "The dharma goes global", outcome: "good", result: "You travel. The dharma you carry crosses mountains and seas. It reaches peoples who have never heard of the Ganges. It adapts — carefully, with some distortion — to new cultural contexts. Buddhism becomes a world religion in this generation. You are part of that. The teaching that began under a Bodhi tree in northeastern India will eventually reach places the Buddha could not have imagined.", karmaChange: 20, statChange: { food: 5, wealth: 5, standing: 20 } },
+        { text: "Warn your community that success is its own form of attachment — the sangha must not confuse imperial favor with spiritual achievement", hint: "Humility in success", outcome: "good", result: "The warning is necessary and unpopular. Success feels like confirmation. The full monasteries, the imperial patronage, the spread of the teaching across the subcontinent — all of it feels like proof that the dharma is right. But the Buddha taught that attachment to outcomes — even good outcomes — is a form of the craving that causes suffering. The sangha's success is wonderful. It is also a spiritual test.", karmaChange: 25, statChange: { food: 5, wealth: 0, standing: 15 } }
+      ],
+      advisor: [
+        { text: "Advise the court to implement Ashoka's dhamma policies efficiently — whether you believe them or not, they are now imperial policy", hint: "Professional implementation of values you serve", outcome: "neutral", result: "Your job is to advise and implement, not to personally endorse every policy. You implement Ashoka's dhamma edicts with professional competence. The hospitals are built. The roads are improved. The welfare programs are administered. Whether this work is spiritually meaningful to you personally is a separate question from whether you do it well. You do it well.", karmaChange: 0, statChange: { food: 10, wealth: 5, standing: 15 } },
+        { text: "Help Ashoka understand the practical implications of ahimsa for imperial governance — nonviolence at scale requires extraordinary institutional creativity", hint: "Making the philosophy workable", outcome: "good", result: "Ashoka's commitment to nonviolence creates genuine governance challenges. How do you maintain public order without brutal punishment? How do you manage border security without offensive warfare? How do you collect taxes from a population that knows the emperor cares about their wellbeing? These are real questions requiring creative answers. Your work in finding those answers is some of the most interesting governance work of your career.", karmaChange: 15, statChange: { food: 10, wealth: 10, standing: 20 } },
+        { text: "Prepare succession plans carefully — Ashoka's dhamma depends on future rulers maintaining his commitments", hint: "Institutional durability", outcome: "good", result: "Ashoka's policies require future rulers who share his values — or at minimum, future rulers who have been institutionally constrained to maintain his policies even without sharing his values. You work on both — identifying successors with genuine commitment to dhamma and building institutional structures that make dhamma governance the path of least resistance for whoever comes next. The second strategy turns out to matter more than the first.", karmaChange: 10, statChange: { food: 5, wealth: 5, standing: 20 } }
+      ]
+    }
+  },
+  {
+    id: "ch6",
+    number: 6,
+    title: "Chapter 6 — The Golden Age",
+    subtitle: "What the Gupta Empire Achieved",
+    scene: "It is the Gupta Empire — roughly 320 to 550 CE. India is experiencing one of the most remarkable periods of human achievement in any civilization's history. Mathematicians conceptualize zero and develop the decimal number system that will eventually reach Europe through the Arab world and transform global commerce. Astronomers calculate the approximate length of the solar year and theorize that the earth rotates on its axis. The physician Sushruta performs surgical procedures including rhinoplasty — reconstructive surgery. The poet and playwright Kalidasa writes works considered among the finest literature in any language. The university at Nalanda attracts scholars from across Asia. This is India's golden age. For most roles, it is a genuinely good time to be alive. For at least one, it contains a quiet heartbreak.",
+    riverNote: "<strong>The Ganges at its height:</strong> The Gupta Empire's heartland is the Ganges plain — the same river system that supported the Mauryan Empire, that witnessed the Buddha's teaching, that received the Indo-Aryan migration. The Ganges, reliable and abundant, has made this golden age possible in the same way the Nile made Egypt's achievements possible. The river does not get credit in the history books. It is always there.",
+    journalPrompt: "The Gupta Golden Age produced extraordinary achievements — zero, decimal mathematics, surgery, astronomy, literature. Who in Indian society had access to these achievements? Who produced them? And who did not benefit from them at all?",
+    discussAfter: false,
+    poisonRoles: ["monk"],
+    choices: {
+      brahmin: [
+        { text: "Contribute to the golden age through Sanskrit scholarship — the Gupta period is the height of classical Sanskrit literature and philosophy", hint: "Scholarly contribution", outcome: "good", result: "The Gupta period produces the texts that will define classical Hinduism — the Puranas, the further development of the Mahabharata and Ramayana, the philosophical schools that systematize Hindu thought in response to Buddhist and Jain challenges. Your contribution is part of this. The golden age of Sanskrit learning will be studied for a thousand years after the Gupta Empire falls.", karmaChange: 10, statChange: { food: 5, wealth: 15, standing: 25 } },
+        { text: "Work with mathematicians and astronomers — the Gupta golden age is a collaboration across disciplines", hint: "Interdisciplinary achievement", outcome: "good", result: "The mathematician Aryabhata, working in this period, calculates pi to four decimal places, theorizes a heliocentric solar system, and explains eclipses through mathematics rather than mythology. His work is done in a tradition that values both sacred knowledge and empirical inquiry. Your engagement with it — bringing philosophical frameworks to bear on mathematical questions — produces work that neither tradition could have achieved alone.", karmaChange: 15, statChange: { food: 5, wealth: 10, standing: 20 } },
+        { text: "Ensure that the Brahmin class benefits materially from the golden age — prosperity should flow toward those who sustain the cosmic order", hint: "Concentrate the gains", outcome: "neutral", result: "The Gupta kings are generous patrons of Brahmin learning and ritual. The temple complexes commissioned in this period are among the most magnificent in Indian history. You benefit substantially. Whether the benefits are proportionate to the contributions or excessive relative to the contributions of others — the farmers, the craftworkers, the laborers — is a question the golden age does not ask.", karmaChange: -10, statChange: { food: 5, wealth: 25, standing: 20 } }
+      ],
+      kshatriya: [
+        { text: "Provide the military stability that makes the golden age possible — achievements require security", hint: "The warrior as enabler", outcome: "good", result: "The Gupta golden age does not happen in a vacuum. It happens because the Gupta kings — Kshatriyas — maintain sufficient military power to keep the subcontinent stable. The mathematicians, the physicians, the poets — all of them work in conditions made possible by rulers who are good at their dharmic function. The sword that protects the scholar does not get credit in the history of ideas. You are used to this.", karmaChange: 10, statChange: { food: 10, wealth: 15, standing: 20 } },
+        { text: "Patronize the arts and learning — a king who funds greatness shares in its glory", hint: "Royal patronage as legacy", outcome: "good", result: "The Gupta kings are among the most culturally engaged rulers in Indian history. They compose poetry, support theatrical performances, commission architectural masterpieces, and fund the Nalanda university. Your patronage does not diminish your warrior identity — it expands it. The Gupta period demonstrates that governance and culture can reinforce each other rather than compete.", karmaChange: 10, statChange: { food: 5, wealth: -10, standing: 25 } },
+        { text: "Celebrate the synthesis of Hindu and Buddhist thought that the Gupta period represents — Ashoka's legacy and the Vedic tradition finding common ground", hint: "Honor the full inheritance", outcome: "good", result: "The Gupta period does not choose between the Hindu and Buddhist traditions. It holds both. The temples and the monasteries coexist. The Sanskrit scholars and the Buddhist philosophers engage each other. The Kshatriya class that once found Buddhism's ahimsa uncomfortable now governs a civilization that has absorbed Buddhist compassion into Hindu royal ideology. The synthesis is imperfect. It is real.", karmaChange: 15, statChange: { food: 5, wealth: 10, standing: 20 } }
+      ],
+      vaishya: [
+        { text: "Apply the new mathematical innovations immediately to commercial practice — zero and place-value notation transform accounting", hint: "Practical application of mathematical genius", outcome: "good", result: "The decimal number system and the concept of zero transform commerce. Calculations that previously required clay tablets and counting systems become manageable in a trader's head. Accounting becomes more precise. Long-distance trade becomes more reliably profitable because the mathematics of profit and loss becomes clearer. The genius of the Gupta mathematicians flows quickly into the commercial world. You are among the first to feel it.", karmaChange: 5, statChange: { food: 5, wealth: 30, standing: 15 } },
+        { text: "Invest in the Nalanda university's commercial education programs — a literate merchant class benefits everyone", hint: "Invest in human capital", outcome: "good", result: "Nalanda becomes one of the world's great centers of learning — attracting students from China, Korea, Central Asia, and Southeast Asia. Your investment in its commercial education programs produces a generation of merchants with mathematical, legal, and commercial training that no previous era could offer. The return on this investment takes a generation to arrive. It exceeds anything your trading operation has ever produced.", karmaChange: 10, statChange: { food: 5, wealth: 20, standing: 20 } },
+        { text: "Expand trade to Southeast Asia and China — the Gupta period's stability creates the conditions for India's greatest commercial expansion", hint: "The golden age goes global", outcome: "good", result: "Indian trade in the Gupta period reaches Southeast Asia, China, and East Africa. The goods that travel — spices, textiles, mathematics, Buddhism, Hinduism, the Sanskrit literary tradition — transform the civilizations they reach. You are a small part of this enormous movement of goods and ideas. The golden age of achievement is also a golden age of connection.", karmaChange: 5, statChange: { food: 5, wealth: 25, standing: 15 } }
+      ],
+      shudra: [
+        { text: "Find dignity in the craftsmanship that builds the Gupta temples — the golden age is also built by hands", hint: "Labor as contribution", outcome: "neutral", result: "The Gupta temples are extraordinary achievements of architecture and sculpture. The hands that built them were largely yours. The names carved into the stone are the names of kings and gods. The artisans who made the carvings, the laborers who moved the stone — their names are not recorded. The golden age is built by people the golden age does not remember. You know this. You build it anyway.", karmaChange: 5, statChange: { food: 10, wealth: 5, standing: 5 } },
+        { text: "Seek access to the Buddhist educational institutions that remain open to all varnas", hint: "Education as the door", outcome: "good", result: "The Buddhist monasteries and universities — including the great Nalanda — accept students regardless of varna. The education available there is extraordinary by any standard. You attend. The learning is difficult and the social environment is not without its hierarchies. But you receive an education that the varna system would never have permitted through any other door. What you do with it is yours to determine.", karmaChange: 15, statChange: { food: 5, wealth: 5, standing: 15 } },
+        { text: "Note with clear eyes that the golden age's achievements are not equally distributed — and that this matters", hint: "Bear witness accurately", outcome: "good", result: "Zero was conceptualized by a Brahmin mathematician. The Sanskrit poetry was written for elite audiences. The surgical advances benefited those who could access and afford physicians. The golden age is real and extraordinary. It is also unevenly distributed in ways that follow the varna system precisely. Seeing this clearly — neither dismissing the achievements nor pretending the distribution was just — is the most honest response available to you.", karmaChange: 15, statChange: { food: 5, wealth: 0, standing: 10 } }
+      ],
+      monk: [
+        { text: "Recognize that Buddhism's incorporation into Hindu theology as an avatar of Vishnu is a form of erasure dressed as honor", hint: "See the absorption clearly", outcome: "good", result: "The Gupta period's synthesis honors Buddhism in a specific way — by making the Buddha a manifestation of Vishnu, a Hindu deity. This is respectful in form. In substance, it subordinates the revolutionary teaching to the tradition it challenged. The teaching that caste is irrelevant to liberation is being absorbed into a tradition that maintains caste. You see this clearly. What to do about it is the question that will define Buddhist strategy for the next several centuries.", karmaChange: 20, statChange: { food: 0, wealth: 0, standing: 10 }, poison: true },
+        { text: "Continue teaching the core dharma regardless of political winds — the Four Noble Truths do not change because an emperor prefers a different theology", hint: "Maintain the teaching", outcome: "good", result: "The Gupta kings are Hindus who respect Buddhism rather than emperors who champion it. The political wind has shifted. The monasteries are funded but the promotion is less enthusiastic. You teach anyway. The dharma does not require imperial endorsement. It requires practitioners. You have practitioners. The teaching continues.", karmaChange: 20, statChange: { food: 5, wealth: 0, standing: 10 }, poison: true },
+        { text: "Look to the spread of Buddhism across Asia as the movement's true golden age — India is one country, Asia is a continent", hint: "The larger perspective", outcome: "good", result: "While Buddhism is being partially absorbed into Hindu theology in India, it is transforming China, Korea, Japan, Southeast Asia, and Central Asia. The dharma the Buddha taught in northeastern India is becoming a world religion. The Gupta period's theological politics will not determine Buddhism's ultimate fate — the peoples who receive the teaching across Asia will. This perspective sustains you through what would otherwise feel like defeat.", karmaChange: 20, statChange: { food: 5, wealth: 0, standing: 15 }, poison: true }
+      ],
+      advisor: [
+        { text: "Help the Gupta court navigate the synthesis of Hindu and Buddhist institutions — religious pluralism is a governance achievement", hint: "Manage diversity", outcome: "good", result: "The Gupta court's ability to patronize both Hindu temples and Buddhist monasteries — to fund both Sanskrit scholarship and Nalanda's curriculum — is a governance achievement that requires active management. Competing claims on royal resources, competing theological positions, competing institutional interests. Your work in managing these tensions without suppressing either tradition is part of what makes the golden age possible.", karmaChange: 10, statChange: { food: 5, wealth: 10, standing: 25 } },
+        { text: "Ensure that the mathematical and astronomical innovations are documented and preserved — knowledge is the most durable form of power", hint: "Institutionalize the achievements", outcome: "good", result: "Aryabhata's calculations. Sushruta's surgical techniques. Kalidasa's texts. The Nalanda curriculum. You work to ensure these are copied, preserved, and taught in ways that will survive political change. When the Gupta Empire eventually falls — as all empires fall — the knowledge it produced will travel. To the Arab world. Eventually to Europe. Eventually around the world. Your preservation work is part of that journey.", karmaChange: 15, statChange: { food: 5, wealth: 10, standing: 20 } },
+        { text: "Advise the court to fund the Nalanda university generously — an empire that invests in knowledge outlasts empires that only invest in armies", hint: "Knowledge as imperial strategy", outcome: "good", result: "Nalanda becomes the greatest university the ancient world has seen — attracting 10,000 students and teachers from across Asia. The Gupta investment in it produces returns in prestige, soft power, and intellectual achievement that outlast the empire itself by a thousand years. Your advice to fund it generously is among the best advice ever given to any ruler in Indian history. Whether anyone remembers you gave it is another matter.", karmaChange: 15, statChange: { food: 5, wealth: -5, standing: 25 } }
+      ]
+    }
+  }
+];
+
+// ══════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════
+let state = {
+  screen: "art_open",
+  role: null,
+  chapterIndex: 0,
+  pendingOutcome: null,
+  stats: { food: 50, karma: 50, wealth: 50, standing: 50 },
+  timerInterval: null,
+};
+
+// ══════════════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════════════
+function go(s) { state.screen = s; render(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+function getRole() { return ROLES.find(r => r.id === state.role); }
+function clamp(v) { return Math.max(0, Math.min(100, v)); }
+
+function applyStats(change) {
+  if (!change) return;
+  for (let k in change) {
+    if (state.stats[k] !== undefined) state.stats[k] = clamp(state.stats[k] + change[k]);
+  }
+}
+
+function applyKarma(change) {
+  if (change === undefined) return;
+  state.stats.karma = clamp(state.stats.karma + change);
+}
+
+function statColor(v) {
+  if (v >= 60) return "#6ABF6A";
+  if (v >= 35) return "#E8C840";
+  return "#E05050";
+}
+
+function karmaColor(v) {
+  if (v >= 70) return "#6ABF6A";
+  if (v >= 40) return "#E8901A";
+  return "#C82020";
+}
+
+function renderStats() {
+  const defs = [
+    { key: "food", label: "Food", icon: "🌾" },
+    { key: "karma", label: "Karma", icon: "☸️" },
+    { key: "wealth", label: "Wealth", icon: "⚖️" },
+    { key: "standing", label: "Standing", icon: "🪷" },
+  ];
+  return `<div class="stats-row">${defs.map(d => {
+    const v = state.stats[d.key];
+    const color = d.key === "karma" ? karmaColor(v) : statColor(v);
+    return `<div class="stat-box">
+      <span class="stat-icon">${d.icon}</span>
+      <div class="stat-label">${d.label}</div>
+      <div class="stat-value" style="color:${color}">${Math.round(v)}</div>
+      <div class="stat-track"><div class="stat-fill" style="width:${v}%;background:${color}"></div></div>
+    </div>`;
+  }).join("")}</div>`;
+}
+
+function renderProgress() {
+  const dots = CHAPTERS.map((c, i) =>
+    `<div class="prog-dot ${i < state.chapterIndex ? 'done' : i === state.chapterIndex ? 'active' : ''}"></div>`
+  ).join("");
+  return `<div class="progress-row">${dots}<span class="prog-label">Chapter ${state.chapterIndex + 1} of ${CHAPTERS.length}</span></div>`;
+}
+
+function isDead() { return state.stats.food <= 0; }
+
+// ══════════════════════════════════════════════════════════════
+//  SCREENS
+// ══════════════════════════════════════════════════════════════
+
+function screenArtOpen() {
+  return `
+    <div class="screen-label">Before we begin — look closely</div>
+    <div class="screen-heading">The Great Stupa at Sanchi</div>
+    <div class="art-frame">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/c/ce/The_great_stupa.jpg"
+           alt="The Great Stupa at Sanchi, India"
+           onerror="this.style.display='none';document.getElementById('stupa-fallback').style.display='block'" />
+      <div id="stupa-fallback" style="display:none;padding:2rem;text-align:center;color:var(--saffron-mid);font-family:Arial,sans-serif;font-size:13px">
+        [The Great Stupa at Sanchi — search "Sanchi Stupa" to view]
+      </div>
+      <div class="art-caption">
+        The Great Stupa · Sanchi, Madhya Pradesh, India · Originally commissioned by Emperor Ashoka, c. 3rd century BCE<br>
+        Expanded during the Gupta period · UNESCO World Heritage Site · Public Domain
+      </div>
+    </div>
+    <div class="scene-text">This structure was originally built by the Emperor Ashoka — whose story you will encounter in this campaign. It is a stupa: a Buddhist monument containing sacred relics, built as a place of meditation and devotion. Before your story begins, look at it carefully. Take 30 seconds of silence first. Then answer the three prompts in your field journal:</div>
+    <div class="art-prompts">
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 1</div>
+        <div class="apt-q">One thing I find interesting...</div>
+      </div>
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 2</div>
+        <div class="apt-q">One thing that puzzles me...</div>
+      </div>
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 3</div>
+        <div class="apt-q">One question I have for the creator...</div>
+      </div>
+    </div>
+    <div class="dharma-note"><strong>Answer in your field journal.</strong> When your teacher gives the signal, continue.</div>
+    <button class="btn" onclick="go('role_select')">Enter ancient India →</button>`;
+}
+
+function screenRoleSelect() {
+  return `
+    <div class="screen-label">Choose your role — your table decides together</div>
+    <div class="screen-heading">Who are you in ancient India?</div>
+    <div class="scene-text">Every person at your table plays the same role. The same events will unfold for everyone — but each role experiences them through a completely different lens. Your karma accumulates through your choices. Choose together.</div>
+    <div class="dharma-note"><strong>About Karma:</strong> In Hindu and Buddhist thought, karma is the accumulated moral weight of actions — good actions build positive karma, harmful actions build negative karma. In this campaign, your karma stat reflects the moral quality of your choices. At the end, it produces a reflection on your journey — not a judgment of who you are, but a mirror of what you chose.</div>
+    <div class="role-grid">
+      ${ROLES.map(r => `
+        <div class="role-card" onclick="selectRole('${r.id}')">
+          <span class="rc-icon">${r.icon}</span>
+          <div class="rc-name">${r.name}</div>
+          <div class="rc-own"><strong>You hold:</strong> ${r.own}</div>
+          <div class="rc-fear">⚠ You fear: ${r.fear}</div>
+        </div>`).join("")}
+    </div>`;
+}
+
+function screenChapter() {
+  const ch = CHAPTERS[state.chapterIndex];
+  const role = getRole();
+  const choices = ch.choices[state.role];
+  const isPoison = ch.poisonRoles.includes(state.role);
+
+  return `
+    ${renderProgress()}
+    ${renderStats()}
+    <div class="role-badge">
+      <span class="rb-icon">${role.icon}</span>
+      <div>
+        <div class="rb-name">${role.name}</div>
+        <div class="rb-desc">${role.desc}</div>
+      </div>
+    </div>
+    <div class="screen-label">${ch.title}</div>
+    <div class="screen-heading" style="font-size:18px">${ch.subtitle}</div>
+    <div class="scene-text">${ch.scene}</div>
+    <div class="role-context">${role.context[ch.id]}</div>
+    ${isPoison ? `<div class="poison-note">⚠ Your role may have no good option in this chapter. Choose what seems least harmful — and notice why the options are limited.</div>` : ""}
+    <div class="river-note">${ch.riverNote}</div>
+    <div class="choices-label">Discuss with your table — then choose:</div>
+    <div class="choices">
+      ${choices.map((c, i) => `
+        <button class="choice-btn" onclick="makeChoice(${i})">
+          <div class="choice-text">${c.text}</div>
+          <div class="choice-hint">${c.hint}</div>
+        </button>`).join("")}
+    </div>`;
+}
+
+function screenOutcome() {
+  const ch = CHAPTERS[state.chapterIndex];
+  const o = state.pendingOutcome;
+  const isPoisonOutcome = o.poison;
+  const outcomeClass = isPoisonOutcome ? "outcome-poison" : `outcome-${o.outcome}`;
+  const outcomeLabel = isPoisonOutcome ? "⚠ The constraint is real" : o.outcome === "good" ? "✓ What happened" : o.outcome === "bad" ? "✗ What happened" : "→ What happened";
+  const karmaDir = (o.karmaChange || 0) > 0 ? "↑" : (o.karmaChange || 0) < 0 ? "↓" : "→";
+  const karmaText = (o.karmaChange || 0) > 0 ? `Karma increased — your choices reflected dharma` : (o.karmaChange || 0) < 0 ? `Karma decreased — your choices prioritized self over others` : `Karma unchanged — a neutral moment`;
+
+  return `
+    ${renderProgress()}
+    ${renderStats()}
+    <div class="outcome-box ${outcomeClass}">
+      <div class="outcome-label">${outcomeLabel}</div>
+      ${o.result}
+      <div class="karma-change">${karmaDir} ${karmaText}</div>
+    </div>
+    <div class="journal-prompt">
+      <strong>✏ Field Journal Prompt —</strong> answer before your teacher signals to continue:<br><br>
+      ${ch.journalPrompt}
+    </div>
+    <button class="btn" onclick="${ch.discussAfter ? 'startDiscussion()' : 'advanceChapter()'}">
+      ${ch.discussAfter ? 'Continue to table discussion →' : state.chapterIndex < CHAPTERS.length - 1 ? 'Continue →' : 'See how your story ends →'}
+    </button>`;
+}
+
+function screenDiscussion() {
+  const ch = CHAPTERS[state.chapterIndex];
+  clearInterval(state.timerInterval);
+
+  setTimeout(() => {
+    let secs = 90;
+    state.timerInterval = setInterval(() => {
+      secs--;
+      const el = document.getElementById("timer-display");
+      const fill = document.getElementById("timer-fill");
+      const btn = document.getElementById("cont-btn");
+      if (el) el.textContent = secs > 0 ? `${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')}` : "0:00";
+      if (fill) fill.style.width = `${(secs/90)*100}%`;
+      if (secs <= 0) {
+        clearInterval(state.timerInterval);
+        if (btn) btn.classList.add("ready");
+      }
+    }, 1000);
+  }, 100);
+
+  return `
+    ${renderProgress()}
+    <div class="discussion-box">
+      <div class="disc-header">⏱ Table Discussion — 90 seconds</div>
+      <div class="disc-prompt">${ch.discussPrompt}</div>
+      <div class="timer-row">
+        <div class="timer-display" id="timer-display">1:30</div>
+        <div class="timer-track"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+        <button class="continue-btn" id="cont-btn" onclick="advanceChapter()">Next chapter →</button>
+      </div>
+    </div>
+    <div class="scene-text" style="font-size:13px;color:var(--cream-dark);font-family:Arial,sans-serif">The button unlocks when the timer ends. Use this time to compare your experience with the table next to you.</div>`;
+}
+
+function screenArtClose() {
+  return `
+    <div class="screen-label">Closing — where it all began</div>
+    <div class="screen-heading">The Dancing Girl of Mohenjo-daro<br><span style="font-size:16px;color:var(--saffron-mid)">c. 2300–1750 BCE</span></div>
+    <div class="art-frame">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/54/Dancing_Girl_of_Mohenjo-daro.jpg"
+           alt="The Dancing Girl of Mohenjo-daro — bronze sculpture, Indus Valley Civilization"
+           onerror="this.style.display='none';document.getElementById('dg-fallback').style.display='block'" />
+      <div id="dg-fallback" style="display:none;padding:2rem;text-align:center;color:var(--saffron-mid);font-family:Arial,sans-serif;font-size:13px">
+        [The Dancing Girl of Mohenjo-daro — search "Dancing Girl Mohenjo-daro" to view]
+      </div>
+      <div class="art-caption">
+        The Dancing Girl · Bronze · c. 2300–1750 BCE · Mohenjo-daro, Indus Valley Civilization<br>
+        10.5 cm tall · National Museum, New Delhi · Public Domain<br>
+        <em>Excavated 1926 by Ernest Mackay · One of the most celebrated artifacts of the ancient world</em>
+      </div>
+    </div>
+    <div class="scene-text">This figure is 4 inches tall. She was made by someone in Mohenjo-daro roughly 4,000 years ago — before the Indo-Aryan migration, before the Vedas, before the varna system, before the Buddha, before the Mauryan and Gupta Empires. We do not know who she is. We do not know what she meant to the person who made her. We do not know what held the civilization that produced her together — or why it ended. Use your three prompts in your field journal:</div>
+    <div class="art-prompts">
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 1</div>
+        <div class="apt-q">One thing I find interesting...</div>
+      </div>
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 2</div>
+        <div class="apt-q">One thing that puzzles me...</div>
+      </div>
+      <div class="art-prompt-box">
+        <div class="apt-label">Prompt 3</div>
+        <div class="apt-q">One question I have for the creator...</div>
+      </div>
+    </div>
+    <div class="journal-prompt">
+      <strong>Year-long comparison question:</strong> You opened this campaign with the Great Stupa — a massive public monument commissioned by an emperor to honor a religious teaching. You are closing it with a 4-inch bronze figure from a civilization that left no monuments to its rulers at all. What does that contrast tell you about what changed between the Indus Valley and the civilizations that followed it — and what was lost?
+    </div>
+    <button class="btn" onclick="go('ending')">See what your journey reveals →</button>`;
+}
+
+function screenEnding() {
+  const role = getRole();
+  const karma = state.stats.karma;
+
+  let karmaVerdict, karmaText;
+  if (karma >= 70) {
+    karmaVerdict = "High Karma — Dharma Reflected";
+    karmaText = "Your choices across this campaign reflected dharma — right action in accordance with your role and your duty to others. Hindu belief holds that karma accumulated through righteous action moves the soul toward moksha — liberation from the cycle of rebirth. Buddhist teaching holds that right action, accumulated with right intention, moves the practitioner toward nirvana. Both traditions recognize what your choices built.";
+  } else if (karma >= 40) {
+    karmaVerdict = "Mixed Karma — The Work Continues";
+    karmaText = "Your choices were a mixture — some aligned with dharma and compassion, some with self-interest and preservation of your position. Both Hindu and Buddhist traditions teach that this is most people's reality — the accumulation of karma across one lifetime rarely resolves cleanly. The cycle continues. The work continues. The next life — or the next chapter — offers another opportunity.";
+  } else {
+    karmaVerdict = "Low Karma — The Harder Reckoning";
+    karmaText = "Your choices prioritized self-interest, the preservation of your position, or the perpetuation of systems that harmed others. Hindu belief holds that this karma follows the soul forward. Buddhist teaching holds that actions rooted in greed, hatred, or delusion bind the practitioner more tightly to the cycle of suffering. This is not a final verdict. It is a mirror.";
+  }
+
+  return `
+    <div class="screen-label">End of the India Campaign</div>
+    ${renderStats()}
+    <div class="karma-verdict">
+      <h3>☸️ ${karmaVerdict}</h3>
+      <p>${karmaText}</p>
+    </div>
+
+    <div class="achievements-box">
+      <h4>What the Gupta Golden Age Produced</h4>
+      <p><strong>Mathematics:</strong> Zero. The decimal number system. Place-value notation. These will reach Europe through the Arab world and transform global commerce and science.</p>
+      <p><strong>Astronomy:</strong> Aryabhata calculates pi to four decimal places, theorizes the earth rotates on its axis, and explains eclipses mathematically.</p>
+      <p><strong>Medicine:</strong> Sushruta's surgical techniques include procedures not re-discovered in the West until centuries later.</p>
+      <p><strong>Literature:</strong> Kalidasa's plays and poetry are considered among the finest in any language.</p>
+      <p><strong>Education:</strong> Nalanda University attracts 10,000 scholars from across Asia — the ancient world's greatest center of learning.</p>
+    </div>
+
+    <div class="discussion-questions">
+      <h4>Class Discussion Questions</h4>
+      <p>1. The Indus Valley civilization was sophisticated and relatively equal — and we know almost nothing about it. What does that tell us about what gets remembered in history and what gets forgotten?</p>
+      <p>2. The varna system was justified as cosmic order. Who benefited from that justification — and who paid its cost?</p>
+      <p>3. The Buddha's teaching was revolutionary because it said the path to liberation was available to everyone. Why was that idea so threatening to some people — and so appealing to others?</p>
+      <p>4. Ashoka was one of the most powerful rulers in the ancient world. He chose compassion over conquest. What did that choice cost him — and what did it produce?</p>
+      <p>5. The Gupta Golden Age produced extraordinary achievements. Who had access to them? Who produced them? And who did not benefit?</p>
+    </div>
+
+    <button class="btn" onclick="restart()">Play again as a different role</button>
+    <button class="btn-secondary btn" onclick="restart()">Return to start</button>`;
+}
+
+function screenGameOver() {
+  return `
+    <div style="text-align:center;padding:2rem 1rem">
+      <div style="font-size:48px;margin-bottom:1rem">☸️</div>
+      <div class="screen-heading">Your story pauses here</div>
+      ${renderStats()}
+      <div class="river-note" style="text-align:left;margin-bottom:1.25rem">
+        Your food stores have run out. In the Hindu tradition, this moment is not an ending — the soul continues. In the Buddhist tradition, suffering has a cause that can be understood and addressed. What choices led here — and what might be done differently?
+      </div>
+      <div class="journal-prompt" style="text-align:left">The Buddha taught that suffering has a cause. What caused this outcome — and what does that tell you about what this civilization depended on?</div>
+      <br>
+      <button class="btn" onclick="restart()">Begin again</button>
+    </div>`;
+}
+
+// ══════════════════════════════════════════════════════════════
+//  ACTIONS
+// ══════════════════════════════════════════════════════════════
+function selectRole(id) {
+  state.role = id;
+  state.chapterIndex = 0;
+  go("chapter");
+}
+
+function makeChoice(i) {
+  const ch = CHAPTERS[state.chapterIndex];
+  const choice = ch.choices[state.role][i];
+  applyStats(choice.statChange);
+  applyKarma(choice.karmaChange);
+  state.pendingOutcome = choice;
+  if (isDead()) { go("gameover"); return; }
+  go("outcome");
+}
+
+function startDiscussion() {
+  go("discussion");
+}
+
+function advanceChapter() {
+  clearInterval(state.timerInterval);
+  state.pendingOutcome = null;
+  if (state.chapterIndex < CHAPTERS.length - 1) {
+    state.chapterIndex++;
+    go("chapter");
+  } else {
+    go("art_close");
+  }
+}
+
+function restart() {
+  clearInterval(state.timerInterval);
+  state = {
+    screen: "art_open",
+    role: null,
+    chapterIndex: 0,
+    pendingOutcome: null,
+    stats: { food: 50, karma: 50, wealth: 50, standing: 50 },
+    timerInterval: null,
+  };
+  render();
+  window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+// ══════════════════════════════════════════════════════════════
+//  RENDER
+// ══════════════════════════════════════════════════════════════
+function render() {
+  const el = document.getElementById("content");
+  const screens = {
+    art_open:    screenArtOpen,
+    role_select: screenRoleSelect,
+    chapter:     screenChapter,
+    outcome:     screenOutcome,
+    discussion:  screenDiscussion,
+    art_close:   screenArtClose,
+    ending:      screenEnding,
+    gameover:    screenGameOver,
+  };
+  el.innerHTML = (screens[state.screen] || (() => "<p>Loading...</p>"))();
+}
+
+render();
+</script>
+</body>
+</html>
