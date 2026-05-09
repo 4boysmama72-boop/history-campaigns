@@ -1,0 +1,786 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ancient China — The Story of Us</title>
+<style>
+  :root {
+    --vermillion: #C0392B;
+    --vermillion-light: #F5C6C0;
+    --vermillion-glow: rgba(192,57,43,0.15);
+    --jade: #1A6B4A;
+    --jade-light: #C8F0DC;
+    --gold: #B8860B;
+    --gold-light: #FFF8DC;
+    --ink: #1A1208;
+    --silk: #F5ECD8;
+    --silk-dark: #D8CCAA;
+    --mist: #8A9AAA;
+    --mist-light: #E8F0F8;
+    --stone: #4A4035;
+    --stone-light: #E0D8C8;
+    --red: #8B2020;
+    --red-light: #F5D0D0;
+    --green: #2A6B3A;
+    --green-light: #C8F0D0;
+    --shadow: #0A0800;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #0A0800;
+    color: var(--silk);
+    min-height: 100vh;
+  }
+
+  #app {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 3rem;
+  }
+
+  .site-header {
+    text-align: center;
+    padding: 1.5rem 1rem 1rem;
+    border-bottom: 2px solid var(--vermillion);
+    margin-bottom: 1.5rem;
+    background: linear-gradient(180deg, rgba(192,57,43,0.08) 0%, transparent 100%);
+  }
+  .site-header .campaign-tag {
+    font-size: 11px;
+    letter-spacing: 0.16em;
+    text-transform: uppercase;
+    color: var(--vermillion);
+    font-family: Arial, sans-serif;
+    margin-bottom: 6px;
+  }
+  .site-header h1 { font-size: 30px; font-weight: bold; color: var(--vermillion-light); letter-spacing: 0.06em; margin-bottom: 4px; }
+  .site-header h2 { font-size: 14px; font-weight: normal; color: var(--silk-dark); font-family: Arial, sans-serif; font-style: italic; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.25rem; }
+  .stat-box { background: rgba(192,57,43,0.08); border: 1px solid rgba(192,57,43,0.3); border-radius: 6px; padding: 8px 10px; text-align: center; }
+  .stat-icon { font-size: 16px; display: block; margin-bottom: 2px; }
+  .stat-label { font-size: 10px; color: var(--vermillion); letter-spacing: 0.05em; text-transform: uppercase; font-family: Arial, sans-serif; }
+  .stat-value { font-size: 18px; font-weight: bold; margin: 2px 0; }
+  .stat-track { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 4px; }
+  .stat-fill { height: 4px; border-radius: 2px; transition: width 0.5s, background 0.5s; }
+
+  .role-badge { display: flex; align-items: center; gap: 10px; background: rgba(192,57,43,0.08); border: 1px solid rgba(192,57,43,0.3); border-radius: 8px; padding: 10px 14px; margin-bottom: 1.25rem; }
+  .role-badge .rb-icon { font-size: 24px; }
+  .role-badge .rb-name { font-size: 15px; font-weight: bold; color: var(--vermillion-light); }
+  .role-badge .rb-desc { font-size: 12px; color: var(--silk-dark); font-family: Arial, sans-serif; }
+
+  .progress-row { display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem; }
+  .prog-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(192,57,43,0.15); border: 1.5px solid rgba(192,57,43,0.3); }
+  .prog-dot.active { background: var(--vermillion); border-color: var(--vermillion); }
+  .prog-dot.done { background: var(--stone); border-color: var(--stone); }
+  .prog-label { font-size: 11px; color: var(--silk-dark); font-family: Arial, sans-serif; }
+
+  .screen-label { font-size: 11px; color: var(--vermillion); letter-spacing: 0.1em; text-transform: uppercase; font-family: Arial, sans-serif; margin-bottom: 6px; }
+  .screen-heading { font-size: 22px; font-weight: bold; color: var(--vermillion-light); margin-bottom: 1rem; line-height: 1.3; }
+  .scene-text { font-size: 15px; line-height: 1.85; color: var(--silk); margin-bottom: 1rem; }
+  .role-context { background: var(--vermillion-glow); border-left: 3px solid var(--vermillion); border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 14px; font-style: italic; color: var(--vermillion-light); margin-bottom: 1.25rem; line-height: 1.65; font-family: Arial, sans-serif; }
+
+  .history-note { background: rgba(26,107,74,0.2); border-left: 3px solid var(--jade); border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 13px; color: var(--jade-light); margin-bottom: 1.25rem; line-height: 1.65; font-family: Arial, sans-serif; }
+  .history-note strong { color: #E8FFF8; font-weight: 600; }
+
+  .journal-prompt { background: rgba(192,57,43,0.1); border-left: 3px solid var(--vermillion); border-radius: 0 6px 6px 0; padding: 12px 14px; font-size: 14px; color: var(--vermillion-light); margin-bottom: 1.25rem; line-height: 1.7; font-family: Arial, sans-serif; }
+  .journal-prompt strong { color: var(--silk); font-weight: 600; }
+
+  .poison-note { background: rgba(139,32,32,0.2); border-left: 3px solid var(--red); border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 13px; color: var(--red-light); margin-bottom: 1.25rem; line-height: 1.65; font-family: Arial, sans-serif; }
+
+  .philosophy-box { background: rgba(184,134,11,0.1); border: 1px solid var(--gold); border-radius: 8px; padding: 14px 16px; margin-bottom: 1.25rem; }
+  .philosophy-box h4 { font-size: 12px; font-weight: bold; color: var(--gold); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 10px; }
+  .philosophy-row { display: grid; grid-template-columns: repeat(3, 1fr); gap: 8px; }
+  .phil-card { background: rgba(10,8,0,0.4); border-radius: 6px; padding: 10px 12px; }
+  .phil-card .pc-name { font-size: 13px; font-weight: bold; color: var(--vermillion-light); margin-bottom: 4px; }
+  .phil-card .pc-core { font-size: 12px; color: var(--silk-dark); font-family: Arial, sans-serif; line-height: 1.5; }
+
+  .discussion-box { background: var(--stone); border-radius: 10px; padding: 16px 20px; margin-bottom: 1.25rem; }
+  .discussion-box .disc-header { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-family: Arial, sans-serif; color: var(--silk-dark); margin-bottom: 6px; }
+  .discussion-box .disc-prompt { font-size: 15px; line-height: 1.6; margin-bottom: 14px; font-style: italic; color: var(--silk); }
+  .timer-row { display: flex; align-items: center; gap: 14px; }
+  .timer-display { font-size: 32px; font-weight: bold; font-family: Arial, sans-serif; min-width: 60px; color: var(--vermillion-light); }
+  .timer-track { flex: 1; height: 8px; background: rgba(255,255,255,0.15); border-radius: 4px; }
+  .timer-fill { height: 8px; background: var(--vermillion); border-radius: 4px; transition: width 1s linear; }
+  .continue-btn { background: var(--vermillion); color: white; border: none; border-radius: 6px; padding: 8px 16px; font-size: 13px; font-weight: bold; cursor: pointer; font-family: Arial, sans-serif; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .continue-btn.ready { opacity: 1; pointer-events: all; }
+
+  .choices-label { font-size: 11px; color: var(--silk-dark); letter-spacing: 0.08em; text-transform: uppercase; font-family: Arial, sans-serif; margin-bottom: 8px; }
+  .choices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+  .choice-btn { background: rgba(192,57,43,0.06); border: 1.5px solid rgba(192,57,43,0.25); border-radius: 8px; padding: 12px 16px; text-align: left; cursor: pointer; transition: all 0.15s; font-family: Georgia, serif; }
+  .choice-btn:hover { background: rgba(192,57,43,0.15); border-color: var(--vermillion); }
+  .choice-btn .choice-text { font-size: 14px; color: var(--silk); line-height: 1.5; }
+  .choice-btn .choice-hint { font-size: 11px; color: var(--silk-dark); margin-top: 4px; font-family: Arial, sans-serif; font-style: italic; }
+
+  .outcome-box { border-radius: 8px; padding: 14px 16px; margin-bottom: 1.25rem; font-size: 14px; line-height: 1.7; font-family: Arial, sans-serif; }
+  .outcome-good { background: rgba(42,107,58,0.2); border: 1.5px solid var(--green); color: var(--green-light); }
+  .outcome-bad { background: rgba(139,32,32,0.2); border: 1.5px solid var(--red); color: var(--red-light); }
+  .outcome-neutral { background: rgba(74,64,53,0.3); border: 1.5px solid var(--stone); color: var(--stone-light); }
+  .outcome-poison { background: rgba(139,32,32,0.15); border: 1.5px solid #6B1A1A; color: #F0B0B0; }
+  .outcome-label { font-size: 11px; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; font-family: Arial, sans-serif; }
+
+  .art-frame { border: 2px solid var(--vermillion); border-radius: 8px; overflow: hidden; margin-bottom: 1.25rem; background: var(--shadow); box-shadow: 0 0 20px rgba(192,57,43,0.12); }
+  .art-frame img { width: 100%; display: block; max-height: 360px; object-fit: cover; object-position: center; }
+  .art-caption { padding: 8px 14px; font-size: 11px; color: var(--vermillion); font-family: Arial, sans-serif; font-style: italic; background: rgba(10,8,0,0.8); line-height: 1.5; }
+
+  .art-prompts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.25rem; }
+  .art-prompt-box { background: rgba(192,57,43,0.08); border: 1px solid rgba(192,57,43,0.25); border-radius: 6px; padding: 10px 14px; }
+  .art-prompt-box .apt-label { font-size: 11px; font-weight: bold; color: var(--vermillion); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 4px; }
+  .art-prompt-box .apt-q { font-size: 14px; color: var(--silk-dark); font-style: italic; }
+
+  .role-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1rem; }
+  .role-card { background: rgba(192,57,43,0.06); border: 2px solid rgba(192,57,43,0.25); border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.15s; }
+  .role-card:hover { background: rgba(192,57,43,0.15); border-color: var(--vermillion); transform: translateY(-1px); }
+  .role-card .rc-icon { font-size: 28px; margin-bottom: 6px; display: block; }
+  .role-card .rc-name { font-size: 15px; font-weight: bold; color: var(--vermillion-light); margin-bottom: 4px; }
+  .role-card .rc-own { font-size: 12px; color: var(--silk-dark); font-family: Arial, sans-serif; line-height: 1.5; margin-bottom: 6px; }
+  .role-card .rc-fear { font-size: 11px; color: var(--red-light); font-family: Arial, sans-serif; font-style: italic; }
+
+  .harmony-result { background: rgba(192,57,43,0.12); border: 1.5px solid var(--vermillion); border-radius: 10px; padding: 16px 18px; margin-bottom: 1.25rem; text-align: center; }
+  .harmony-result .hr-icon { font-size: 36px; margin-bottom: 8px; display: block; }
+  .harmony-result .hr-label { font-size: 12px; color: var(--vermillion); text-transform: uppercase; letter-spacing: 0.08em; font-family: Arial, sans-serif; margin-bottom: 6px; }
+  .harmony-result .hr-title { font-size: 20px; font-weight: bold; color: var(--vermillion-light); margin-bottom: 8px; }
+  .harmony-result .hr-text { font-size: 14px; color: var(--silk-dark); line-height: 1.7; font-family: Arial, sans-serif; }
+
+  .achievements-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1.25rem; }
+  .achievement-card { background: rgba(192,57,43,0.08); border: 1px solid rgba(192,57,43,0.3); border-radius: 8px; padding: 12px 14px; }
+  .achievement-card .ac-icon { font-size: 20px; margin-bottom: 4px; display: block; }
+  .achievement-card .ac-title { font-size: 13px; font-weight: bold; color: var(--vermillion-light); margin-bottom: 4px; }
+  .achievement-card .ac-desc { font-size: 12px; color: var(--silk-dark); font-family: Arial, sans-serif; line-height: 1.5; }
+
+  .discussion-questions { background: rgba(26,107,74,0.15); border: 1px solid var(--jade); border-radius: 8px; padding: 14px 16px; margin-bottom: 1.25rem; }
+  .discussion-questions h4 { font-size: 12px; font-weight: bold; color: var(--jade-light); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 10px; }
+  .discussion-questions p { font-size: 13px; color: #A8E8D0; line-height: 1.7; font-family: Arial, sans-serif; margin-bottom: 8px; }
+
+  .btn { background: var(--stone); color: var(--silk); border: none; border-radius: 8px; padding: 11px 22px; font-size: 14px; font-weight: bold; cursor: pointer; font-family: Arial, sans-serif; transition: background 0.15s; margin-right: 8px; margin-bottom: 8px; }
+  .btn:hover { background: #3A3020; }
+  .btn-vermillion { background: var(--vermillion); color: white; }
+  .btn-vermillion:hover { background: #A03020; }
+  .btn-secondary { background: transparent; color: var(--vermillion); border: 1.5px solid var(--vermillion); }
+  .btn-secondary:hover { background: var(--vermillion-glow); }
+
+  .divider { height: 1px; background: rgba(192,57,43,0.2); margin: 1.25rem 0; }
+
+  @media (max-width: 500px) {
+    .role-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .achievements-grid { grid-template-columns: 1fr; }
+    .philosophy-row { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="site-header">
+    <div class="campaign-tag">The Story of Us · Campaign 4</div>
+    <h1>ANCIENT CHINA</h1>
+    <h2>From the Yellow River to the Silk Road · c. 1600 BCE – 220 CE</h2>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script>
+const ROLES = [
+  {
+    id: "official",
+    name: "Emperor's Official",
+    icon: "📋",
+    desc: "You serve the emperor — administering taxes, managing infrastructure, maintaining order across the vast empire.",
+    own: "Imperial authority delegated from the Son of Heaven. Control over local governance, taxation, and law enforcement.",
+    fear: "A change in dynasty that makes your expertise irrelevant. An emperor who prefers a different philosophy of governance.",
+    want: "A stable empire, a wise emperor, and a clear philosophy to govern by — whichever one keeps order best.",
+    context: {
+      ch1: "The Yellow River is your administrative challenge. Its floods bring life and death. The irrigation systems, the flood controls, the grain storage networks — all of it runs through your office.",
+      ch2: "The Mandate of Heaven is not abstract to you. You have seen dynasties fall. You know the signs. Your job is to serve whoever holds the Mandate — and to recognize when they are losing it.",
+      ch3: "This is your poison pill. You have studied Confucianism your whole life — the five relationships, filial piety, governance by moral example. Now the Qin Emperor has declared Legalism the only valid philosophy and ordered Confucian books burned and scholars executed. What do you do?",
+      ch4: "The Great Wall is the largest administrative project in Chinese history. Organizing hundreds of thousands of workers, supplying them across thousands of miles, managing the logistics of construction — this is your chapter.",
+      ch5: "The Han Emperor has restored Confucian governance. The imperial examination system — which selects officials based on knowledge of Confucian texts — has been established. Your career is vindicated. Your philosophy runs the empire.",
+      ch6: "The Silk Road requires administrative infrastructure — rest houses, standardized weights, diplomatic relationships with distant kingdoms. Managing the road is as complex as building the wall. And infinitely more interesting."
+    }
+  },
+  {
+    id: "scholar",
+    name: "Confucian Scholar",
+    icon: "📚",
+    desc: "You have spent your life studying the Analects of Confucius — learning the proper relationships that hold society together.",
+    own: "Deep knowledge of the classics. The ability to teach the principles that make civilization function. Moral authority.",
+    fear: "A government that rejects moral example in favor of harsh law. An emperor who burns books rather than reads them.",
+    want: "A society organized around the five relationships — ruler-subject, parent-child, husband-wife, elder-younger, friend-friend — each maintained with proper respect and responsibility.",
+    context: {
+      ch1: "The Yellow River teaches you something Confucius understood — humans exist within nature and must work with it, not against it. The river's floods are not enemies. They are teachers.",
+      ch2: "The Mandate of Heaven is Confucian at its core — rulers govern by moral example, and Heaven withdraws its favor from rulers who fail their people. You have texts for this.",
+      ch3: "This is your chapter — and your darkest moment. The Qin Emperor has declared Confucianism dangerous. Your books are being collected for burning. Your colleagues are being buried alive in pits. Everything you have devoted your life to is under existential threat.",
+      ch4: "The Great Wall is built on Legalist principles — harsh compulsion, massive forced labor, punishment for failure. A Confucian looking at the Wall sees the cost in human suffering that the official records will never capture.",
+      ch5: "Vindication. The Han Emperor has made Confucianism the state philosophy. The imperial examination system means officials must know your texts to hold power. Your life's work now runs the largest empire in the world.",
+      ch6: "The Silk Road carries more than goods. It carries ideas. Buddhism arriving from India. Mathematical concepts moving west. Your texts traveling to Korea, Japan, Vietnam. Confucianism is becoming the philosophy of East Asia, not just China."
+    }
+  },
+  {
+    id: "farmer",
+    name: "Farmer",
+    icon: "🌾",
+    desc: "Your family has farmed the loess soil of the Yellow River valley for generations — planting millet, wheat, and rice.",
+    own: "A plot of land near the river. A family. Knowledge of the floods that has accumulated across generations.",
+    fear: "A bad flood year. Tax collectors who take too much. Being conscripted to build a wall a thousand miles from home.",
+    want: "A good harvest, fair taxes, and to be left alone by the empire long enough to plant and harvest in peace.",
+    context: {
+      ch1: "The Yellow River is your entire world. Its floods bring the silt that makes your soil fertile. Its unpredictable rages destroy everything you have built. You watch the river the way other people watch the emperor.",
+      ch2: "When dynasties change, farmers feel it in their tax rates and their conscription notices. The Mandate of Heaven is philosophical to scholars. To you it means different people taking your grain.",
+      ch3: "The philosophical debate between Confucianism, Legalism, and Taoism is distant from your field. Except: Legalism means harsher punishments for tax non-payment. Confucianism means officials who are supposed to care about your welfare. Taoism says leave things alone. You have a preference.",
+      ch4: "A notice arrives. The emperor requires labor for a great construction project on the northern border. Your family's name has been selected. You will spend the next year building the Great Wall. Your field will not be planted.",
+      ch5: "Confucian governance means officials who are at least theoretically accountable to the welfare of the people. The Han dynasty's agricultural policies — land redistribution, reduced taxation, investment in irrigation — make your life measurably better than it was under Qin.",
+      ch6: "The Silk Road passes near your village. Merchants with camels loaded with silk move through at dawn. You have never seen silk in your life — it is too expensive for anyone in your village to own. You grow the grain that feeds the merchants who move the silk that makes China famous. None of that fame touches you."
+    }
+  },
+  {
+    id: "artisan",
+    name: "Artisan",
+    icon: "🏺",
+    desc: "You work in bronze, jade, silk, and lacquer — producing the luxury goods that define Chinese civilization.",
+    own: "Extraordinary craft skills passed through apprenticeship. State contracts for imperial goods. A workshop.",
+    fear: "Losing imperial contracts. Raw materials becoming unavailable. A dynasty that does not value craftsmanship.",
+    want: "Steady contracts, fine materials, and the chance to make something that outlasts the dynasty that commissioned it.",
+    context: {
+      ch1: "The Yellow River valley's bronze deposits made Chinese metalwork the finest in the ancient world. Your craft begins with what the river's geography provides.",
+      ch2: "Each dynasty brings new aesthetic demands. The Shang wanted ritual bronze vessels. The Zhou wanted jade ceremonial objects. The Qin wanted 8,000 terracotta soldiers. You make what the emperor needs — and each emperor's needs reveal what they value.",
+      ch3: "The philosophical debates do not directly affect your workshop — except that Legalist emperors commission objects of power, Confucian emperors commission objects of ritual propriety, and Taoist-influenced patrons want objects that feel like nature. Your craft serves all three. The philosophy changes what you are asked to make.",
+      ch4: "The Great Wall requires artisan work — the watchtower construction, the signal beacon systems, the weapons manufactured for the garrison soldiers. Your workshop produces components for the most ambitious construction project in history.",
+      ch5: "Han dynasty patronage of the arts produces a golden age for artisans. Silk weaving technology advances. Lacquerware reaches new levels of refinement. The objects your workshop produces during the Han dynasty will be found in tombs two thousand years later and called masterpieces.",
+      ch6: "The Silk Road is named for what your workshops produce. Chinese silk is the most sought-after luxury good in the ancient world — from Rome to Persia to Southeast Asia. The road that connects China to the world runs on your craft."
+    }
+  },
+  {
+    id: "merchant",
+    name: "Merchant",
+    icon: "🐪",
+    desc: "You trade goods across China and eventually beyond — connecting producers to consumers across vast distances.",
+    own: "Trade networks, warehouses, knowledge of prices across multiple markets, relationships with officials who can be bribed.",
+    fear: "A government that decides merchants are parasites. Confucian officials who look down on commerce. Bandits on the road.",
+    want: "Safe roads, low tariffs, reliable contracts, and a society that values what you do rather than treating you as morally suspect.",
+    context: {
+      ch1: "The Yellow River is your highway. The grain, bronze, and luxury goods of Chinese civilization move on its waters. You have been moving things other people make since before you can remember.",
+      ch2: "Dynasty changes mean new tariff systems, new officials to negotiate with, new rules about what can be traded and where. The Mandate of Heaven is a business risk to you.",
+      ch3: "Here is your poison pill arriving early: Confucianism places merchants at the bottom of the four occupations — below scholars, farmers, and artisans — because merchants produce nothing, only move things others create. The philosophy now running the empire says your work is the least valuable kind. You are wealthy and socially contemptible simultaneously.",
+      ch4: "The Great Wall creates a massive market for supplies — food, tools, materials, transport. You make money from the Wall's construction even as farmers die building it. The moral complexity of this does not escape you.",
+      ch5: "Han Confucian governance formally places merchants at the bottom of the social hierarchy. You cannot wear silk despite being the person who moves silk across the empire. You cannot ride horses despite being the person who supplies horses to the army. You are rich and officially looked down upon. This is your permanent condition.",
+      ch6: "The Silk Road is yours. Whatever the Confucian scholars say about merchants, the empire needs you to make the road work. Your caravans connect China to Rome. Your relationships with Central Asian traders make China's wealth possible. The philosopher who looks down on you wears silk you moved."
+    }
+  },
+  {
+    id: "soldier",
+    name: "Soldier",
+    icon: "⚔️",
+    desc: "You serve in the imperial army — defending China's borders against the Xiongnu nomads of the northern steppes.",
+    own: "Military training, weapons, the brotherhood of your unit. The emperor's authority backing every order you give or receive.",
+    fear: "Being stationed on the northern wall indefinitely. Running out of supplies. A Xiongnu raid that comes faster than reinforcements.",
+    want: "Clear orders, adequate supplies, victory, and eventually — to go home.",
+    context: {
+      ch1: "The Yellow River is a strategic asset — it defines China's agricultural heartland and the population you are sworn to protect. The northern steppes beyond the river bend are where the Xiongnu live. Your whole career is defined by that geography.",
+      ch2: "The Mandate of Heaven means the emperor commands your absolute loyalty. But soldiers know things philosophers don't: the difference between a dynasty that supplies its troops and one that doesn't.",
+      ch3: "Confucianism says the scholar ranks above the soldier. Legalism says the soldier is the state's most important servant. Taoism says war creates suffering that ripples through generations. You have a preference, and it is not Confucianism.",
+      ch4: "You are stationed on the Great Wall. The northern wind is extraordinary. The Xiongnu probe the wall's defenses every week. Your garrison is undersupplied. The wall is magnificent and miserable simultaneously. This is your chapter.",
+      ch5: "The Han dynasty's approach to the Xiongnu shifts — less pure military confrontation, more diplomatic marriage alliances and tribute trade. You are still on the wall. But the strategy has changed around you.",
+      ch6: "The Silk Road creates a new strategic problem — the trade routes must be protected across thousands of miles of territory where the Xiongnu roam. Your mission has expanded from defending a wall to securing a road. It is more complex and more dangerous."
+    }
+  }
+];
+
+const CHAPTERS = [
+  {
+    id: "ch1",
+    number: 1,
+    title: "Chapter 1 — The River That Made China",
+    subtitle: "The Yellow River and the World It Built",
+    scene: "The Yellow River — Huang He — carries more silt than any river on earth. Its floods deposit some of the richest agricultural soil in the world across the North China Plain. They also destroy everything in their path without warning. The ancient Chinese called it 'China's Sorrow' and 'The Ungovernable.' It is approximately 1600 BCE, during the Shang dynasty — one of China's earliest recorded civilizations. Your role has just arrived at the river for the first time and is making sense of what you see.",
+    historyNote: "<strong>The Yellow River:</strong> China's second-longest river gets its name from the yellow loess silt it carries — the same silt that makes the North China Plain extraordinarily fertile. Unlike the Nile's predictable annual flood, the Yellow River flooded unpredictably and catastrophically, changing course entirely multiple times in recorded history. Chinese civilization developed partly as an organized response to managing this river — requiring the kind of centralized coordination that produces states.",
+    journalPrompt: "You have now seen four river civilizations — Mesopotamia, Egypt, India, and now China. What is the same about all of them? What is different about China's relationship with its river?",
+    poisonRoles: [],
+    discussAfter: false,
+    choices: {
+      official: [
+        { text: "Study the flood control systems — whoever masters the river masters China", hint: "Administrative control of geography", outcome: "good", result: "The flood control infrastructure is the foundation of everything. Dikes, irrigation channels, early warning systems — these are not engineering projects, they are political projects. The dynasty that manages the Yellow River keeps its people fed and its Mandate of Heaven secure. The dynasty that fails at flood control loses both. You understand this better than any philosopher.", statChange: { food: 15, harmony: 10, wealth: 10, standing: 15 } },
+        { text: "Survey the agricultural potential — the silt deposits determine tax revenue", hint: "Revenue assessment first", outcome: "good", result: "The survey is revealing. The areas of richest silt deposit are also the most flood-prone — the best farmland is the most dangerous. Your tax assessments must account for this volatility. A fixed tax on flood-prone farmland produces famine during bad years. A flexible system tied to actual harvest produces stability. You are already thinking like a Chinese administrator.", statChange: { food: 10, harmony: 10, wealth: 15, standing: 10 } },
+        { text: "Consult the Shang oracle bones — divine guidance for the river's management", hint: "Ritual before administration", outcome: "neutral", result: "The oracle bones are consulted. The ancestors are asked. The answer, as always, is ambiguous enough to support whatever decision the king has already made. You perform your ritual duty. You also quietly commission an engineering survey of the flood defenses. Divine and practical are not opposites in China. They are colleagues.", statChange: { food: 5, harmony: 15, wealth: 5, standing: 10 } }
+      ],
+      scholar: [
+        { text: "Study the river's patterns — Confucius taught that the superior person observes nature carefully", hint: "Nature as teacher", outcome: "good", result: "The river teaches patience, persistence, and the futility of forcing nature into shapes it does not want to take. The flood control systems that work with the river's natural tendencies outlast those that try to dominate it. Confucius did not write about flood engineering. But his principle — that harmony requires understanding rather than force — applies perfectly here.", statChange: { food: 5, harmony: 20, wealth: 5, standing: 15 } },
+        { text: "Write about the river as a metaphor for good governance — the ruler who guides rather than commands", hint: "Philosophy from geography", outcome: "good", result: "The metaphor writes itself. The ruler who tries to stop the flood by force loses everything. The ruler who channels it, guides it, works with its nature — keeps the fields fertile and the people fed. The Taoists will say the same thing. You arrived at it through Confucian observation. Sometimes the same wisdom appears in different philosophical clothing.", statChange: { food: 5, harmony: 20, wealth: 5, standing: 10 } },
+        { text: "Teach the local farmers the classical texts — civilization begins with proper education", hint: "Education as priority", outcome: "neutral", result: "The farmers listen politely. What they need is better flood prediction and fairer tax assessment. Your classical texts are genuinely valuable — but not more immediately valuable than knowing when the river will rise. You have learned something Confucius would have endorsed: theory must connect to the actual conditions of people's lives.", statChange: { food: 0, harmony: 15, wealth: 0, standing: 10 } }
+      ],
+      farmer: [
+        { text: "Build your fields on the elevated ground — less fertile but safer from flooding", hint: "Safety over yield", outcome: "neutral", result: "The elevated fields produce reliably but modestly. During the flood years that destroy your neighbors' lower fields, your family eats. During the good years when lower fields are extraordinarily productive, your family eats adequately. You have traded peak prosperity for consistent survival. In a landscape defined by 'China's Sorrow,' this is not a bad trade.", statChange: { food: 10, harmony: 5, wealth: 0, standing: 5 } },
+        { text: "Farm the flood plain — the silt makes the soil extraordinary and the risk is worth it", hint: "High risk, high yield", outcome: "neutral", result: "Three good years. Then the river rises faster than anyone predicted. Your harvest is lost. Your tools are underwater. Your family survives on stored grain and the goodwill of neighbors. The flood plain gave you three abundant years and one catastrophic one. The math works out — barely. This is what 'China's Sorrow' means from ground level.", statChange: { food: 5, harmony: 0, wealth: -10, standing: 5 } },
+        { text: "Join the community irrigation cooperative — collective water management reduces individual risk", hint: "Community over individual", outcome: "good", result: "The cooperative distributes both the labor of flood management and the risk of flood damage. No single family loses everything because the community absorbs the blow. The Chinese irrigation cooperative tradition — one of the oldest forms of collective organization in the world — begins with exactly this logic: the river is too big for any family alone.", statChange: { food: 15, harmony: 15, wealth: 5, standing: 15 } }
+      ],
+      artisan: [
+        { text: "Work with the river's bronze deposits — the Yellow River valley's metal resources are extraordinary", hint: "Geography enables craft", outcome: "good", result: "The bronze from the Yellow River valley is the foundation of Shang dynasty craft. Your ritual vessels — the ding tripods, the gui bowls, the jue wine cups — are not just objects. They are cosmological statements, connecting the human world to the ancestors and the divine. The river's minerals become China's most sophisticated art.", statChange: { food: 5, harmony: 10, wealth: 20, standing: 20 } },
+        { text: "Study the river's patterns to incorporate them into your designs — Chinese craft reflects the natural world", hint: "Nature in craft", outcome: "good", result: "The sinuous lines of river water, the patterns of rippling silt, the organic forms of flood-carved landscape — all of these enter your work. Chinese aesthetic tradition, from the earliest Shang bronzes to the landscape paintings of later dynasties, is fundamentally about finding the human relationship to the natural world. You are beginning that tradition.", statChange: { food: 5, harmony: 15, wealth: 15, standing: 15 } },
+        { text: "Secure contracts for the ritual objects the Shang royal court needs", hint: "Commercial priority", outcome: "good", result: "The Shang court's ritual needs are extensive — oracle bone ceremonies, ancestor worship, royal burials all require objects of extraordinary quality. Your workshop secures the contracts. The work is demanding, the compensation significant, and the objects you produce will be excavated by archaeologists three thousand years from now and displayed in museums worldwide.", statChange: { food: 5, harmony: 5, wealth: 20, standing: 15 } }
+      ],
+      merchant: [
+        { text: "Map the river's trade routes — the Yellow River connects China's agricultural heartland to its cities", hint: "River as highway", outcome: "good", result: "The river highway carries grain south, bronze north, silk east, and information in all directions. Your mental map of the river's commercial possibilities is more detailed than any official survey. The merchant's map of China is drawn in goods and prices, not in administrative districts. Both maps describe the same place. Yours is more useful for making money.", statChange: { food: 10, harmony: 5, wealth: 20, standing: 10 } },
+        { text: "Trade in grain during flood years — scarcity creates opportunity", hint: "Crisis commerce", outcome: "neutral", result: "The flood year grain trade is profitable and politically dangerous. Officials who see merchants profiting from farmers' misfortune have a Confucian framework ready for condemnation. You make money. You make enemies. The two things will accompany each other throughout your career.", statChange: { food: 0, harmony: -10, wealth: 20, standing: -10 } },
+        { text: "Invest in flood control infrastructure — protect the supply chain you depend on", hint: "Long-term commercial thinking", outcome: "good", result: "You fund a section of the community dike. Your investment protects your supply chain — the farmers who cannot produce during flood years cannot buy your goods or sell you grain. Infrastructure investment is commerce by another name. The Confucian officials who would normally look down on you find your contribution useful. Usefulness, you have discovered, is the merchant's best argument.", statChange: { food: 10, harmony: 15, wealth: 5, standing: 15 } }
+      ],
+      soldier: [
+        { text: "Study the Yellow River as a strategic asset — it defines China's defensible geography", hint: "Military geography", outcome: "good", result: "The river is a natural defensive line and a supply route simultaneously. The civilizations that China must defend against — nomadic peoples of the northern steppes — cannot easily cross its lower reaches. Your strategic assessment of the river matches what Chinese military planners will understand for the next three thousand years: geography is the first fact of defense.", statChange: { food: 5, harmony: 10, wealth: 5, standing: 15 } },
+        { text: "Help organize the flood emergency response — military discipline applied to disaster relief", hint: "Military capacity for civilian use", outcome: "good", result: "The flood emergency response requires exactly the kind of organized, hierarchical, disciplined labor that military training produces. Your unit moves sandbags, evacuates villages, and coordinates supply distribution with an efficiency civilian administrators cannot match. The emperor notes the military's usefulness in disaster. This expands your budget. Disaster relief as military mission begins here.", statChange: { food: 15, harmony: 15, wealth: 5, standing: 15 } },
+        { text: "Train on the river's banks — military readiness above all else", hint: "Mission focus", outcome: "neutral", result: "Training continues. Your unit is ready. For what, specifically, changes with every dynasty. The Yellow River is peaceful this season. The Xiongnu are quiet. You train anyway because a soldier who stops training stops being a soldier. The discipline that defines you is also the discipline that makes you useful when the river rises or the nomads probe the border.", statChange: { food: 5, harmony: 5, wealth: 0, standing: 10 } }
+      ]
+    }
+  },
+  {
+    id: "ch2",
+    number: 2,
+    title: "Chapter 2 — The Mandate of Heaven",
+    subtitle: "Who Decides When a Ruler Has Failed?",
+    scene: "It is the late Zhou dynasty — approximately 500 BCE. The central Zhou authority is fragmenting. Competing warlords control different regions of China. Natural disasters have struck several provinces. The philosophers call this the Warring States period. Confucius walks from court to court trying to find a ruler willing to govern by moral example. In this chaos, the ancient idea of the Mandate of Heaven — Tianming — becomes urgently relevant. The Son of Heaven rules because Heaven approves. When Heaven withdraws its approval, the dynasty falls and a new one rises. But who decides when that moment has arrived?",
+    historyNote: "<strong>The Mandate of Heaven:</strong> The Zhou dynasty developed the concept of Tianming — the Mandate of Heaven — to legitimize their overthrow of the Shang. Heaven (Tian) granted the right to rule to virtuous leaders and withdrew it from corrupt or incompetent ones. Natural disasters, peasant rebellions, and military defeats were all interpreted as signs that Heaven was withdrawing its favor. This concept justified every subsequent dynasty change in Chinese history.",
+    journalPrompt: "The Mandate of Heaven says rulers govern by Heaven's approval — and lose that approval when they fail their people. Who benefits from this idea? Who does it protect — and who does it leave vulnerable?",
+    poisonRoles: ["official"],
+    discussAfter: false,
+    choices: {
+      official: [
+        { text: "Serve the current dynasty loyally regardless of its failings — loyalty is a Confucian virtue", hint: "Loyalty over judgment", outcome: "neutral", result: "You serve loyally. The dynasty continues to fail. Your loyalty is noted and rewarded with continued employment. The people you administer continue to suffer under policies you know are wrong. The Confucian virtue of loyalty and the Confucian virtue of remonstrance — speaking truth to power — are in direct conflict. You have chosen loyalty. The cost of that choice is visible in your district.", statChange: { food: 0, harmony: -5, wealth: 10, standing: 10 }, poison: true },
+        { text: "Advise the ruler honestly about the signs of Heaven's disapproval — remonstrance is also a virtue", hint: "Speak truth to power", outcome: "good", result: "The advice is not welcome. The ruler hears it anyway. Some of your recommendations are implemented — the tax burden is reduced in the worst-affected provinces, the flood relief is better organized. The dynasty falls anyway, a generation later, but the suffering between now and then is measurably reduced by your honesty. Remonstrance is the harder virtue. It is also the more important one.", statChange: { food: 10, harmony: 20, wealth: -5, standing: 10 } },
+        { text: "Begin quietly positioning yourself to serve the next dynasty — practical survival over philosophical loyalty", hint: "Pragmatic transition planning", outcome: "neutral", result: "The positioning is politically intelligent and morally uncomfortable. You keep your options open, build relationships with the emerging powers, and manage your exit from the failing dynasty gracefully. When the transition comes, your administrative expertise transfers smoothly to the new regime. You have survived. The people your district serves have also survived, served by a competent administrator who stayed in place. Both things are true.", statChange: { food: 5, harmony: -10, wealth: 10, standing: 15 }, poison: true }
+      ],
+      scholar: [
+        { text: "Write about the ruler's obligation to the people — the Mandate is conditional on moral governance", hint: "Define the Mandate philosophically", outcome: "good", result: "Your text on the conditional nature of the Mandate becomes one of the foundational documents of Chinese political philosophy. The ruler who governs well keeps Heaven's favor. The ruler who fails the people loses it. The implication — that the people's welfare is the ultimate measure of legitimate authority — is more radical than it sounds. It will echo through Chinese political thought for two thousand years.", statChange: { food: 5, harmony: 20, wealth: 5, standing: 20 } },
+        { text: "Travel to the courts of different warlords looking for a ruler willing to govern by moral example", hint: "The philosopher as political consultant", outcome: "neutral", result: "The journey is long and largely unsuccessful. Most warlords want military advice, not moral philosophy. Two courts find your counsel briefly interesting before deciding that Legalist advisors produce faster results. You return home having planted seeds in several courts that will germinate, slowly, over generations. Confucius himself traveled for thirteen years without finding the ruler he sought. You are following his example.", statChange: { food: -5, harmony: 15, wealth: -5, standing: 15 } },
+        { text: "Establish a school — teach the next generation of officials the principles of Confucian governance", hint: "Long-term philosophical investment", outcome: "good", result: "The school produces graduates who carry Confucian principles into government service across multiple warring states. None of them can implement a full Confucian governance model in the chaos of the Warring States period. But they create a network of officials who share a philosophical framework — the foundation that the Han dynasty will eventually build on to make Confucianism the official state philosophy.", statChange: { food: 5, harmony: 20, wealth: 5, standing: 20 } }
+      ],
+      farmer: [
+        { text: "Watch the signs of Heaven's displeasure — floods, droughts, plagues — and decide when to stop paying taxes to a failing dynasty", hint: "Read the Mandate from ground level", outcome: "neutral", result: "The signs are clear. The floods are worse than usual. The tax collectors take more than before. The soldiers who pass through your village are more desperate and less disciplined. You reduce your tax payment to what you can actually afford. The collectors accept less than they demand. The dynasty is failing in exactly the way the Mandate of Heaven predicts — from the bottom up, one farm at a time.", statChange: { food: 10, harmony: 5, wealth: 5, standing: -5 } },
+        { text: "Support a local leader who claims Heaven's favor has shifted — join the rebellion", hint: "Active participation in dynasty change", outcome: "neutral", result: "The rebellion succeeds in your district. The local leader who claimed Heaven's favor proves to be a reasonably competent governor. Your tax burden decreases. Your village's flood management improves. Whether Heaven actually withdrew its favor from the old dynasty or whether your village simply had a better military option available is a question you do not spend much time on.", statChange: { food: 10, harmony: 5, wealth: 5, standing: 10 } },
+        { text: "Keep your head down — dynasty changes are dangerous for farmers regardless of which side wins", hint: "Survival through invisibility", outcome: "neutral", result: "You survive the transition. Both sides demand grain from your village during the conflict. You give both sides what you cannot afford to withhold and hide what you cannot afford to give. When the new dynasty establishes itself, you pay taxes to the new collectors with the same resigned efficiency you brought to the old ones. Farmers outlast dynasties by not choosing sides.", statChange: { food: 5, harmony: 5, wealth: -5, standing: 5 } }
+      ],
+      artisan: [
+        { text: "Continue producing ritual objects regardless of which dynasty is in power — craft transcends politics", hint: "Artistic continuity through political chaos", outcome: "good", result: "Your workshop serves whoever holds power. The ritual vessels required by Zhou ceremony are essentially the same ones required by whatever dynasty follows. The shapes change slightly. The purposes remain identical. Your craft is more durable than any particular dynasty — which is, in a quiet way, a form of power.", statChange: { food: 5, harmony: 10, wealth: 15, standing: 15 } },
+        { text: "Produce objects that communicate the new dynasty's legitimacy — art as political statement", hint: "Craft serving the Mandate", outcome: "good", result: "Every new dynasty needs objects that say it belongs here, that Heaven approves, that the old order has been properly superseded. Your workshop provides those objects. The bronze ritual vessels, the jade seals, the ceremonial weapons — all of them communicate the new regime's claim to the Mandate. You are not making propaganda. You are making legitimacy visible.", statChange: { food: 5, harmony: 5, wealth: 20, standing: 15 } },
+        { text: "Document the artistic traditions of the failing dynasty — preserve what might otherwise be lost", hint: "Cultural preservation", outcome: "good", result: "The transition between dynasties is when cultural knowledge is most vulnerable. Workshops are disrupted, masters die, techniques disappear. Your documentation — detailed records of methods, designs, material sources — preserves craft knowledge across the transition. Future artisans in the new dynasty will use your records. The art outlasts the politics that commissioned it.", statChange: { food: 5, harmony: 15, wealth: 5, standing: 15 } }
+      ],
+      merchant: [
+        { text: "Supply both sides during the Warring States conflicts — neutrality is profitable", hint: "War as market", outcome: "neutral", result: "Both sides need grain, weapons, supplies. You supply both. Your profits are extraordinary. Your reputation among both sides is functional — everyone knows you sell to anyone with silver. When the conflict resolves, the winning side needs merchants who know the supply networks. You are exactly that merchant. Neutrality has costs. It also has a very particular kind of value.", statChange: { food: 5, harmony: -10, wealth: 25, standing: -5 } },
+        { text: "Back the likely winner early — first-mover advantage in dynasty transitions", hint: "Political investment", outcome: "good", result: "Your early support of the emerging power — grain at favorable prices, intelligence about supply routes, warehouse access — is remembered when the transition succeeds. The new dynasty needs merchants who supported it. Your contracts improve. Your official standing improves, temporarily, before Confucian philosophy reasserts the merchant's low social position. The window between dynasty transitions is your best moment.", statChange: { food: 5, harmony: 5, wealth: 20, standing: 15 } },
+        { text: "Use the chaos to establish new trade routes the previous dynasty had blocked", hint: "Opportunity in disorder", outcome: "good", result: "Chaos reduces enforcement. Routes previously taxed or blocked are suddenly accessible. You establish commercial relationships with distant regions that were administratively off-limits. When order returns, the routes you established during chaos become legitimate trade connections. The merchant who moves fastest during political transition often ends up with the best position when stability returns.", statChange: { food: 5, harmony: -5, wealth: 20, standing: 10 } }
+      ],
+      soldier: [
+        { text: "Remain loyal to the current dynasty until the Mandate clearly shifts — then reassess", hint: "Principled loyalty with limits", outcome: "good", result: "The line between loyalty and complicity is one soldiers navigate in every civilization. You serve the current dynasty competently while watching the signs. When the Mandate clearly shifts — when the emperor can no longer supply or pay his army — you make your decision. The soldier who changes sides at the right moment is called pragmatic. The soldier who stays too long is called a martyr.", statChange: { food: 5, harmony: 15, wealth: 5, standing: 15 } },
+        { text: "Follow whoever can actually supply and pay the troops — armies run on logistics", hint: "Practical military loyalty", outcome: "neutral", result: "The dynasty that can supply its troops holds its army. The dynasty that cannot loses them — gradually, then suddenly. You follow the supplies. This is not noble. It is also not stupid. An army that fights for a dynasty that cannot feed it loses regardless of its loyalty. Military history is full of soldiers whose noble loyalty to failing dynasties produced nothing but their own deaths.", statChange: { food: 10, harmony: -5, wealth: 10, standing: 5 } },
+        { text: "Use the Warring States period to advance your military career — chaos creates opportunity for skilled soldiers", hint: "Personal advancement through conflict", outcome: "neutral", result: "The Warring States period produces extraordinary military innovation — Sun Tzu's Art of War is written during this period. Your skills are in demand. Your career advances. The cost is that you spend the most productive years of your life in one of the most violent periods of Chinese history, serving several different masters, building something personal while the civilization around you fragments.", statChange: { food: 5, harmony: -5, wealth: 10, standing: 20 } }
+      ]
+    }
+  },
+  {
+    id: "ch3",
+    number: 3,
+    title: "Chapter 3 — Three Ways to Order Society",
+    subtitle: "Confucianism, Legalism, and Taoism Face the Same Problem",
+    scene: "It is 221 BCE. Qin Shi Huang has just unified China for the first time — defeating all the warring states and declaring himself the First Emperor. He is brilliant, ruthless, and has no patience for philosophical debate. He has chosen Legalism as his governing philosophy: strict laws, harsh punishments, absolute obedience, and — most devastatingly for Confucian scholars — the burning of books and the burying of scholars who disagree. Three philosophies exist to answer the same question: how do you create a stable, harmonious society? The Qin Emperor has chosen one. Every role in your civilization now lives with that choice.",
+    historyNote: "<strong>Three Philosophies:</strong> Confucianism taught that social harmony comes from proper relationships and moral example — rulers govern by virtue, children honor parents, officials speak truth to power. Legalism taught that human nature is selfish and only strict law with severe punishment produces order. Taoism taught that the best governance is minimal — go with the natural flow of things rather than imposing artificial order. All three emerged during the Warring States period as answers to the same crisis.",
+    journalPrompt: "Which of the three philosophies would be best for your specific role — and which would be worst? Why?",
+    poisonRoles: ["scholar"],
+    discussAfter: true,
+    discussPrompt: "Your table just experienced the Qin Emperor's Legalism from one role's perspective. The table next to you experienced it completely differently. Before you continue — spend 90 seconds comparing: what did Legalism mean for your role? What did it mean for theirs?",
+    choices: {
+      official: [
+        { text: "Implement Legalist policy efficiently — the emperor's law is absolute and your job is execution", hint: "Serve the system in power", outcome: "neutral", result: "You implement. The harsh punishments produce compliance. The massive construction projects — the Great Wall beginning, the Epang Palace, the roads and canals — are organized with Legalist efficiency that would have been impossible under Confucian governance. The people suffer more than they would have under Confucian policy. The projects are completed faster than they would have been. Both things are true.", statChange: { food: 5, harmony: -10, wealth: 10, standing: 15 } },
+        { text: "Hide your Confucian texts and privately maintain your philosophical principles while publicly serving Legalism", hint: "Survive to fight another day", outcome: "good", result: "The texts survive. You survive. When the Qin dynasty collapses — only fifteen years after unification — and the Han dynasty restores Confucian governance, you are one of the officials who remembers how it works. The choice to hide rather than resist or abandon was the choice that made your later influence possible. Survival is not always cowardice. Sometimes it is the necessary precondition for contribution.", statChange: { food: 5, harmony: 10, wealth: 5, standing: 10 } },
+        { text: "Advise the emperor that Legalism without mercy will produce rebellion — offer a Confucian modification", hint: "Moderate the extremism", outcome: "bad", result: "The emperor does not want modification. He wants implementation. Your advice is heard as weakness and disloyalty. You are reassigned to a distant province — which is, under this emperor, a form of mercy. Officials who pushed harder than you did were executed. You have survived by being moved out of the way. Your advice was correct. It was also three hundred years too early for this particular emperor.", statChange: { food: -5, harmony: 10, wealth: -10, standing: -15 }, poison: true }
+      ],
+      scholar: [
+        { text: "Hide your books — the physical texts must survive even if the scholars do not", hint: "Preserve the knowledge", outcome: "good", result: "You bury the texts in the walls of your home, in the floors of the school, wrapped in oilcloth in the mountains behind your village. Some are found. Most survive. When the Han dynasty comes and scholars are asked to reconstruct the Confucian canon, these hidden texts are what make it possible. Your choice to prioritize the books over your own safety preserves the philosophy that will run China for the next two thousand years.", statChange: { food: 0, harmony: 20, wealth: -5, standing: 5 } },
+        { text: "Flee to a remote region where the emperor's reach is limited — preserve yourself and your knowledge", hint: "Survival through withdrawal", outcome: "neutral", result: "The remote region is uncomfortable and isolated. You teach a small group of students in what feels like exile. When the Qin dynasty collapses — faster than anyone expected — you return. Your students carry Confucian principles that were preserved specifically because you had the wisdom to leave. The Taoists would say you followed the natural flow rather than fighting the flood. They might be right.", statChange: { food: 5, harmony: 15, wealth: -10, standing: 5 } },
+        { text: "Argue publicly against the book burning — some principles are worth dying for", hint: "Principled resistance", outcome: "bad", result: "You argue publicly. You are arrested. You are among the scholars buried alive in the pits outside the capital. Your students witness this. The courage of your death becomes part of what they teach — the Confucian scholar who would not be silent. Your knowledge dies with you. Your example does not. Both things happen simultaneously. This is your poison pill.", statChange: { food: -10, harmony: 25, wealth: -20, standing: -20 }, poison: true }
+      ],
+      farmer: [
+        { text: "Comply with Legalist law precisely — the punishments for non-compliance are catastrophic", hint: "Survival through compliance", outcome: "neutral", result: "You comply precisely. The harvest is delivered on time. The labor conscription is fulfilled. The laws are followed to the letter. The Legalist system produces its intended effect on you — you behave exactly as required, not from virtue but from fear. This is what Legalism produces: reliable compliance without loyalty. The Qin Emperor considers this sufficient. History suggests he was wrong about how long it lasts.", statChange: { food: 5, harmony: -10, wealth: -5, standing: 5 } },
+        { text: "Quietly help hidden scholars in your area — small acts of resistance from people the emperor ignores", hint: "Resistance from invisibility", outcome: "good", result: "Your farmhouse becomes a way station for scholars moving between hiding places. The food you provide, the information about patrol routes, the space in your barn — these small contributions keep the Confucian network alive during the Qin period. When the Han dynasty comes and asks who helped preserve the philosophy, your name is not in any record. But the scholars who survived remember.", statChange: { food: -5, harmony: 20, wealth: -5, standing: 10 } },
+        { text: "Find a Taoist teacher in the mountains — if the government is going to be brutal, at least find peace", hint: "Withdraw from politics entirely", outcome: "neutral", result: "The Taoist teacher is exactly where you expected — in the mountains, beside a stream, entirely unconcerned with the Qin Emperor's administrative ambitions. What you learn: the river flows around the rock rather than through it. The philosophy that fits your life best might not be the one that runs the government. The government changes. The mountain stream does not.", statChange: { food: 5, harmony: 20, wealth: 0, standing: 5 } }
+      ],
+      artisan: [
+        { text: "Accept the commission for the terracotta army — this is the greatest artistic project in Chinese history", hint: "Art above politics", outcome: "good", result: "Eight thousand individual figures. Each face unique. Thousands of horses, chariots, weapons. The project takes years and employs hundreds of artisans. The artistic challenge is extraordinary. The political context is brutal — the emperor who commissioned this also burned books and buried scholars. You make the art anyway. The terracotta warriors survive when the empire does not. Four thousand years later they are still extraordinary.", statChange: { food: 5, harmony: 5, wealth: 25, standing: 20 } },
+        { text: "Work on the Qin road and canal infrastructure — practical construction serving the empire", hint: "Infrastructure craft", outcome: "good", result: "The Qin road network — standardized width, standardized axle gauges for carts, rest houses at regular intervals — is an engineering masterpiece. The canals that connect rivers across southern China transform agricultural productivity. Your work on this infrastructure outlasts the Qin dynasty by centuries. The roads Qin built the Han used. The canals the Qin dug still exist.", statChange: { food: 5, harmony: 5, wealth: 15, standing: 15 } },
+        { text: "Maintain craft quality standards even as the Legalist speed demands compromise quality", hint: "Professional integrity under pressure", outcome: "neutral", result: "The speed of Qin construction projects produces uneven quality. You maintain your standards where you have control. The sections of wall, road, and palace built by artisans who maintained quality survive. Those built under pure speed pressure crumble. Your professional integrity is invisible in the records. The evidence survives in the archaeology.", statChange: { food: 5, harmony: 10, wealth: 10, standing: 10 } }
+      ],
+      merchant: [
+        { text: "Embrace the Qin standardization — unified currency, weights, and measures are extraordinarily good for commerce", hint: "Commerce benefits from standardization", outcome: "good", result: "The Qin Emperor's standardization program is, from a purely commercial perspective, the best thing that has happened to Chinese merchants in centuries. One currency across all of China. Standardized weights across all markets. Standardized road widths for all carts. The brutal efficiency of Legalism produces exactly the commercial infrastructure that commerce requires. You are profiting from a system that is destroying the scholars. Both things are happening simultaneously.", statChange: { food: 5, harmony: -10, wealth: 25, standing: 10 } },
+        { text: "Comply fully with Legalist commercial regulations — the punishments for non-compliance are severe", hint: "Compliance as survival", outcome: "neutral", result: "Full compliance. Standardized weights on every scale. Accurate records for every transaction. Taxes paid in the new currency at the prescribed rate. The Legalist commercial environment is more transparent and more controlled than anything before it. Your profits are smaller — the regulations eliminate the gray areas where you previously made money. They also eliminate the corrupt officials who previously extracted money from you. It evens out.", statChange: { food: 5, harmony: -5, wealth: 10, standing: 5 } },
+        { text: "Use the new road network to establish trade connections that will outlast the Qin dynasty", hint: "Build for the long term", outcome: "good", result: "The Qin road network is the best commercial infrastructure China has ever had. You use it aggressively while it exists, establishing trade connections with distant regions that will survive the dynasty's collapse. When the Han comes and the roads remain, your network is already in place. The Qin dynasty was short. The roads it built lasted centuries. You built your business on the roads, not the dynasty.", statChange: { food: 5, harmony: 0, wealth: 20, standing: 10 } }
+      ],
+      soldier: [
+        { text: "Serve the Qin military with full commitment — the unified empire finally has a real army", hint: "Professional military in a unified state", outcome: "good", result: "The Qin military is the most powerful force in Chinese history — standardized weapons, organized command structure, professional training. You serve it well. The campaigns that unified China and pushed the Xiongnu back from the northern borders are among the most successful military operations in the ancient world. The soldiers who fought them were extraordinarily effective. You are one of them.", statChange: { food: 10, harmony: 5, wealth: 10, standing: 20 } },
+        { text: "Question the assignment to guard scholars being arrested for their books — this is not military work", hint: "Professional objection", outcome: "neutral", result: "The objection is heard and ignored. You guard the scholars anyway. The arrests, the burnings, the executions — these are not military operations in any sense you were trained for. You perform your orders with the minimum necessary force and the maximum possible reluctance. The scholars who survive your particular assignments survive because of your reluctance. You do not know this. They do.", statChange: { food: 0, harmony: 10, wealth: 0, standing: 5 } },
+        { text: "Focus on the northern border campaigns — fight the Xiongnu rather than scholars", hint: "Find the legitimate military mission", outcome: "good", result: "The northern border campaigns against the Xiongnu are exactly the military mission you understand and believe in. The Xiongnu raids on Chinese settlements are real. The military response is legitimate. You request transfer to the northern command and spend the Qin period fighting the actual enemy rather than arresting philosophers. Your record in the north is excellent. Your conscience is clearer than most.", statChange: { food: 10, harmony: 15, wealth: 5, standing: 15 } }
+      ]
+    }
+  },
+  {
+    id: "ch4",
+    number: 4,
+    title: "Chapter 4 — The Great Wall",
+    subtitle: "Who Pays the Cost — and Who Benefits?",
+    scene: "It is the Han dynasty — approximately 100 BCE, under Emperor Wu. The Great Wall, begun under the Qin, is being extended and reinforced under Han governance. Hundreds of thousands of laborers — conscripted farmers, criminals, soldiers, and paid workers — are building across the most inhospitable terrain in northern China. The stated purpose: keep the Xiongnu nomads of the northern steppes from raiding Chinese settlements. The actual cost in human life and agricultural disruption is enormous. The DBQ question this campaign is preparing you for: did the benefits of the Great Wall outweigh the costs?",
+    historyNote: "<strong>The Great Wall:</strong> The wall built under various dynasties was not a single continuous structure but a series of walls, watchtowers, and garrison settlements built over centuries. The Han dynasty extended the Qin wall significantly westward to protect the Silk Road corridors. Estimates of deaths during construction range from hundreds of thousands to millions. It was the largest construction project in human history — and historians still debate whether it successfully stopped the Xiongnu.",
+    journalPrompt: "Your role just experienced the Great Wall's construction from a specific position. Write one benefit and one cost of the Wall from your role's perspective — then consider: whose benefits and whose costs were the ones that mattered most to the emperor?",
+    poisonRoles: ["farmer", "soldier"],
+    discussAfter: false,
+    choices: {
+      official: [
+        { text: "Organize the conscription fairly — distribute the labor burden across districts proportionally", hint: "Administrative equity", outcome: "good", result: "Fair distribution does not make the conscription less brutal. It makes it less arbitrary — which, in administrative terms, is significant. The districts that provide labor proportionally maintain more agricultural capacity than those stripped of workers randomly. Your fair distribution produces better harvest records in your district. The wall still gets built. The cost is still enormous. Fair administration of an unjust burden is both better than unfair administration and insufficient as a response to the injustice.", statChange: { food: 10, harmony: 15, wealth: 5, standing: 15 } },
+        { text: "Ensure the wall workers are adequately supplied — deaths from exposure and starvation on the wall hurt agricultural production back home", hint: "Pragmatic welfare argument", outcome: "good", result: "Your supply chain argument is framed in economic terms rather than humanitarian ones — because economic arguments reach this emperor's ears better. The mortality rate on the wall decreases in your supply zone. The workers who survive return to their farms. The harvest the following year is better than in comparable districts with higher wall mortality. You have made a humanitarian argument in the language of administration. This is how much of governance actually works.", statChange: { food: 15, harmony: 15, wealth: -5, standing: 10 } },
+        { text: "Manage the wall project for speed and completion — the emperor's priority is the wall, not the workers", hint: "Imperial priorities first", outcome: "neutral", result: "The section is completed ahead of schedule. The mortality rate is high. The emperor is pleased with the speed. The district's agricultural output suffers for three years from the loss of able-bodied farmers. The administrative record shows success. The human cost does not appear in the administrative record. This is not an accident.", statChange: { food: -10, harmony: -10, wealth: 10, standing: 15 } }
+      ],
+      scholar: [
+        { text: "Write about the human cost of the wall — document what the official records will not capture", hint: "Bear witness", outcome: "good", result: "Your account of the wall's human cost — the families separated, the farmers who never returned, the fields that went unplanted — is not published during the Han emperor's reign. It circulates privately, copied by hand, passed between scholars who share your concerns. It survives. Future historians who want to understand what the Great Wall cost will cite it. The record that the official history left out exists because you wrote it.", statChange: { food: 0, harmony: 20, wealth: 0, standing: 10 } },
+        { text: "Advise the emperor that a diplomatic solution with the Xiongnu might cost less than the wall", hint: "Alternative policy proposal", outcome: "neutral", result: "The advice is heard. Emperor Wu is simultaneously building the wall and pursuing diplomatic marriage alliances with the Xiongnu. The two strategies coexist uncomfortably — the wall says the Xiongnu cannot be trusted, the marriages say they can be partners. Your advice does not stop the wall. It contributes to a policy that combines both approaches, which is more effective than either alone.", statChange: { food: 5, harmony: 15, wealth: 0, standing: 10 } },
+        { text: "Teach Confucian governance principles to the wall administrators — the wall will be built better if its managers care about the workers", hint: "Humanize the administration", outcome: "good", result: "Some administrators respond. The supply systems in their sections improve. The arbitrary punishment of workers decreases. The mortality rate drops slightly in the sections your students manage. The wall is still built through forced labor. The forced labor is slightly less brutal in the sections influenced by Confucian administrative principles. Improvement without justice is insufficient. It is also better than nothing.", statChange: { food: 10, harmony: 20, wealth: 0, standing: 15 } }
+      ],
+      farmer: [
+        { text: "Go to the wall and work as well as you can — survival requires cooperation with power", hint: "Compliant survival", outcome: "neutral", result: "You go. You work. You survive — barely. The wall is being built in conditions that kill a significant percentage of workers. You are among those who make it back. Your field, unplanted for a year, requires two seasons to recover full productivity. The tax collector does not reduce your assessment for the year you were gone. You pay the tax on a harvest that does not exist, with grain borrowed from a neighbor at interest. Welcome back.", statChange: { food: -10, harmony: 5, wealth: -15, standing: 5 }, poison: true },
+        { text: "Flee to a region beyond the conscription notice's reach — refuse the forced labor", hint: "Resist through disappearance", outcome: "bad", result: "You disappear. Your family is assessed a fine for your non-compliance. The fine is larger than your annual income. Your family must sell a portion of their land to pay it. The land goes to a wealthier neighbor at below-market price. When you return, your family's farm is smaller than it was. You survived. The cost of your survival landed on the people you were trying to protect.", statChange: { food: -5, harmony: 5, wealth: -20, standing: -15 }, poison: true },
+        { text: "Go to the wall and quietly organize fellow workers to demand better food and shelter", hint: "Collective action under conscription", outcome: "neutral", result: "The demand is partially met — the supply administrator responsible for your section responds to organized pressure better than to individual complaints. The food improves slightly. The shelter improves slightly. You return home having survived and having made the conditions slightly better for the workers who came after you. Your name appears nowhere in the records of the Great Wall's construction.", statChange: { food: 5, harmony: 15, wealth: -10, standing: 10 }, poison: true }
+      ],
+      artisan: [
+        { text: "Design and build the watchtower signal systems — the wall only works if information moves along it quickly", hint: "Technical contribution to strategic infrastructure", outcome: "good", result: "The beacon signal system you design allows a warning to travel the length of the wall in hours rather than days. The military effectiveness of the wall depends more on this communication system than on the wall itself — a breach that cannot be communicated is a breach that cannot be responded to. Your technical contribution to the wall's function is more significant than the wall's physical presence.", statChange: { food: 5, harmony: 5, wealth: 20, standing: 20 } },
+        { text: "Improve the construction materials — better brick bonding compounds reduce the wall's maintenance requirements", hint: "Technical quality improvement", outcome: "good", result: "The sections built with your improved mortar compound require significantly less maintenance over the following decades. The material cost savings across those sections offset a portion of the initial expense. You have made the wall more durable without making it more costly — which is the artisan's highest contribution to any large project.", statChange: { food: 5, harmony: 5, wealth: 15, standing: 15 } },
+        { text: "Work on the artistic elements of the wall — the ceremonial gates and inscriptions that give it symbolic meaning", hint: "Art making infrastructure meaningful", outcome: "good", result: "The Great Wall is more than a military installation — it is a statement about China's identity, its boundaries, its sense of where civilization ends and barbarian territory begins. The ceremonial gates you design, the inscriptions you carve, the decorative elements that distinguish this from a mere pile of rocks — these give the wall its cultural meaning. Military walls become historical monuments through exactly this kind of work.", statChange: { food: 5, harmony: 10, wealth: 10, standing: 15 } }
+      ],
+      merchant: [
+        { text: "Supply the wall construction — the logistics market is extraordinary", hint: "War and construction as commercial opportunity", outcome: "good", result: "Hundreds of thousands of workers require food, tools, clothing, and replacement materials continuously across thousands of miles. Your supply network — already established through previous trade — is perfectly positioned for this market. The profit is significant. The moral complexity is also significant. You are profiting from the suffering of conscripted farmers. Both things are simultaneously true.", statChange: { food: 5, harmony: -10, wealth: 25, standing: 10 } },
+        { text: "Supply the wall garrison soldiers with better equipment than the state provides", hint: "Fill the gap in state supply", outcome: "good", result: "The garrison soldiers on the wall are chronically undersupplied. Your private supply of better cold-weather clothing, supplemental food, and quality weapons creates loyal customers who also happen to be the people guarding the trade routes you depend on. Commerce and security reinforce each other. The soldier who is better supplied fights better — and is more inclined to protect the merchant who supplied them.", statChange: { food: 10, harmony: 10, wealth: 15, standing: 15 } },
+        { text: "Argue against the wall investment — the same resources could improve the Silk Road instead", hint: "Alternative resource allocation", outcome: "neutral", result: "Your argument is economically sound and politically irrelevant. The emperor has decided. The wall will be built. Your alternative proposal is filed and forgotten. Three hundred years later, when historians debate whether the wall's benefits outweighed its costs, your argument will look prescient. In the moment it makes no difference whatsoever.", statChange: { food: 5, harmony: 10, wealth: 0, standing: 5 } }
+      ],
+      soldier: [
+        { text: "Accept the wall assignment and make the best of it — this is what soldiers do", hint: "Professional acceptance", outcome: "neutral", result: "The wall assignment is exactly what you expected and worse than you imagined. The northern wind is extraordinary. The Xiongnu probe the defenses every week — sometimes probing, sometimes raiding in force. Your garrison is undersupplied. The wall is magnificent and the posting is miserable. You do your job. You count the days. You write letters home that arrive months late if they arrive at all.", statChange: { food: 5, harmony: 5, wealth: 0, standing: 10 }, poison: true },
+        { text: "Advocate for better supplies for the garrison — the wall cannot be defended by starving soldiers", hint: "Soldier welfare as military readiness", outcome: "good", result: "Your advocacy moves through the military chain of command with the speed of Chinese bureaucracy — slowly. Some improvements arrive eventually. The supply situation improves from catastrophic to merely inadequate. Your advocacy is noted in the records. Future historians of the Han military will cite the garrison supply problems you identified as contributing to the wall's periodic failures against Xiongnu raids.", statChange: { food: 10, harmony: 15, wealth: 0, standing: 15 }, poison: true },
+        { text: "Study the Xiongnu tactics during raids — understand the enemy the wall is supposed to stop", hint: "Military intelligence", outcome: "good", result: "The study is revealing. The Xiongnu do not attack the wall directly — they probe for gaps, find undefended passes, and move through terrain the wall cannot cross. The wall is least effective against exactly the kind of mobile, opportunistic raiding that defines Xiongnu military culture. Your tactical assessment — that the wall needs to be part of a broader mobile defense strategy — is correct. It is also not what the emperor wants to hear.", statChange: { food: 5, harmony: 10, wealth: 0, standing: 15 }, poison: true }
+      ]
+    }
+  },
+  {
+    id: "ch5",
+    number: 5,
+    title: "Chapter 5 — The Way of Harmony",
+    subtitle: "Confucianism Restored — and the Merchant's Permanent Problem",
+    scene: "The Han dynasty has stabilized. Emperor Wu has established the imperial examination system — government officials must now demonstrate mastery of Confucian texts to hold office. The five relationships, filial piety, governance by moral example — all of it is now official state philosophy. Scholars who hid their books during the Qin period are vindicated. Officials trained in Confucian principles now administer the empire. The system is more humane, more stable, and more durable than Legalism. It is also, from certain perspectives, deeply unfair in ways Legalism was not.",
+    historyNote: "<strong>The Imperial Examination System:</strong> Han Emperor Wu's establishment of the imperial examination system — selecting officials based on knowledge of Confucian classics rather than birth — was one of the most consequential administrative innovations in world history. It theoretically opened government service to talented men regardless of family background, though in practice the expense of education limited access. The system survived with modifications until 1905 CE.",
+    journalPrompt: "The Confucian system restored harmony for some people — and created new problems for others. Which role benefited most from Confucian restoration? Which role found it hardest?",
+    poisonRoles: ["merchant"],
+    discussAfter: true,
+    discussPrompt: "The Confucian restoration meant completely different things to different roles. Before you continue — spend 90 seconds comparing with the table next to you: what did restored Confucian governance mean for your role — and what did it mean for theirs?",
+    choices: {
+      official: [
+        { text: "Study for the imperial examination — compete on the basis of knowledge rather than birth", hint: "Merit-based advancement", outcome: "good", result: "The examination system is the most important innovation in Chinese governance. For the first time, men of non-elite birth can reach the highest offices in the empire through demonstrated knowledge rather than family connection. You study, you pass, you advance. The system is not perfectly meritocratic — the expense of education still advantages the wealthy. But it is more open than anything that preceded it.", statChange: { food: 5, harmony: 20, wealth: 10, standing: 25 } },
+        { text: "Train younger officials in both Confucian principles and practical governance — the combination produces the best administrators", hint: "Philosophy plus practice", outcome: "good", result: "Your training program produces administrators who can cite the Analects and manage a flood emergency simultaneously. The officials who can only cite texts are useless in a crisis. Those who can only manage crises make decisions without ethical framework. The combination is what makes a genuine administrator. Your graduates become the model for Han dynasty provincial governance.", statChange: { food: 10, harmony: 20, wealth: 5, standing: 20 } },
+        { text: "Use the restored Confucian hierarchy to consolidate administrative power — the scholar-official class now runs China", hint: "Institutional consolidation", outcome: "neutral", result: "The scholar-official class becomes the permanent administrative backbone of China — more durable than any single dynasty. The Confucian bureaucracy that you help consolidate during the Han will survive the Han's fall, the centuries of fragmentation that follow, and the rise of multiple subsequent dynasties. The institution outlasts every emperor it serves. This is simultaneously its greatest strength and the source of its eventual rigidity.", statChange: { food: 5, harmony: 10, wealth: 15, standing: 20 } }
+      ],
+      scholar: [
+        { text: "Reconstruct the burned Confucian texts from memory and hidden copies — restore the canon", hint: "Restore what was destroyed", outcome: "good", result: "The reconstruction takes decades and the work of hundreds of scholars comparing fragments, memories, and surviving copies. The restored canon is not identical to what was burned — some texts are lost forever, some are reconstructed imperfectly. But the intellectual tradition is restored. The Han dynasty's official Confucianism is built on this reconstruction. You were part of making it possible.", statChange: { food: 5, harmony: 25, wealth: 5, standing: 20 } },
+        { text: "Accept the position of imperial Confucian advisor — your philosophy now runs the government", hint: "Philosophical influence made official", outcome: "good", result: "The vindication is real. Your teachings shape the examination questions that select every government official in China. The five relationships, filial piety, proper ritual conduct — all of it now has the force of state policy. You are careful about this. State Confucianism is not quite the same thing as Confucius's philosophy — the state has domesticated the teaching somewhat in making it official. You navigate this carefully.", statChange: { food: 5, harmony: 20, wealth: 10, standing: 25 } },
+        { text: "Acknowledge the limitations of Confucianism — the system restored still has injustices Confucius would have found troubling", hint: "Critical fidelity to the tradition", outcome: "good", result: "The honest assessment: Confucian restoration is better than Legalist brutality. It is not a complete answer to the problems of a large, complex empire. The examination system advantages the wealthy. The five relationships entrench patriarchy. The emphasis on hierarchy justifies the permanent subordination of certain groups. Confucius himself remonstrated against injustice — his tradition should do the same. You teach your students to do so.", statChange: { food: 5, harmony: 20, wealth: 5, standing: 15 } }
+      ],
+      farmer: [
+        { text: "Benefit from Han agricultural policies — land redistribution and reduced taxation make life measurably better", hint: "Confucian governance improves farmer welfare", outcome: "good", result: "The Han dynasty's agricultural policies are directly informed by Confucian concern for the people's welfare. Tax rates decrease from Qin levels. Land redistribution policies prevent the extreme consolidation that had pushed farmers into debt peonage. Irrigation investment increases. Your farm is more productive and more secure under Han Confucian governance than it was under Qin Legalism. The philosophy that seemed abstract turns out to have very concrete effects on your harvest.", statChange: { food: 20, harmony: 15, wealth: 10, standing: 10 } },
+        { text: "Send your most talented child to study for the imperial examinations — the system is theoretically open", hint: "Access the meritocratic pathway", outcome: "neutral", result: "The theory is correct — the examination is open to men regardless of birth. The practice is constrained by the cost of the education required to pass it. You can provide basic tutoring from a local scholar. The wealthy families in your district provide years of intensive classical education from multiple teachers. Your child is talented. The competition is better resourced. The attempt is honorable. The outcome is uncertain.", statChange: { food: -5, harmony: 15, wealth: -10, standing: 10 } },
+        { text: "Appreciate the stability Confucian governance provides — after the Qin chaos, peace and order have real value", hint: "Stability as welfare", outcome: "good", result: "The Qin period was characterized by constant conscription, brutal punishment, and administrative volatility. The Han Confucian period is characterized by relative stability, lighter taxation, and officials who at least theoretically answer for the welfare of the people they govern. The stability itself is a form of welfare. You can plant and harvest with a reasonable expectation that the harvest will still be yours when collection time comes.", statChange: { food: 15, harmony: 15, wealth: 5, standing: 10 } }
+      ],
+      artisan: [
+        { text: "Thrive under Han patronage — Confucian ritual requires extraordinary artistic production", hint: "Philosophy generates craft demand", outcome: "good", result: "Confucian governance requires ritual objects for every significant occasion — state ceremonies, seasonal festivals, official appointments, scholarly examinations. The ritual calendar of Han China keeps artisan workshops continuously busy. Your craft serves the philosophical restoration directly. The objects you produce give Confucian ceremony its physical form.", statChange: { food: 5, harmony: 10, wealth: 20, standing: 20 } },
+        { text: "Develop silk weaving technology — Chinese silk is the foundation of the coming Silk Road economy", hint: "Prepare for global commerce", outcome: "good", result: "The silk weaving innovations you develop during the Han period — new loom designs, new dyeing techniques, new pattern complexity — produce fabric of quality that no other civilization can match. The Silk Road will be named for this product. The techniques you develop in this workshop will remain China's most valuable trade secret for centuries.", statChange: { food: 5, harmony: 5, wealth: 20, standing: 15 } },
+        { text: "Study the Confucian aesthetic principles — art in service of moral cultivation", hint: "Philosophical alignment of craft", outcome: "good", result: "Confucian aesthetics hold that art should cultivate moral character — beauty in service of virtue rather than pleasure. Your work shifts accordingly. The lacquerware becomes more restrained, the silk patterns more symmetrical, the bronze vessels more precisely ritualistic. The Confucian aesthetic does not produce your most innovative work. It produces your most enduring work.", statChange: { food: 5, harmony: 15, wealth: 10, standing: 15 } }
+      ],
+      merchant: [
+        { text: "Accept the low social position and compete on wealth — money is its own kind of power", hint: "Subvert hierarchy through wealth", outcome: "neutral", result: "You are officially the lowest of the four occupations. You cannot wear silk. You cannot ride horses in certain contexts. You cannot hold office. You are also wealthy enough to bribe officials, fund scholars, and arrange marriages into higher-status families. The social hierarchy says you are at the bottom. The economic reality says you are essential. You live in the gap between those two truths.", statChange: { food: 5, harmony: -10, wealth: 20, standing: -5 }, poison: true },
+        { text: "Fund Confucian schools — if the scholars run everything, their good will is worth purchasing", hint: "Buy philosophical acceptance", outcome: "neutral", result: "The scholars accept your funding. They do not accept your social position. The Confucian texts that place merchants at the bottom of the social hierarchy are the same texts your funding helps preserve and teach. You are financing the philosophy of your own degradation. The scholars are politely grateful. They look down on you with slightly warmer eyes than before.", statChange: { food: 5, harmony: 5, wealth: -10, standing: 10 }, poison: true },
+        { text: "Focus entirely on the emerging Silk Road — the trade routes that connect China to the world are too new for Confucian hierarchy to have fully regulated", hint: "Find the unregulated frontier", outcome: "good", result: "The Silk Road is new enough that the Confucian social hierarchy has not fully calcified around it. The Central Asian traders you deal with do not know or care about your position in the Chinese four-occupation hierarchy. On the road, you are simply a trader with goods and silver. The further from the Han capital you operate, the less the official contempt for merchants constrains you.", statChange: { food: 5, harmony: 10, wealth: 25, standing: 15 }, poison: false }
+      ],
+      soldier: [
+        { text: "Appreciate the shift from pure military to diplomatic strategy with the Xiongnu", hint: "Soldier in a diplomatic era", outcome: "good", result: "The marriage alliances and tribute arrangements that the Han uses alongside military force to manage the Xiongnu are more effective than the wall alone. You are still on the wall — but the strategy around you is more sophisticated. Diplomatic success means fewer raids. Fewer raids means fewer deaths on both sides. The soldier who wants to fight and the soldier who wants to live are not always different people.", statChange: { food: 10, harmony: 15, wealth: 5, standing: 15 } },
+        { text: "Study the Confucian texts required for military officer advancement — the examination system reaches into the military", hint: "Confucian military culture", outcome: "neutral", result: "Military officers under the Han are expected to demonstrate Confucian learning alongside military competence. You study the Analects with the same discipline you bring to weapons training. The combination — martial skill and classical education — is the Han ideal of the cultivated soldier. You achieve it imperfectly and sufficiently. The examination you pass is not rigorous. The principle it embodies is.", statChange: { food: 5, harmony: 15, wealth: 5, standing: 15 } },
+        { text: "Protect the emerging Silk Road trade routes — the new mission is as important as the wall", hint: "Mission expansion", outcome: "good", result: "The Silk Road protection mission is more interesting and more dangerous than wall garrison duty. The routes pass through territory the Han does not fully control, past peoples with complex relationships to Chinese authority. Your unit navigates diplomacy, intelligence, and occasional combat across territory no previous Han soldier has patrolled. You are doing something genuinely new.", statChange: { food: 10, harmony: 10, wealth: 10, standing: 20 } }
+      ]
+    }
+  },
+  {
+    id: "ch6",
+    number: 6,
+    title: "Chapter 6 — The Road Goes Both Ways",
+    subtitle: "The Silk Road Opens China to the World",
+    scene: "It is approximately 100 CE, Han dynasty at the height of its power and reach. The Silk Road — the network of trade routes connecting China to Central Asia, Persia, India, and eventually Rome — is fully operational. Chinese silk moves west. Roman glass moves east. Indian spices move in both directions. And with the goods: ideas, religions, technologies, diseases, and people. Buddhism is arriving from India. Mathematical concepts are moving toward the Arab world that will transmit them to Europe. Confucian texts are traveling to Korea and Vietnam. China has been the most isolated major civilization in the ancient world. The Silk Road has ended that isolation — and the world is rushing in both directions.",
+    historyNote: "<strong>The Silk Road:</strong> Named by a 19th-century German geographer, the Silk Road was not a single road but a network of overland and maritime routes connecting East Asia to the Mediterranean. At its height it moved silk, spices, glassware, gems, cotton, and ideas across 4,000 miles. Buddhism traveled east along these routes from India to China. Paper-making technology traveled west from China. The Black Death traveled west in the 14th century. The road carried everything.",
+    journalPrompt: "The Silk Road carried goods, ideas, religions, and diseases in both directions. Think about China's previous isolation — the geography, the wall, the philosophy. What does it mean that China chose to open these trade routes? What did China gain — and what did it give up?",
+    poisonRoles: [],
+    discussAfter: false,
+    choices: {
+      official: [
+        { text: "Administer the Silk Road's Chinese end — taxation, inspection, diplomatic protocol with foreign traders", hint: "Manage the gateway", outcome: "good", result: "The administrative challenge is extraordinary — traders from a dozen different cultures, speaking different languages, following different commercial customs, all passing through Chinese administrative checkpoints. Your office develops the protocols that make international trade possible within the Chinese system. The Silk Road runs on goods and silver. It also runs on the administrative infrastructure you build.", statChange: { food: 5, harmony: 15, wealth: 15, standing: 20 } },
+        { text: "Study the arriving Buddhist texts — the new religion raises philosophical questions Confucianism must engage with", hint: "Intellectual openness", outcome: "good", result: "Buddhism's arrival creates the first major philosophical challenge Confucianism has faced from outside the Chinese tradition. The questions Buddhism raises — about suffering, about the nature of the self, about liberation — are not well addressed by Confucian thought. Your engagement with Buddhist texts produces a scholarly dialogue that will eventually influence both traditions. China absorbs Buddhism. Buddhism adapts to China. The result is something neither tradition imagined.", statChange: { food: 5, harmony: 20, wealth: 5, standing: 15 } },
+        { text: "Regulate the incoming ideas as carefully as the incoming goods — some foreign influences are destabilizing", hint: "Cautious engagement", outcome: "neutral", result: "Some incoming ideas are destabilizing — Buddhism's challenge to Confucian social hierarchy, its claim that monks owe primary loyalty to the dharma rather than to parents and rulers, its organization outside state control. Your regulatory instinct is not wrong. The tension between Buddhist institutional independence and Confucian state authority will define Chinese religious politics for centuries. You have correctly identified the problem. The solution remains elusive.", statChange: { food: 5, harmony: 5, wealth: 10, standing: 10 } }
+      ],
+      scholar: [
+        { text: "Engage with the Buddhist texts arriving from India — the tradition has something Confucianism lacks", hint: "Philosophical encounter with Buddhism", outcome: "good", result: "The Buddhist texts raise questions Confucianism has not fully answered — about suffering, about the nature of consciousness, about what persists after death. The Confucian tradition is primarily social and ethical. Buddhism is primarily metaphysical and soteriological. The encounter produces Chinese Buddhism — a tradition that absorbs Confucian social values into a Buddhist framework for liberation. Neither tradition is unchanged by the meeting.", statChange: { food: 5, harmony: 20, wealth: 5, standing: 15 } },
+        { text: "Send Confucian texts west along the Silk Road — Chinese philosophy should travel as goods do", hint: "Export the tradition", outcome: "good", result: "Confucian texts travel with Chinese merchants into Central Asia, eventually reaching the Persian world and influencing governance philosophy there. Korean and Vietnamese scholars actively seek the texts, studying in China and returning to apply Confucian governance principles in their own kingdoms. The Silk Road carries Confucianism east and south as surely as it carries silk west. Your tradition is becoming a philosophy of East Asia, not just China.", statChange: { food: 5, harmony: 20, wealth: 5, standing: 20 } },
+        { text: "Document what arrives on the Silk Road — the first comprehensive Chinese account of the wider world", hint: "Intellectual cartography", outcome: "good", result: "Your account of the cultures, goods, and ideas arriving via the Silk Road is the most comprehensive description of the ancient world seen from the Chinese end. The descriptions of Rome — which the Chinese call Daqin — the Parthian Empire, the Indian kingdoms — all filtered through your observation. The world is larger than China knew. Your documentation makes that largeness navigable for future Chinese scholars.", statChange: { food: 5, harmony: 15, wealth: 5, standing: 20 } }
+      ],
+      farmer: [
+        { text: "Notice that new crops are arriving via the Silk Road — grapes, walnuts, sesame, cotton", hint: "Agricultural revolution from trade", outcome: "good", result: "The agricultural impact of the Silk Road is one of its least celebrated effects. Crops that did not exist in China before the road's opening — grapes, walnuts, sesame, pomegranates, cotton — arrive via Central Asian traders and transform Chinese agriculture. Your farm diversifies. Your diet improves. The road that was built for silk carries the seeds that change what you grow.", statChange: { food: 20, harmony: 10, wealth: 10, standing: 10 } },
+        { text: "Sell your grain surplus to supply the Silk Road caravans passing through your region", hint: "Participate in the trade economy", outcome: "good", result: "The caravans need food. Your surplus grain finds a market you never had before. The prices the foreign traders pay are higher than the local market price — they need the food and they have silver from distant markets. Your participation in the Silk Road economy is modest. It is also more substantial than any farmer in your district has experienced before. The road that carries silk carries your grain too.", statChange: { food: 5, harmony: 5, wealth: 15, standing: 10 } },
+        { text: "Watch the caravans pass with curiosity — this road connects your farm to Rome without you taking a single step", hint: "Witness the connection", outcome: "neutral", result: "The caravans are extraordinary — camels loaded with silk, merchants from faces and languages you have never seen, goods whose origins you cannot imagine. A piece of glass from Rome passes your field on a camel's back. A Roman senator will wear silk grown near your village. The connection between your farm and the world's largest empire exists. You will never see it. It exists anyway.", statChange: { food: 5, harmony: 10, wealth: 0, standing: 5 } }
+      ],
+      artisan: [
+        { text: "Produce silk of the highest quality for the international market — the world is waiting", hint: "Craft for global demand", outcome: "good", result: "The international silk market rewards quality with prices that the domestic market never offered. Roman merchants pay extraordinary sums for the finest Chinese silk — silk so fine it can be read through. Your workshop's reputation travels west with the goods. Artisans in your tradition will eventually be the most sought-after luxury producers in the ancient world. The Silk Road is named for what you make.", statChange: { food: 5, harmony: 5, wealth: 30, standing: 20 } },
+        { text: "Learn techniques from the artisans arriving via the Silk Road — Parthian metalwork, Indian textile patterns, Central Asian dyeing methods", hint: "Craft synthesis through trade", outcome: "good", result: "The artisans who arrive with caravans bring techniques unknown in China. Parthian metalwork. Indian textile patterns. Central Asian dyeing methods. Your workshop synthesizes these with Chinese craft traditions to produce objects unlike anything made before — the first truly international luxury goods. The objects that emerge from this synthesis will end up in tombs from Japan to Egypt.", statChange: { food: 5, harmony: 10, wealth: 20, standing: 20 } },
+        { text: "Guard the secret of silk production — China's economic advantage depends on no one else knowing how to make it", hint: "Protect the trade secret", outcome: "neutral", result: "The secret holds — for now. Silk production remains a Chinese monopoly for centuries. The economic advantage is significant. Rome spends an estimated one third of its treasury on Chinese silk. The secret eventually leaks — silkworm eggs smuggled to Byzantium in hollow canes in the 6th century CE. But that is centuries away. For now, the secret is yours, and the world's silver flows toward your workshop.", statChange: { food: 5, harmony: 5, wealth: 20, standing: 15 } }
+      ],
+      merchant: [
+        { text: "Build the Silk Road trading operation — this is your moment and your vindication", hint: "The merchant's greatest chapter", outcome: "good", result: "Everything the Confucian social hierarchy said about merchants — that you produce nothing, that your work is the least valuable kind — collapses against the reality of the Silk Road. You move silk from Chinese workshops to Roman aristocrats. You carry glass from Rome to Chinese emperors. You connect civilizations that would otherwise never meet. The philosophy that placed you at the bottom of the social hierarchy has no answer for what you have built.", statChange: { food: 10, harmony: 15, wealth: 30, standing: 20 } },
+        { text: "Develop the caravanserai network — rest houses, water sources, security arrangements across the entire route", hint: "Infrastructure as commerce", outcome: "good", result: "The Silk Road only works if merchants can travel it safely. The caravanserai network — rest houses at regular intervals with water, fodder, and security — is the infrastructure that makes the road functional. You build it because it serves your commercial interest. It also serves every other merchant who follows the route. The infrastructure you build for profit becomes the public good that enables everyone else's profit too.", statChange: { food: 5, harmony: 15, wealth: 25, standing: 20 } },
+        { text: "Carry Buddhist monks along with your trade goods — religious travel and commercial travel use the same roads", hint: "Trade and religion intertwined", outcome: "good", result: "The Buddhist monks who travel with your caravans bring their faith to communities along the route. You bring them safely through territory that would be dangerous for travelers without commercial cover. The trade road and the pilgrimage road are the same road. Buddhism spreads to China partly because merchants like you provided safe passage. The Silk Road carries everything.", statChange: { food: 5, harmony: 20, wealth: 20, standing: 15 } }
+      ],
+      soldier: [
+        { text: "Escort and protect the caravans — the road needs security to function", hint: "Military enables commerce", outcome: "good", result: "The Silk Road protection mission transforms your role from wall defender to road guardian. The distances involved are enormous — you patrol routes that extend thousands of miles into Central Asia. The cultures you encounter are unlike anything in Chinese military training. You learn to negotiate as much as fight, to establish relationships with local powers rather than simply intimidate them. The road makes you a different kind of soldier.", statChange: { food: 10, harmony: 15, wealth: 15, standing: 20 } },
+        { text: "Establish Chinese military presence in Central Asian oasis cities — project power along the route", hint: "Strategic military expansion", outcome: "good", result: "The garrison cities you establish in the Tarim Basin and Central Asian oases become the anchor points of Chinese influence along the Silk Road. The military presence protects the trade routes and projects Han power further west than any previous Chinese military force. The oasis cities become cosmopolitan trading centers — Chinese, Parthian, Indian, and local cultures mixing in the shadow of Chinese garrison walls.", statChange: { food: 5, harmony: 10, wealth: 10, standing: 20 } },
+        { text: "Report back on what you encounter — military intelligence from the world beyond China", hint: "Soldier as explorer", outcome: "good", result: "Your reports on the peoples, terrain, military capacities, and trade goods of Central Asia and beyond are the most detailed intelligence the Han court has ever received about the wider world. The Han emperor reads your dispatches with the same attention he gives to reports on the Xiongnu. You have extended China's strategic vision beyond its traditional borders. The soldier as geographer is a Han innovation.", statChange: { food: 5, harmony: 10, wealth: 10, standing: 20 } }
+      ]
+    }
+  }
+];
+
+// ══════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════
+let state = {
+  screen: "art_open",
+  role: null,
+  chapterIndex: 0,
+  pendingOutcome: null,
+  stats: { food: 50, harmony: 50, wealth: 50, standing: 50 },
+  inDiscussion: false,
+  timerInterval: null,
+};
+
+function go(s) { state.screen = s; render(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+function getRole() { return ROLES.find(r => r.id === state.role); }
+function clamp(v) { return Math.max(0, Math.min(100, v)); }
+function applyStats(change) { if (!change) return; for (let k in change) { if (state.stats[k] !== undefined) state.stats[k] = clamp(state.stats[k] + change[k]); } }
+function statColor(v) { return v >= 60 ? "#6ABF6A" : v >= 35 ? "#E8C840" : "#E05050"; }
+function isDead() { return state.stats.food <= 0; }
+
+function harmonyResult(v) {
+  if (v >= 75) return { icon: "☯️", title: "Great Harmony", text: "Your choices aligned with the Confucian ideal of harmonious relationship — proper conduct between people, between rulers and subjects, between humans and the natural order. The five relationships held. The empire functioned as it should. What you contributed to Chinese civilization will be felt for generations." };
+  if (v >= 50) return { icon: "⚖️", title: "Balanced Order", text: "Your choices maintained basic social harmony while navigating the inevitable tensions of Chinese civilization — between Legalism and Confucianism, between isolation and connection, between the wall and the road. Most Chinese people across most dynasties lived exactly this navigation. It is not the Confucian ideal. It is the Chinese reality." };
+  if (v >= 25) return { icon: "🌊", title: "Disrupted Harmony", text: "Your choices prioritized individual or factional interest over the larger social harmony. In Confucian terms, the five relationships were not properly maintained. This does not make you a villain — Chinese history is full of people who disrupted harmony for understandable reasons. But the cost of disruption in a civilization that values order above almost everything else is real." };
+  return { icon: "🔥", title: "Broken Harmony", text: "Your choices contributed significantly to social disruption. The Mandate of Heaven concept suggests that when harmony breaks down sufficiently, dynastic change follows. You may have been on the wrong side of that dynamic, or on the right side of a necessary change, depending on your perspective and your dynasty." };
+}
+
+function renderStats() {
+  const defs = [
+    { key: "food", label: "Food", icon: "🌾" },
+    { key: "harmony", label: "Harmony", icon: "☯️" },
+    { key: "wealth", label: "Wealth", icon: "💰" },
+    { key: "standing", label: "Standing", icon: "📋" },
+  ];
+  return `<div class="stats-row">${defs.map(d => {
+    const v = state.stats[d.key];
+    return `<div class="stat-box"><span class="stat-icon">${d.icon}</span><div class="stat-label">${d.label}</div><div class="stat-value" style="color:${statColor(v)}">${Math.round(v)}</div><div class="stat-track"><div class="stat-fill" style="width:${v}%;background:${statColor(v)}"></div></div></div>`;
+  }).join("")}</div>`;
+}
+
+function renderProgress() {
+  const dots = CHAPTERS.map((c, i) => `<div class="prog-dot ${i < state.chapterIndex ? 'done' : i === state.chapterIndex ? 'active' : ''}"></div>`).join("");
+  return `<div class="progress-row">${dots}<span class="prog-label">Chapter ${state.chapterIndex + 1} of ${CHAPTERS.length}</span></div>`;
+}
+
+function screenArtOpen() {
+  return `
+    <div class="screen-label">Before we begin — look closely</div>
+    <div class="screen-heading">The Terracotta Army of Qin Shi Huang</div>
+    <div class="art-frame">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/b/ba/Terracotta_army_museum.jpg" alt="The Terracotta Army — Xi'an, China" onerror="this.style.display='none';document.getElementById('terra-fallback').style.display='block'" />
+      <div id="terra-fallback" style="display:none;padding:2rem;text-align:center;color:var(--vermillion);font-family:Arial,sans-serif;font-size:13px">[Terracotta Army — search "Terracotta Army Xi'an" to view]</div>
+      <div class="art-caption">Terracotta Army · Mausoleum of Qin Shi Huang · Xi'an, Shaanxi, China · c. 210 BCE · Qin Dynasty · UNESCO World Heritage Site · Public Domain</div>
+    </div>
+    <div class="scene-text">Approximately 8,000 individual soldiers, 130 chariots, and 670 horses — each face unique, buried with the first emperor of unified China to protect him in the afterlife. Discovered by farmers digging a well in 1974. Before you begin your story in ancient China, look closely. Take 30 seconds of silence first. Then answer the three prompts in your field journal:</div>
+    <div class="art-prompts">
+      <div class="art-prompt-box"><div class="apt-label">Prompt 1</div><div class="apt-q">One thing I find interesting...</div></div>
+      <div class="art-prompt-box"><div class="apt-label">Prompt 2</div><div class="apt-q">One thing that puzzles me...</div></div>
+      <div class="art-prompt-box"><div class="apt-label">Prompt 3</div><div class="apt-q">One question I have for the creator...</div></div>
+    </div>
+    <div class="history-note"><strong>Answer in your field journal.</strong> When your teacher gives the signal, continue.</div>
+    <button class="btn btn-vermillion" onclick="go('role_select')">Enter ancient China →</button>`;
+}
+
+function screenRoleSelect() {
+  return `
+    <div class="screen-label">Choose your role — your table decides together</div>
+    <div class="screen-heading">Who are you in ancient China?</div>
+    <div class="scene-text">Every person at your table plays the same role. Each role will experience China's history from a different position — different philosophy, different relationship to the emperor, different experience of the same events. Notice the <strong>Harmony</strong> stat — it tracks how well your role's choices align with the social order of the civilization you are part of. Choose together.</div>
+    <div class="role-grid">
+      ${ROLES.map(r => `<div class="role-card" onclick="selectRole('${r.id}')"><span class="rc-icon">${r.icon}</span><div class="rc-name">${r.name}</div><div class="rc-own"><strong>You control:</strong> ${r.own}</div><div class="rc-fear">⚠ You fear: ${r.fear}</div></div>`).join("")}
+    </div>`;
+}
+
+function screenChapter() {
+  const ch = CHAPTERS[state.chapterIndex];
+  const role = getRole();
+  const choices = ch.choices[state.role];
+  const isPoison = ch.poisonRoles.includes(state.role);
+  return `
+    ${renderProgress()}
+    ${renderStats()}
+    <div class="role-badge"><span class="rb-icon">${role.icon}</span><div><div class="rb-name">${role.name}</div><div class="rb-desc">${role.desc}</div></div></div>
+    <div class="screen-label">${ch.title}</div>
+    <div class="screen-heading" style="font-size:18px">${ch.subtitle}</div>
+    <div class="scene-text">${ch.scene}</div>
+    <div class="role-context">${role.context[ch.id]}</div>
+    ${isPoison ? `<div class="poison-note">⚠ There may be no good option for your role in this chapter. Choose the least difficult path — and notice what the options themselves reveal about your position in this civilization.</div>` : ""}
+    ${ch.id === "ch3" ? `<div class="philosophy-box"><h4>The Three Philosophies</h4><div class="philosophy-row"><div class="phil-card"><div class="pc-name">Confucianism</div><div class="pc-core">Harmony through proper relationships and moral example. The ruler governs by virtue. Society is organized around five relationships of mutual respect and responsibility.</div></div><div class="phil-card"><div class="pc-name">Legalism</div><div class="pc-core">Order through strict law and severe punishment. Human nature is selfish — only fear of consequences produces reliable behavior. The state's power is absolute.</div></div><div class="phil-card"><div class="pc-name">Taoism</div><div class="pc-core">Harmony through non-interference. Go with the natural flow of things. The best governance is the least governance. Force creates resistance; yielding finds the way.</div></div></div></div>` : ""}
+    <div class="history-note">${ch.historyNote}</div>
+    <div class="choices-label">Discuss with your table — then choose:</div>
+    <div class="choices">${choices.map((c, i) => `<button class="choice-btn" onclick="makeChoice(${i})"><div class="choice-text">${c.text}</div><div class="choice-hint">${c.hint}</div></button>`).join("")}</div>`;
+}
+
+function screenOutcome() {
+  const ch = CHAPTERS[state.chapterIndex];
+  const o = state.pendingOutcome;
+  const outcomeClass = o.poison ? "outcome-poison" : `outcome-${o.outcome}`;
+  const outcomeLabel = o.outcome === "good" ? "✓ What happened" : o.outcome === "bad" ? "✗ What happened" : o.poison ? "⚠ The constrained choice" : "→ What happened";
+  return `
+    ${renderProgress()}
+    ${renderStats()}
+    <div class="outcome-box ${outcomeClass}"><div class="outcome-label">${outcomeLabel}</div>${o.result}</div>
+    ${ch.discussAfter
+      ? `<button class="btn btn-vermillion" onclick="startDiscussion()">Continue to table discussion →</button>`
+      : `<div class="journal-prompt"><strong>✏ Field Journal Prompt —</strong> answer before your teacher signals to continue:<br><br>${ch.journalPrompt}</div>
+         <button class="btn btn-vermillion" onclick="advanceChapter()">${state.chapterIndex < CHAPTERS.length - 1 ? 'Continue →' : 'See how your story ends →'}</button>`}`;
+}
+
+function screenDiscussion() {
+  const ch = CHAPTERS[state.chapterIndex];
+  clearInterval(state.timerInterval);
+  setTimeout(() => {
+    let secs = 90;
+    state.timerInterval = setInterval(() => {
+      secs--;
+      const el = document.getElementById("timer-display");
+      const fill = document.getElementById("timer-fill");
+      const btn = document.getElementById("cont-btn");
+      if (el) el.textContent = `${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')}`;
+      if (fill) fill.style.width = `${(secs/90)*100}%`;
+      if (secs <= 0) { clearInterval(state.timerInterval); if (btn) btn.classList.add("ready"); }
+    }, 1000);
+  }, 100);
+  return `
+    ${renderProgress()}
+    <div class="discussion-box">
+      <div class="disc-header">⏱ Table Discussion — 90 seconds</div>
+      <div class="disc-prompt">${ch.discussPrompt}</div>
+      <div class="timer-row">
+        <div class="timer-display" id="timer-display">1:30</div>
+        <div class="timer-track"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+        <button class="continue-btn" id="cont-btn" onclick="afterDiscussion()">Continue →</button>
+      </div>
+    </div>
+    <div class="journal-prompt"><strong>✏ Field Journal Prompt —</strong> write your response while the timer runs:<br><br>${ch.journalPrompt}</div>`;
+}
+
+function screenGameOver() {
+  return `
+    <div style="text-align:center;padding:2rem 1rem">
+      <div style="font-size:48px;margin-bottom:1rem">🌾</div>
+      <div class="screen-heading">Your family's food stores are gone</div>
+      ${renderStats()}
+      <div class="history-note" style="text-align:left;margin-bottom:1.25rem">In ancient China, as in every civilization, the most sophisticated philosophical system and the most magnificent wall cannot sustain a people who cannot eat. The Yellow River gives and takes. The dynasties rise and fall. The farmer endures — until the harvest fails.</div>
+      <div class="journal-prompt" style="text-align:left">What does a food crisis reveal about the limits of the Mandate of Heaven?</div><br>
+      <button class="btn btn-vermillion" onclick="restart()">Start again as a different role</button>
+    </div>`;
+}
+
+function screenArtClose() {
+  return `
+    <div class="screen-label">Closing — one more image</div>
+    <div class="screen-heading">Wang Shen — Landscape in Mist<br><span style="font-size:16px;color:var(--vermillion)">Song Dynasty · c. 1100 CE</span></div>
+    <div class="art-frame">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/6/6c/Wang_Shen%2C_landscape.jpg" alt="Wang Shen Landscape — Song Dynasty Chinese ink wash painting" onerror="this.style.display='none';document.getElementById('landscape-fallback').style.display='block'" />
+      <div id="landscape-fallback" style="display:none;padding:2rem;text-align:center;color:var(--vermillion);font-family:Arial,sans-serif;font-size:13px">[Wang Shen Landscape — search "Wang Shen Song Dynasty landscape" to view]</div>
+      <div class="art-caption">Wang Shen · Landscape in Mist · Song Dynasty · c. 1100 CE · Ink and color on silk · Shanghai Museum · Public Domain</div>
+    </div>
+    <div class="scene-text">You opened this campaign with 8,000 individual terracotta soldiers — each face unique, each one a statement of imperial power, control, and the emperor's determination to carry his army into the afterlife. Now look at this painting. Misty mountains. Bare trees. A tiny boat on a vast river. Humans present but dwarfed by the natural world. Use your three prompts in your field journal:</div>
+    <div class="art-prompts">
+      <div class="art-prompt-box"><div class="apt-label">Prompt 1</div><div class="apt-q">One thing I find interesting...</div></div>
+      <div class="art-prompt-box"><div class="apt-label">Prompt 2</div><div class="apt-q">One thing that puzzles me...</div></div>
+      <div class="art-prompt-box"><div class="apt-label">Prompt 3</div><div class="apt-q">One question I have for the creator...</div></div>
+    </div>
+    <div class="journal-prompt"><strong>Year-long comparison question:</strong> You opened this campaign with terracotta soldiers — humans at monumental scale, power made physical. You are closing with a landscape where humans are tiny and the mountains are everything. Both are Chinese art. What does the difference between them tell you about the range of ideas within Chinese civilization — and how does this compare to the art you have seen from Egypt, India, and Mesopotamia?</div>
+    <button class="btn btn-vermillion" onclick="go('ending')">See what your story revealed →</button>`;
+}
+
+function screenEnding() {
+  const role = getRole();
+  const h = harmonyResult(state.stats.harmony);
+  return `
+    <div class="screen-label">End of the China Campaign</div>
+    <div class="screen-heading" style="font-size:18px">${role.name} — Your Story Through Ancient China</div>
+    ${renderStats()}
+    <div class="harmony-result"><span class="hr-icon">${h.icon}</span><div class="hr-label">Harmony Assessment</div><div class="hr-title">${h.title}</div><div class="hr-text">${h.text}</div></div>
+    <div class="history-note"><strong>What this campaign covered:</strong><br>The Yellow River and China's agricultural geography · Shang and Zhou dynasties · The Mandate of Heaven · Confucianism, Legalism, and Taoism · The Qin unification and book burning · The Great Wall and its costs and benefits · Han dynasty Confucian restoration and the imperial examination system · The Silk Road and China's connection to the ancient world</div>
+    <div style="margin-bottom:1.25rem">
+      <div class="screen-label" style="margin-bottom:8px">China's Achievements</div>
+      <div class="achievements-grid">
+        <div class="achievement-card"><span class="ac-icon">📜</span><div class="ac-title">Paper</div><div class="ac-desc">Invented during the Han dynasty — transforming record-keeping, literature, and eventually the spread of ideas across the world.</div></div>
+        <div class="achievement-card"><span class="ac-icon">🧭</span><div class="ac-title">Compass</div><div class="ac-desc">The magnetic compass — enabling navigation that would eventually make global exploration possible.</div></div>
+        <div class="achievement-card"><span class="ac-icon">🎆</span><div class="ac-title">Gunpowder</div><div class="ac-desc">Discovered by Taoist alchemists seeking immortality — it found other uses.</div></div>
+        <div class="achievement-card"><span class="ac-icon">🖨️</span><div class="ac-title">Printing</div><div class="ac-desc">Woodblock printing and later movable type — centuries before Gutenberg — spreading texts across China and beyond.</div></div>
+        <div class="achievement-card"><span class="ac-icon">🐛</span><div class="ac-title">Silk Production</div><div class="ac-desc">The closely guarded secret that gave the Silk Road its name and funded Chinese civilization for centuries.</div></div>
+        <div class="achievement-card"><span class="ac-icon">📋</span><div class="ac-title">Imperial Examination</div><div class="ac-desc">The world's first merit-based civil service system — selecting officials by demonstrated knowledge rather than birth alone.</div></div>
+      </div>
+    </div>
+    <div class="discussion-questions">
+      <h4>Class Discussion Questions</h4>
+      <p>1. Confucianism, Legalism, and Taoism all emerged during the same period of chaos. What does it tell you that three such different answers appeared at the same time?</p>
+      <p>2. The Great Wall was built to keep the Xiongnu out. The Silk Road was built to connect China to the world. How can the same civilization build both — and what does that contradiction reveal?</p>
+      <p>3. The Confucian social hierarchy placed merchants at the bottom — below farmers and artisans — despite their wealth. Why would a philosophy place commercial people below physical laborers?</p>
+      <p>4. The terracotta army and the Song Dynasty landscape painting are both Chinese art — but they express completely opposite ideas about power and the human relationship to nature. Which one feels more Chinese to you now that you have studied the civilization?</p>
+      <p>5. The Silk Road carried goods, ideas, religions, and eventually disease in both directions. Was China's decision to open the road worth it — and who got to make that decision?</p>
+    </div>
+    <button class="btn btn-vermillion" onclick="restart()">Play again as a different role</button>
+    <button class="btn btn-secondary" onclick="restart()">Return to start</button>`;
+}
+
+function selectRole(id) { state.role = id; state.chapterIndex = 0; go("chapter"); }
+function makeChoice(i) {
+  const ch = CHAPTERS[state.chapterIndex];
+  const choice = ch.choices[state.role][i];
+  applyStats(choice.statChange);
+  state.pendingOutcome = choice;
+  if (isDead()) { go("gameover"); return; }
+  go("outcome");
+}
+function startDiscussion() { state.inDiscussion = true; go("discussion"); }
+function afterDiscussion() { clearInterval(state.timerInterval); state.inDiscussion = false; advanceChapter(); }
+function advanceChapter() {
+  state.pendingOutcome = null;
+  if (state.chapterIndex < CHAPTERS.length - 1) { state.chapterIndex++; go("chapter"); }
+  else { go("art_close"); }
+}
+function restart() {
+  clearInterval(state.timerInterval);
+  state = { screen: "art_open", role: null, chapterIndex: 0, pendingOutcome: null, stats: { food: 50, harmony: 50, wealth: 50, standing: 50 }, inDiscussion: false, timerInterval: null };
+  render(); window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function render() {
+  const el = document.getElementById("content");
+  const screens = { art_open: screenArtOpen, role_select: screenRoleSelect, chapter: screenChapter, outcome: screenOutcome, discussion: screenDiscussion, gameover: screenGameOver, art_close: screenArtClose, ending: screenEnding };
+  el.innerHTML = (screens[state.screen] || (() => "<p>Loading...</p>"))();
+}
+render();
+</script>
+</body>
+</html>
