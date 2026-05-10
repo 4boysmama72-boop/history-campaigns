@@ -1,0 +1,779 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ancient Greece — The Story of Us</title>
+<style>
+  :root {
+    --marble: #F5F0E8;
+    --marble-dark: #D8D0C0;
+    --aegean: #1A5C8A;
+    --aegean-light: #C8E4F8;
+    --olive: #6B7A2A;
+    --olive-light: #E8F0C0;
+    --terracotta: #B84A1A;
+    --terracotta-light: #F5D0C0;
+    --terracotta-glow: rgba(184,74,26,0.15);
+    --gold: #A87A00;
+    --gold-light: #FFF4C0;
+    --stone: #5A5040;
+    --stone-light: #E8E0D0;
+    --red: #8B2020;
+    --red-light: #F5D0D0;
+    --green: #2A6B3A;
+    --green-light: #C8F0D0;
+    --shadow: #0A0800;
+    --ink: #1A1208;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    font-family: Georgia, 'Times New Roman', serif;
+    background: #0A0A0F;
+    color: var(--marble);
+    min-height: 100vh;
+  }
+
+  #app {
+    max-width: 780px;
+    margin: 0 auto;
+    padding: 1.5rem 1.5rem 3rem;
+  }
+
+  .site-header {
+    text-align: center;
+    padding: 1.5rem 1rem 1rem;
+    border-bottom: 2px solid var(--aegean);
+    margin-bottom: 1.5rem;
+    background: linear-gradient(180deg, rgba(26,92,138,0.08) 0%, transparent 100%);
+  }
+  .site-header .campaign-tag { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--aegean); font-family: Arial, sans-serif; margin-bottom: 6px; }
+  .site-header h1 { font-size: 30px; font-weight: bold; color: var(--marble); letter-spacing: 0.06em; margin-bottom: 4px; }
+  .site-header h2 { font-size: 14px; font-weight: normal; color: var(--marble-dark); font-family: Arial, sans-serif; font-style: italic; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.25rem; }
+  .stat-box { background: rgba(26,92,138,0.1); border: 1px solid rgba(26,92,138,0.3); border-radius: 6px; padding: 8px 10px; text-align: center; }
+  .stat-icon { font-size: 16px; display: block; margin-bottom: 2px; }
+  .stat-label { font-size: 10px; color: var(--aegean); letter-spacing: 0.05em; text-transform: uppercase; font-family: Arial, sans-serif; }
+  .stat-value { font-size: 18px; font-weight: bold; margin: 2px 0; }
+  .stat-track { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 4px; }
+  .stat-fill { height: 4px; border-radius: 2px; transition: width 0.5s, background 0.5s; }
+
+  .role-badge { display: flex; align-items: center; gap: 10px; background: rgba(26,92,138,0.1); border: 1px solid rgba(26,92,138,0.3); border-radius: 8px; padding: 10px 14px; margin-bottom: 1.25rem; }
+  .role-badge .rb-icon { font-size: 24px; }
+  .role-badge .rb-name { font-size: 15px; font-weight: bold; color: var(--marble); }
+  .role-badge .rb-desc { font-size: 12px; color: var(--marble-dark); font-family: Arial, sans-serif; }
+
+  .progress-row { display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem; }
+  .prog-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(26,92,138,0.2); border: 1.5px solid rgba(26,92,138,0.4); }
+  .prog-dot.active { background: var(--aegean); border-color: var(--aegean); }
+  .prog-dot.done { background: var(--terracotta); border-color: var(--terracotta); }
+  .prog-label { font-size: 11px; color: var(--marble-dark); font-family: Arial, sans-serif; }
+
+  .screen-label { font-size: 11px; color: var(--aegean); letter-spacing: 0.1em; text-transform: uppercase; font-family: Arial, sans-serif; margin-bottom: 6px; }
+  .screen-heading { font-size: 22px; font-weight: bold; color: var(--marble); margin-bottom: 1rem; line-height: 1.3; }
+  .scene-text { font-size: 15px; line-height: 1.85; color: var(--marble); margin-bottom: 1rem; }
+  .role-context { background: var(--terracotta-glow); border-left: 3px solid var(--terracotta); border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 14px; font-style: italic; color: var(--terracotta-light); margin-bottom: 1.25rem; line-height: 1.65; font-family: Arial, sans-serif; }
+
+  .history-note { background: rgba(26,92,138,0.15); border-left: 3px solid var(--aegean); border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 13px; color: var(--aegean-light); margin-bottom: 1.25rem; line-height: 1.65; font-family: Arial, sans-serif; }
+  .history-note strong { color: #E8F4FF; font-weight: 600; }
+
+  .journal-prompt { background: rgba(184,74,26,0.1); border-left: 3px solid var(--terracotta); border-radius: 0 6px 6px 0; padding: 12px 14px; font-size: 14px; color: var(--terracotta-light); margin-bottom: 1.25rem; line-height: 1.7; font-family: Arial, sans-serif; }
+  .journal-prompt strong { color: var(--marble); font-weight: 600; }
+
+  .poison-note { background: rgba(139,32,32,0.2); border-left: 3px solid var(--red); border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 13px; color: var(--red-light); margin-bottom: 1.25rem; line-height: 1.65; font-family: Arial, sans-serif; }
+
+  .discussion-box { background: var(--stone); border-radius: 10px; padding: 16px 20px; margin-bottom: 1.25rem; }
+  .discussion-box .disc-header { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-family: Arial, sans-serif; color: var(--marble-dark); margin-bottom: 6px; }
+  .discussion-box .disc-prompt { font-size: 15px; line-height: 1.6; margin-bottom: 14px; font-style: italic; color: var(--marble); }
+  .timer-row { display: flex; align-items: center; gap: 14px; }
+  .timer-display { font-size: 32px; font-weight: bold; font-family: Arial, sans-serif; min-width: 60px; color: var(--marble); }
+  .timer-track { flex: 1; height: 8px; background: rgba(255,255,255,0.15); border-radius: 4px; }
+  .timer-fill { height: 8px; background: var(--aegean); border-radius: 4px; transition: width 1s linear; }
+  .continue-btn { background: var(--aegean); color: white; border: none; border-radius: 6px; padding: 8px 16px; font-size: 13px; font-weight: bold; cursor: pointer; font-family: Arial, sans-serif; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .continue-btn.ready { opacity: 1; pointer-events: all; }
+
+  .choices-label { font-size: 11px; color: var(--marble-dark); letter-spacing: 0.08em; text-transform: uppercase; font-family: Arial, sans-serif; margin-bottom: 8px; }
+  .choices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+  .choice-btn { background: rgba(26,92,138,0.08); border: 1.5px solid rgba(26,92,138,0.3); border-radius: 8px; padding: 12px 16px; text-align: left; cursor: pointer; transition: all 0.15s; font-family: Georgia, serif; }
+  .choice-btn:hover { background: rgba(26,92,138,0.2); border-color: var(--aegean); }
+  .choice-btn .choice-text { font-size: 14px; color: var(--marble); line-height: 1.5; }
+  .choice-btn .choice-hint { font-size: 11px; color: var(--marble-dark); margin-top: 4px; font-family: Arial, sans-serif; font-style: italic; }
+
+  .outcome-box { border-radius: 8px; padding: 14px 16px; margin-bottom: 1.25rem; font-size: 14px; line-height: 1.7; font-family: Arial, sans-serif; }
+  .outcome-good { background: rgba(42,107,58,0.2); border: 1.5px solid var(--green); color: var(--green-light); }
+  .outcome-bad { background: rgba(139,32,32,0.2); border: 1.5px solid var(--red); color: var(--red-light); }
+  .outcome-neutral { background: rgba(90,80,64,0.3); border: 1.5px solid var(--stone); color: var(--stone-light); }
+  .outcome-poison { background: rgba(139,32,32,0.15); border: 1.5px solid #6B1A1A; color: #F0B0B0; }
+  .outcome-label { font-size: 11px; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; font-family: Arial, sans-serif; }
+
+  .art-frame { border: 2px solid var(--aegean); border-radius: 8px; overflow: hidden; margin-bottom: 1.25rem; background: var(--shadow); box-shadow: 0 0 20px rgba(26,92,138,0.15); }
+  .art-frame img { width: 100%; display: block; max-height: 360px; object-fit: contain; object-position: center; background: #1A1A1A; }
+  .art-caption { padding: 8px 14px; font-size: 11px; color: var(--aegean); font-family: Arial, sans-serif; font-style: italic; background: rgba(10,10,15,0.9); line-height: 1.5; }
+
+  .art-prompts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.25rem; }
+  .art-prompt-box { background: rgba(26,92,138,0.1); border: 1px solid rgba(26,92,138,0.3); border-radius: 6px; padding: 10px 14px; }
+  .art-prompt-box .apt-label { font-size: 11px; font-weight: bold; color: var(--aegean); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 4px; }
+  .art-prompt-box .apt-q { font-size: 14px; color: var(--marble-dark); font-style: italic; }
+
+  .role-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1rem; }
+  .role-card { background: rgba(26,92,138,0.08); border: 2px solid rgba(26,92,138,0.3); border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.15s; }
+  .role-card:hover { background: rgba(26,92,138,0.2); border-color: var(--aegean); transform: translateY(-1px); }
+  .role-card .rc-icon { font-size: 28px; margin-bottom: 6px; display: block; }
+  .role-card .rc-name { font-size: 15px; font-weight: bold; color: var(--marble); margin-bottom: 4px; }
+  .role-card .rc-own { font-size: 12px; color: var(--marble-dark); font-family: Arial, sans-serif; line-height: 1.5; margin-bottom: 6px; }
+  .role-card .rc-fear { font-size: 11px; color: var(--red-light); font-family: Arial, sans-serif; font-style: italic; }
+
+  .arete-result { background: rgba(26,92,138,0.12); border: 1.5px solid var(--aegean); border-radius: 10px; padding: 16px 18px; margin-bottom: 1.25rem; text-align: center; }
+  .arete-result .ar-icon { font-size: 36px; margin-bottom: 8px; display: block; }
+  .arete-result .ar-label { font-size: 12px; color: var(--aegean); text-transform: uppercase; letter-spacing: 0.08em; font-family: Arial, sans-serif; margin-bottom: 6px; }
+  .arete-result .ar-title { font-size: 20px; font-weight: bold; color: var(--marble); margin-bottom: 8px; }
+  .arete-result .ar-text { font-size: 14px; color: var(--marble-dark); line-height: 1.7; font-family: Arial, sans-serif; }
+
+  .achievements-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1.25rem; }
+  .achievement-card { background: rgba(26,92,138,0.1); border: 1px solid rgba(26,92,138,0.3); border-radius: 8px; padding: 12px 14px; }
+  .achievement-card .ac-icon { font-size: 20px; margin-bottom: 4px; display: block; }
+  .achievement-card .ac-title { font-size: 13px; font-weight: bold; color: var(--marble); margin-bottom: 4px; }
+  .achievement-card .ac-desc { font-size: 12px; color: var(--marble-dark); font-family: Arial, sans-serif; line-height: 1.5; }
+
+  .discussion-questions { background: rgba(107,122,42,0.15); border: 1px solid var(--olive); border-radius: 8px; padding: 14px 16px; margin-bottom: 1.25rem; }
+  .discussion-questions h4 { font-size: 12px; font-weight: bold; color: var(--olive-light); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 10px; }
+  .discussion-questions p { font-size: 13px; color: #D8E8A0; line-height: 1.7; font-family: Arial, sans-serif; margin-bottom: 8px; }
+
+  .dbq-box { background: rgba(168,122,0,0.12); border: 1.5px solid var(--gold); border-radius: 10px; padding: 16px 18px; margin-bottom: 1.25rem; }
+  .dbq-box h4 { font-size: 13px; font-weight: bold; color: var(--gold-light); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 8px; }
+  .dbq-box p { font-size: 14px; color: var(--gold-light); line-height: 1.7; font-family: Arial, sans-serif; }
+
+  .btn { background: var(--stone); color: var(--marble); border: none; border-radius: 8px; padding: 11px 22px; font-size: 14px; font-weight: bold; cursor: pointer; font-family: Arial, sans-serif; transition: background 0.15s; margin-right: 8px; margin-bottom: 8px; }
+  .btn:hover { background: #3A3020; }
+  .btn-aegean { background: var(--aegean); color: white; }
+  .btn-aegean:hover { background: #0A3A5A; }
+  .btn-secondary { background: transparent; color: var(--aegean); border: 1.5px solid var(--aegean); }
+  .btn-secondary:hover { background: rgba(26,92,138,0.15); }
+
+  @media (max-width: 500px) {
+    .role-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .achievements-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="site-header">
+    <div class="campaign-tag">The Story of Us · Campaign 5</div>
+    <h1>ANCIENT GREECE</h1>
+    <h2>What Makes a Civilization Truly Great? · c. 2000 – 323 BCE</h2>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script>
+const ROLES = [
+  {
+    id: "citizen",
+    name: "Citizen / Politician",
+    icon: "🏛️",
+    desc: "You are an Athenian citizen — one of the men who participates in the world's first democracy.",
+    own: "The vote. The right to speak in the Assembly. The ability to hold office and shape the laws of your city.",
+    fear: "A demagogue who manipulates the Assembly. A war that destroys what democracy built. The mob turning on someone who tells it the truth.",
+    want: "A democracy that actually produces wise decisions — and a city that lives up to its own ideals.",
+    context: {
+      ch1: "Athens sits on a rocky peninsula with poor farmland but an extraordinary harbor. Your city became great not through agriculture but through trade and naval power. Geography made you a merchant city before it made you a democratic one.",
+      ch2: "The Assembly meets on the Pnyx hill. Every citizen can speak. Every citizen votes. You are part of something that has never existed before in human history. The question is whether it works as well as it sounds.",
+      ch3: "You are democracy's beneficiary and democracy's guardian. This chapter asks you to look honestly at who shares that privilege — and who doesn't.",
+      ch4: "The philosophers make you uncomfortable. Socrates walks the agora asking questions that have no comfortable answers. His method — the Socratic method — is democratic in spirit: no authority, just argument. But the questions go places that feel dangerous.",
+      ch5: "The Peloponnesian War is democracy's greatest crisis. Athens versus Sparta — Greek against Greek — for twenty-seven years. And at the war's end, the democracy you built will make a decision that haunts it forever.",
+      ch6: "Alexander has ended the era of the independent city-state. The democracy you participated in no longer determines the fate of Athens. A Macedonian king does. The question the DBQ will ask you — was he great? — is personal for you."
+    }
+  },
+  {
+    id: "philosopher",
+    name: "Philosopher",
+    icon: "🦉",
+    desc: "You pursue wisdom — asking the questions that make comfortable people uncomfortable.",
+    own: "An extraordinary mind, the Socratic method, and the dangerous habit of following an argument wherever it leads.",
+    fear: "A city that prefers comfortable lies to uncomfortable truths. A democracy that executes its questioners.",
+    want: "A world organized around reason, justice, and the genuine pursuit of wisdom — wherever that pursuit leads.",
+    context: {
+      ch1: "The sea-trading culture of early Greece exposed Greeks to more ideas from more places than almost any other ancient civilization. That exposure — Egyptian mathematics, Phoenician writing, Babylonian astronomy — is part of what made Greek philosophy possible.",
+      ch2: "The city-state creates the conditions for philosophical inquiry. Small enough that ideas circulate. Democratic enough that questioning authority is somewhat tolerated. Competitive enough that different city-states produce different philosophical traditions.",
+      ch3: "Socrates teaches in the agora — the public marketplace. He teaches everyone: citizens, merchants, slaves, foreigners, women when he can. His classroom has no walls and no admission requirements. This is both his greatness and what will eventually get him killed.",
+      ch4: "This is your chapter. The Greek mind does something remarkable — it invents mythology to explain the world AND simultaneously invents philosophy to question whether mythology is enough. Both traditions emerge from the same culture at nearly the same time. That is extraordinary.",
+      ch5: "Socrates is put on trial by the democracy. The charges: impiety and corrupting the youth. The real charge: asking questions the city finds uncomfortable during a time of crisis and defeat. He is found guilty by a jury of 501 citizens. He is given the chance to propose an alternative punishment — and proposes something the jury finds insulting. He drinks the hemlock.",
+      ch6: "Aristotle — Plato's student, Alexander's teacher — accompanies the conquests intellectually if not physically. His ideas about biology, politics, physics, and ethics travel with Alexander's army. Greek philosophy becomes the intellectual currency of the Hellenistic world."
+    }
+  },
+  {
+    id: "merchant",
+    name: "Merchant",
+    icon: "⚓",
+    desc: "You trade across the Aegean and Mediterranean — connecting Greek city-states to each other and to the wider world.",
+    own: "A trading vessel, commercial relationships across multiple ports, knowledge of winds and currents that is itself a form of wealth.",
+    fear: "Pirates, storms, wars that close trade routes, and city-states that tax foreign merchants more than citizens.",
+    want: "Open seas, fair ports, stable politics, and a world that rewards the people who connect it.",
+    context: {
+      ch1: "Greece's geography made you inevitable. Rocky soil and limited farmland meant Greeks had to trade to survive. The Aegean Sea — full of islands spaced perfectly for ancient navigation — is your highway. You are the reason Greece knows about the wider world.",
+      ch2: "Different city-states mean different markets, different currencies, different rules. You navigate all of them. The merchant who operates across city-state boundaries understands Greece better than any politician who stays in one city.",
+      ch3: "In Athens, you can be wealthy and still not vote — if you were not born an Athenian citizen. The democracy that prides itself on equality has a very specific definition of who qualifies for that equality.",
+      ch4: "The gods protect sailors. You make your offerings at every port. But you have also met Phoenician merchants who worship different gods, Egyptian priests who explain the cosmos differently, and Babylonian traders whose mathematical knowledge improves your navigation. The sea makes you philosophical whether you intend it or not.",
+      ch5: "The Peloponnesian War is economic catastrophe. Athenian trade routes disrupted. Syracusan expedition — Athens's greatest military disaster — destroys the fleet your commercial network depends on. Wars between cities are disasters for the merchants who need all cities functioning.",
+      ch6: "Alexander's conquests open the largest unified trading zone in history. And his policy of religious and cultural tolerance means something specific to you — Jewish merchants in the cities Alexander controls are permitted to maintain their laws and practices. A new kind of relationship between conqueror and conquered begins here."
+    }
+  },
+  {
+    id: "artisan",
+    name: "Artisan",
+    icon: "🏺",
+    desc: "You create the objects that define Greek civilization — pottery, sculpture, architecture, metalwork.",
+    own: "Technical mastery developed through years of apprenticeship. Commissions from temples, wealthy citizens, and the state.",
+    fear: "Losing a major commission. Imported goods undercutting your prices. A war that destroys the buildings and wealth that fund your craft.",
+    want: "Worthy commissions, fine materials, and the chance to make something that achieves arete — excellence so complete it becomes timeless.",
+    context: {
+      ch1: "The sea-trading culture that defines early Greece carries your work across the Mediterranean. Athenian black-figure and red-figure pottery is found in archaeological sites from Spain to the Black Sea. Your craft is Greece's most visible export.",
+      ch2: "Different city-states develop different artistic traditions. Corinthian pottery. Spartan bronze. Athenian ceramics. The competition between city-states drives craft innovation — each city trying to produce something better than its rivals.",
+      ch3: "The Parthenon is being built. The greatest building in the Greek world, funded by the Delian League treasury — which is to say, funded by Athens's allies whether they agreed or not. You are working on it. The building is extraordinary. Its funding is complicated.",
+      ch4: "Greek art is doing something no previous civilization attempted at this scale — representing the human body as the measure of beauty. Egyptian art made humans rigid and hierarchical. Greek art makes them dynamic, proportional, idealized. The Parthenon's sculptures show humans and gods at the same scale. This is a philosophical statement made in marble.",
+      ch5: "The Peloponnesian War damages the building programs that fund artisan work. The Parthenon is complete but the plans for additional Acropolis buildings are suspended. War is bad for architecture. The artisan who depends on state commissions feels every military defeat in their income.",
+      ch6: "The Hellenistic world that Alexander creates becomes the greatest market for Greek art in history. Hellenistic rulers across the former Persian Empire commission Greek-style temples, portraits, and city planning. Your aesthetic tradition becomes the visual language of an entire world."
+    }
+  },
+  {
+    id: "soldier",
+    name: "Soldier",
+    icon: "🛡️",
+    desc: "You fight in the phalanx — the Greek infantry formation that changed warfare — for your city-state.",
+    own: "Military training, your hoplon shield and spear, the discipline of the phalanx, and absolute loyalty to your city.",
+    fear: "A war that cannot be won. Fighting other Greeks. An enemy that does not fight like Greeks fight.",
+    want: "A just war, a worthy enemy, victory that means something, and to come home.",
+    context: {
+      ch1: "The sea-trading culture produces naval warfare as much as land warfare. The trireme — the Greek warship — is as important to Greek military power as the phalanx. You may fight on land or sea depending on which city you serve.",
+      ch2: "Athens and Sparta represent two completely different ideas of what a soldier is for. The Athenian soldier is a citizen first, a fighter when needed. The Spartan soldier is a fighter always, trained from childhood for nothing else. Both cities produce excellent soldiers. They produce them very differently.",
+      ch3: "The democracy you fight for sends you to war through the Assembly's vote. Every Athenian citizen — including you when you are not fighting — participates in the decision to go to war. This is either the most just way to make military decisions or a terrifying way to run an army, depending on the quality of the Assembly's judgment that day.",
+      ch4: "The gods of war — Ares, Athena — are real to you in a way they are not to the philosophers. Before every battle you sacrifice and pray. The gods do not always answer. You fight anyway.",
+      ch5: "The Peloponnesian War. Twenty-seven years of Greek killing Greek. You are asked to fight Spartans — people who speak your language, worship your gods, share your mythology — because Athens and Sparta cannot agree on who should lead Greece. This is your poison pill. There is no version of this war that feels right.",
+      ch6: "Alexander's army achieves what no Greek phalanx achieved before — it marches from Greece to India. The soldiers who make that journey are extraordinary. Many of them never come home. The empire Alexander builds requires you to garrison cities in Persia, Egypt, and Central Asia. Victory looks different from the inside."
+    }
+  },
+  {
+    id: "woman",
+    name: "Woman",
+    icon: "🌿",
+    desc: "You live in Athens — one of history's most celebrated civilizations — and are excluded from almost all of it.",
+    own: "Management of the household, raising the children who will become citizens, knowledge of domestic crafts and medicine.",
+    fear: "That the civilization celebrated for inventing democracy and philosophy will never notice that you exist as a full human being.",
+    want: "To be seen. To think, to speak, to participate in the life of the city you were born into and that calls itself the greatest in the world.",
+    context: {
+      ch1: "The Minoan civilization — the sea-trading culture that preceded classical Greece — left evidence of women in prominent roles: priestesses, administrators, athletes. Something changed between the Minoans and classical Athens. You are living on the other side of that change.",
+      ch2: "Sparta, of all places, gives women more freedom than Athens. Spartan women own property, exercise publicly, and manage estates while their husbands are at war. Athenian women are confined largely to the home. The city that invented democracy invented it for a very specific group.",
+      ch3: "The Assembly meets today. Every male citizen over eighteen can attend, speak, and vote. You cannot. The philosophers will later write that this is natural and correct — that women are by nature suited to the private sphere. You were not consulted about whether you agreed.",
+      ch4: "Aspasia of Miletus — the companion of the statesman Pericles — is one of the most intellectually influential people in Athens. She cannot be a citizen because she was not born in Athens. She cannot participate in the Assembly because she is a woman. She influences Athenian policy through Pericles anyway. This is the only route available to her.",
+      ch5: "The Peloponnesian War takes your husband, your sons, your brothers. You manage the household, raise the children, and maintain the domestic economy that keeps Athens functioning while the men fight. When Aristophanes writes a comedy called Lysistrata — about women who refuse to cooperate with their husbands until the war ends — the Athenian audience laughs. It is a comedy. It is also the most radical political idea produced by classical Athens.",
+      ch6: "Alexander's conquests change the Greek world in many ways. The position of women in that world changes somewhat — Hellenistic queens like Cleopatra will eventually hold real power. But that is generations away. Right now, in classical Athens, the civilization that history calls the birthplace of Western democracy has not noticed that half its population exists."
+    }
+  }
+];
+
+const CHAPTERS = [
+  {
+    id: "ch1",
+    number: 1,
+    title: "Chapter 1 — The Sea Made Us",
+    subtitle: "Geography, Trade, and the World Before City-States",
+    scene: "Greece is not a country. It is a coastline — a jagged, island-scattered peninsula jutting into the Mediterranean, with mountains that divide communities from each other and a sea that connects them to everyone else. The soil is rocky and thin. The harbors are numerous and deep. Before the great city-states, before democracy, before philosophy — there were the Minoans on Crete and the Mycenaeans on the mainland, both of them sea-trading cultures whose wealth came from the water rather than the land. Around 1200 BCE both cultures collapsed — destroyed by a combination of drought, invasion, and internal conflict that historians call the Bronze Age Collapse. What emerged from that collapse, slowly, were the Greek city-states. And the sea was still there.",
+    historyNote: "<strong>Greek Geography:</strong> Greece's mountainous terrain naturally divided its population into small, isolated communities — each developing its own government, culture, and identity. The sea compensated for the land's limitations. Greek colonies spread from Spain to the Black Sea. The Minoans of Crete (c. 2000-1400 BCE) built a sophisticated trading civilization with running water, artistic achievement, and evidence of significant female participation — the palace at Knossos is still one of the most extraordinary archaeological sites in the world. Their influence on later Greek culture was significant and largely uncredited.",
+    journalPrompt: "Greece has poor farmland and an extraordinary coastline. How did geography push Greeks toward the sea — and what did the sea give them that the land could not?",
+    poisonRoles: [],
+    discussAfter: false,
+    choices: {
+      citizen: [
+        { text: "Study the Minoan and Mycenaean precedents — what can their collapse teach about building durable civilizations?", hint: "Learn from failure", outcome: "good", result: "The Bronze Age Collapse is the most important event in Greek prehistory — and the least discussed. The Minoans and Mycenaeans were sophisticated, wealthy, and apparently stable. They collapsed anyway. The Greek city-states that emerged from that collapse developed something the earlier cultures lacked: decentralized political systems that could survive the failure of any single center. Your study of the collapse informs how you think about what Athens needs to survive.", statChange: { food: 5, arete: 15, wealth: 5, standing: 15 } },
+        { text: "Focus on Athens's harbor — the Piraeus is the economic foundation of Athenian power", hint: "Geography as strategy", outcome: "good", result: "The Piraeus harbor is extraordinary — deep, protected, connected to Athens by the Long Walls. Whoever controls the sea controls the trade. Whoever controls the trade controls Athens. The politician who understands this understands Athenian power better than the philosopher who stays in the city. Themistocles built the fleet. Pericles built the Long Walls. You understand why.", statChange: { food: 5, arete: 10, wealth: 15, standing: 15 } },
+        { text: "Advocate for Athenian expansion — colonies and naval presence extend Athenian power", hint: "Imperial ambition", outcome: "neutral", result: "Athenian colonization and naval presence extend the city's wealth and power. They also create the resentments that will eventually produce the Peloponnesian War. The expansion that makes Athens great also makes Athens enemies. Every imperial decision contains the seed of the conflict it will eventually produce. You are not wrong to want expansion. You are not thinking far enough ahead.", statChange: { food: 5, arete: 5, wealth: 15, standing: 10 } }
+      ],
+      philosopher: [
+        { text: "Study the myths that explain the sea — Poseidon, the Odyssey, the stories of navigation and homecoming", hint: "Mythology as geographic thinking", outcome: "good", result: "The Odyssey is not just a story about a man trying to get home. It is a map of the Greek world — the islands, the currents, the peoples encountered along the way. Homer encoded Greek geographic knowledge in narrative form. The philosopher who reads it as both story and geography understands something about how knowledge was preserved before writing was widespread.", statChange: { food: 5, arete: 20, wealth: 0, standing: 10 } },
+        { text: "Examine the idea that geography shapes character — does living by the sea make Greeks different?", hint: "Environmental philosophy", outcome: "good", result: "The argument is genuinely interesting. Herodotus will make a version of it — that the Greeks, living between Europe and Asia, between the soft comfort of eastern luxury and the harsh cold of the north, developed a particular kind of balanced character. The idea that environment shapes civilization is not wrong. It is also not the complete story. You pursue the question carefully.", statChange: { food: 5, arete: 20, wealth: 0, standing: 15 } },
+        { text: "Question the myths about the Minoans — the stories of the Minotaur and the labyrinth may encode historical memory", hint: "Myth as history", outcome: "good", result: "The labyrinth at Knossos exists — it is the palace's complex floor plan, overwhelming to anyone who enters it. The Minotaur may encode Greek cultural memory of Minoan ritual, bull-worship, and the tribute that mainland Mycenaeans paid to Crete. Myth is not history. But myth often contains compressed historical memory that systematic inquiry can recover. This insight will make you a better philosopher.", statChange: { food: 0, arete: 20, wealth: 0, standing: 10 } }
+      ],
+      merchant: [
+        { text: "Follow the Minoan trade routes — they mapped the Mediterranean before anyone else", hint: "Build on existing networks", outcome: "good", result: "The Minoan trade network — connecting Crete to Egypt, the Levant, Anatolia, and the Aegean islands — is the foundation on which later Greek commerce is built. The routes exist. The relationships exist. You are not starting from nothing — you are inheriting a commercial infrastructure that collapsed politically but survived commercially. The sea remembers the routes even when the civilizations that first sailed them are gone.", statChange: { food: 5, arete: 10, wealth: 20, standing: 15 } },
+        { text: "Establish trading relationships with non-Greek peoples — the Phoenicians, Egyptians, and Lydians have things Greece needs", hint: "Cross-cultural commerce", outcome: "good", result: "The contact with Phoenician merchants produces something more valuable than any single trade good — the Phoenician alphabet, adapted into Greek letters. Egyptian contact produces mathematical and astronomical knowledge. Lydian contact produces coinage. Your commercial relationships are the vectors through which Greek civilization acquires the intellectual tools it will use to become extraordinary. Trade carries ideas.", statChange: { food: 10, arete: 15, wealth: 20, standing: 10 } },
+        { text: "Invest in shipbuilding — the trireme that will define Greek naval power begins with merchant ship technology", hint: "Commercial infrastructure enables military power", outcome: "good", result: "The technology of Greek shipbuilding — developed through centuries of commercial navigation — is what makes the trireme possible. The warship emerges from the merchant vessel. Naval military power depends on the commercial shipping knowledge that merchants develop. Your investment in ship technology is simultaneously a commercial and a strategic decision, though you are only thinking commercially right now.", statChange: { food: 5, arete: 5, wealth: 20, standing: 15 } }
+      ],
+      artisan: [
+        { text: "Study Minoan artistic techniques — the frescoes at Knossos represent the highest art of the pre-classical world", hint: "Learn from the predecessors", outcome: "good", result: "The Minoan frescoes at Knossos are astonishing — fluid, naturalistic, full of movement and color. Dolphins leaping. Young men leaping over bulls. Flowers in the wind. The Minoan artistic tradition is more naturalistic than anything in Egypt or Mesopotamia. Studying it gives you an understanding of a visual vocabulary that feeds into the classical Greek ideal of representing the human form at its most dynamic.", statChange: { food: 5, arete: 20, wealth: 5, standing: 15 } },
+        { text: "Develop the black-figure pottery technique — create narrative scenes that travel with trade goods", hint: "Art as export", outcome: "good", result: "Black-figure pottery is the first mass-produced narrative art in history — scenes from mythology, athletics, daily life, painted on vessels that travel to every corner of the Mediterranean. Your pottery is found in Etruscan tombs in Italy, in Scythian burial mounds north of the Black Sea, in Egyptian marketplaces. The story of Greek civilization is partially the story of the objects your workshop produces.", statChange: { food: 5, arete: 15, wealth: 20, standing: 15 } },
+        { text: "Observe how different cultural contacts change Greek artistic style", hint: "Cross-cultural artistic synthesis", outcome: "good", result: "The Orientalizing period — when Greek art absorbs influences from Phoenicia, Egypt, and the Near East — produces the sphinx, the griffin, the lotus pattern that appear on early Greek pottery. The contact with the wider world through trade changes what Greek art looks like. Artistic traditions are never purely local — they are always the product of exchange.", statChange: { food: 5, arete: 20, wealth: 10, standing: 10 } }
+      ],
+      soldier: [
+        { text: "Study the collapse of the Bronze Age civilizations — what military failures destroyed the Minoans and Mycenaeans?", hint: "Military history as strategy", outcome: "good", result: "The Bronze Age Collapse involved military failure on a civilizational scale — the Mycenaean palace economies that organized military production collapsed, leaving communities defenseless. The lesson: military power cannot be centralized in palaces that can be destroyed. The polis — the city-state with its citizen militia — is partly a military innovation, distributing defense across the entire citizen body rather than concentrating it in palace warriors.", statChange: { food: 5, arete: 15, wealth: 5, standing: 15 } },
+        { text: "Train in the phalanx formation — the military innovation that will define Greek warfare", hint: "Master the new military technology", outcome: "good", result: "The phalanx — a close formation of heavily armed infantry with overlapping shields — is the Greek military revolution. Its effectiveness depends on discipline and mutual trust rather than individual heroism. The soldier who breaks formation kills his neighbors. The soldier who holds it survives. The phalanx is a military argument for the value of civic cooperation — the same cooperation that makes democracy possible.", statChange: { food: 5, arete: 20, wealth: 5, standing: 15 } },
+        { text: "Study naval warfare — the sea is where Greek military power will ultimately be decided", hint: "Naval strategy", outcome: "good", result: "The Battle of Salamis — where the Athenian fleet defeats the Persian navy — has not happened yet. But the strategic insight that Athens's power depends on naval supremacy is already available to anyone who looks at the map. You develop naval tactics and advocate for investment in the fleet. Themistocles will get credit for the fleet. The soldiers who trained for it made it possible.", statChange: { food: 5, arete: 15, wealth: 5, standing: 15 } }
+      ],
+      woman: [
+        { text: "Study what the Minoan evidence suggests about women's roles before classical Greece", hint: "Find the world that was lost", outcome: "good", result: "The frescoes at Knossos show women in prominent positions — presiding over ceremonies, participating in athletics, serving as priestesses with apparent authority. The Linear A script that Minoan women appear to have used for administrative purposes remains undeciphered. Something changed between the Minoan world and classical Athens. The change was not inevitable. It was a choice someone made — many someones, over many generations. Knowing this matters.", statChange: { food: 5, arete: 20, wealth: 0, standing: 10 } },
+        { text: "Manage the household economy — the oikos is the foundation of everything Athens builds", hint: "Invisible economic contribution", outcome: "neutral", result: "The household economy you manage — the food production, the textile work, the management of slaves, the raising of children who will become citizens — is the economic foundation of Athens. Without functional households, there is no surplus for the state. Without your work, there is no democracy. None of this appears in the official record of Athenian achievement. The foundation is always invisible to people standing on top of it.", statChange: { food: 10, arete: 10, wealth: 5, standing: 5 } },
+        { text: "Find the spaces where women do have influence — religious festivals, household management, weaving Athena's robe", hint: "Work within the available space", outcome: "neutral", result: "The Panathenaic festival — Athens's greatest civic celebration — includes women in the procession. The women who weave the robe presented to Athena's statue are performing the city's most sacred civic act. Religion provides the limited public space available to you. You use it fully. The influence you exercise through religious participation is real and constrained simultaneously.", statChange: { food: 5, arete: 15, wealth: 0, standing: 10 } }
+      ]
+    }
+  },
+  {
+    id: "ch2",
+    number: 2,
+    title: "Chapter 2 — The World of the Polis",
+    subtitle: "City-States, Identity, and Athens vs. Sparta",
+    scene: "By 500 BCE Greece is organized into hundreds of independent city-states — poleis — each with its own government, currency, laws, and identity. The Greeks share a language, a mythology, and a general sense of cultural unity. They also compete ferociously, fight regularly, and occasionally destroy each other. Two city-states dominate: Athens, organized around commerce, democracy, and intellectual life; and Sparta, organized around military training, discipline, and collective sacrifice. They are both Greek. They could not be more different. The question your role must engage with: what is the polis for — and what does it demand of the people who live in it?",
+    historyNote: "<strong>Athens and Sparta:</strong> Athens was a democracy (of a specific kind) with a powerful navy, a thriving commercial economy, and the greatest cultural production in the Greek world. Sparta was an oligarchy with the most powerful land army in Greece, an economy based on the labor of enslaved Helots, and a social system that subordinated every individual need to military readiness. Both cities considered themselves the truest expression of Greek values. Their competition defined the classical period.",
+    journalPrompt: "Athens and Sparta were both Greek — same language, same gods, same myths. But they organized their societies completely differently. What does that difference tell you about whether there is one right way to build a civilization?",
+    poisonRoles: [],
+    discussAfter: false,
+    choices: {
+      citizen: [
+        { text: "Defend Athenian democracy against Spartan criticism — Athens's model is genuinely superior", hint: "Advocate for your system", outcome: "good", result: "The Athenian defense of democracy is genuinely compelling. A system where citizens participate in their own governance produces citizens who understand and care about civic life. The Spartan system produces extraordinary soldiers — and very little else. Athens produces philosophy, art, architecture, drama, mathematics, and democracy simultaneously. Sparta produces the Spartans. Both are impressive achievements. Only one of them changes the world.", statChange: { food: 5, arete: 15, wealth: 5, standing: 20 } },
+        { text: "Study the Spartan system seriously — its strengths reveal Athens's weaknesses", hint: "Learn from the rival", outcome: "good", result: "The Spartan system's strengths are real. Collective discipline. Individual sacrifice for the common good. Military readiness that Athens cannot match on land. The Spartan critique of Athenian democracy — that it is too easily manipulated by demagogues, too focused on individual comfort, too slow to make military decisions — is not entirely wrong. Understanding the critique makes you a better defender of what is genuinely right about Athens.", statChange: { food: 5, arete: 20, wealth: 5, standing: 15 } },
+        { text: "Recognize that the competition between Athens and Sparta is making both cities stronger", hint: "Competition as catalyst", outcome: "neutral", result: "The competition is real and productive — in the short term. The rivalry between Athens and Sparta drives innovation in both cities. Athenian democracy deepens partly in response to Spartan criticism. Spartan military excellence pushes Athenian military investment. But competition between two powers that cannot coexist eventually produces conflict. The productive rivalry has a catastrophic end built into it.", statChange: { food: 5, arete: 10, wealth: 10, standing: 10 } }
+      ],
+      philosopher: [
+        { text: "Compare Athenian and Spartan ideas of virtue — what does each city think arete means?", hint: "Philosophical comparison", outcome: "good", result: "For Sparta, arete is military excellence — courage, discipline, sacrifice. For Athens, arete is more complex — it includes wisdom, civic participation, artistic achievement, and yes, courage. The Spartan answer is simpler and more consistent. The Athenian answer is richer and harder to achieve. Plato will later argue that the true polis should combine Spartan discipline with Athenian wisdom. The Republic is the philosophical response to this comparison.", statChange: { food: 5, arete: 25, wealth: 0, standing: 15 } },
+        { text: "Walk the agora asking what justice requires — Socrates's method applied to the city-state question", hint: "Apply philosophy to politics", outcome: "good", result: "The Socratic method applied to the city-state question produces uncomfortable answers. Is it just that Athens enslaves other Greeks through the Delian League? Is it just that Athens excludes women and foreigners from citizenship? Is it just that Sparta enslaves the Helots? The questions make everyone uncomfortable. That discomfort is the point. Philosophy that only confirms what people already believe is not philosophy. It is flattery.", statChange: { food: 0, arete: 25, wealth: 0, standing: 10 } },
+        { text: "Write about what the ideal city-state would look like — the beginning of political philosophy", hint: "Ideal versus actual", outcome: "good", result: "Your writing on the ideal city-state begins the tradition of political philosophy — the systematic inquiry into what government should be rather than what it is. The gap between the ideal and the actual is where philosophy lives. Athens is better than Sparta in some ways. Both fall short of the ideal in ways that matter. The writing you produce today will eventually become what Plato systematizes in the Republic.", statChange: { food: 5, arete: 20, wealth: 5, standing: 15 } }
+      ],
+      merchant: [
+        { text: "Trade with both Athens and Sparta — neutrality is commercially rational", hint: "Commercial neutrality", outcome: "good", result: "Athens needs grain from the Black Sea. Sparta needs bronze from Corinth. You supply both. The merchant who takes sides in city-state rivalries loses half the market. Commercial neutrality is both rational and genuine — your interests are served by all cities functioning, not by any one of them dominating. This will become untenable when war comes. For now it works.", statChange: { food: 5, arete: 5, wealth: 20, standing: 10 } },
+        { text: "Advocate for the Delian League as a commercial alliance — common defense enables common commerce", hint: "Security enables trade", outcome: "good", result: "The Delian League — originally formed to resist Persian expansion — is also the most significant commercial alliance in Greek history. Common security enables the trade routes that connect the Aegean. You advocate for it as a commercial necessity, not just a military one. When Athens converts the league's treasury from Delos to Athens, you notice that the line between alliance and empire is thin.", statChange: { food: 5, arete: 10, wealth: 20, standing: 15 } },
+        { text: "Note that Spartan society produces almost no tradeable goods — military states are not commercial partners", hint: "Military states and commerce", outcome: "neutral", result: "Sparta's economy is based on Helot agriculture — a system that produces food for Spartans and almost nothing for export. Sparta has no significant commercial class, no merchant fleet, and no interest in the trade networks that define Athenian power. The two cities are not just politically different — they represent completely different economic models. One of those models produces the wealth that funds civilization. The other produces soldiers.", statChange: { food: 5, arete: 10, wealth: 10, standing: 5 } }
+      ],
+      artisan: [
+        { text: "Work in Athens — democracy and commerce create the wealthiest art market in Greece", hint: "Athens as art capital", outcome: "good", result: "The combination of democratic participation and commercial wealth makes Athens the most productive art center in the ancient world. Wealthy citizens commission work. The state commissions public buildings. The religious calendar requires ceremonial objects. The export trade requires pottery. You work constantly. The arete you pursue — craft excellence — finds its best market in the city that values excellence most broadly.", statChange: { food: 5, arete: 20, wealth: 20, standing: 20 } },
+        { text: "Study how Spartan material culture differs from Athenian — simplicity as aesthetic choice", hint: "Comparative aesthetics", outcome: "neutral", result: "Sparta's deliberately simple material culture — plain pottery, undecorated buildings, functional weapons — is not poverty. It is philosophy. The Spartan rejection of luxury is a statement about what a city should value. Athenian aesthetics celebrate the beautiful as an expression of human excellence. Spartan aesthetics celebrate the functional as an expression of collective discipline. Both are coherent. Only one of them needs artisans.", statChange: { food: 5, arete: 15, wealth: 5, standing: 10 } },
+        { text: "Begin work on the preliminary designs for a major temple commission — Athens is planning something unprecedented", hint: "Prepare for the great commission", outcome: "good", result: "The rumors in the workshop are that Pericles is planning something extraordinary on the Acropolis. A new temple to Athena. Larger than anything built before. Funded by the Delian League treasury. The architectural challenge is unprecedented. You begin preliminary studies. The commission that will define your career — and Greek architecture forever — is coming. The Parthenon is being imagined.", statChange: { food: 5, arete: 20, wealth: 10, standing: 15 } }
+      ],
+      soldier: [
+        { text: "Train in the Athenian phalanx — citizen soldiers defending their own democracy", hint: "Citizen militia as democratic ideal", outcome: "good", result: "The Athenian citizen militia is both a military and a political institution. The same men who vote in the Assembly fight in the phalanx. The connection between military service and political participation is explicit — citizenship means both the right to vote and the obligation to fight. This produces soldiers with a stake in what they are defending. It also produces political decisions made by people who understand military consequences personally.", statChange: { food: 5, arete: 20, wealth: 5, standing: 15 } },
+        { text: "Study Spartan military training — know your potential enemy and your potential ally", hint: "Know Sparta", outcome: "good", result: "Spartan military training is the most intensive in the ancient world — beginning at age seven, continuous through adulthood, eliminating every non-military activity. The result is the most reliable infantry in Greece. In open battle on flat ground, the Spartan phalanx is nearly undefeatable. You study it with respect. You also note its limitations — Sparta struggles with siege warfare, naval combat, and any situation requiring flexibility rather than disciplined formation.", statChange: { food: 5, arete: 20, wealth: 5, standing: 15 } },
+        { text: "Fight at Marathon — the Persian Wars are the defining military experience of this generation", hint: "The Persian Wars as formation", outcome: "good", result: "The Battle of Marathon — 490 BCE, ten thousand Athenians and Plataeans against perhaps twenty-five thousand Persians — produces a Greek victory that seems impossible even to those who achieve it. The runner who carries the news to Athens collapses and dies after delivering it. You were there. The victory defines Athenian self-confidence for a generation and produces the conditions that make the golden age possible.", statChange: { food: 5, arete: 25, wealth: 5, standing: 20 } }
+      ],
+      woman: [
+        { text: "Notice that Spartan women have more freedom than Athenian women — and consider what that means", hint: "Comparative gender analysis", outcome: "good", result: "Spartan women own property, manage estates, exercise publicly, and speak openly on civic matters. They are not citizens — but they are not confined to the household either. The city that Athens considers its most dangerous rival gives its women more freedom than Athens does. If Sparta — militaristic, austere, hierarchical — can do this, Athens has no philosophical argument for why it cannot. You notice this. No one in power is listening.", statChange: { food: 5, arete: 20, wealth: 0, standing: 10 } },
+        { text: "Find community with other women — shared understanding of your position is knowledge the polis ignores", hint: "Community as resource", outcome: "good", result: "The women's festivals — the Thesmophoria, the Adonia — are the only civic occasions organized by and for women without male oversight. In these spaces, women share information, form alliances, and maintain the social networks that male public life excludes them from. The polis thinks these festivals are religious events. They are also political ones — the only political space available to half the population.", statChange: { food: 5, arete: 15, wealth: 0, standing: 15 } },
+        { text: "Manage the household so well that your husband has the freedom to participate in democratic life", hint: "Invisible enabling", outcome: "neutral", result: "The democracy your husband participates in is possible because you have freed him from domestic responsibility. His political participation rests on your domestic management. The Assembly could not function if citizens had to cook their own food, weave their own cloth, and raise their own children simultaneously. The democracy is built on your invisible labor. The democracy does not acknowledge this.", statChange: { food: 10, arete: 5, wealth: 5, standing: 5 } }
+      ]
+    }
+  },
+  {
+    id: "ch3",
+    number: 3,
+    title: "Chapter 3 — The Great Experiment",
+    subtitle: "Democracy — Who It Includes, Who It Doesn't",
+    scene: "It is 450 BCE, the height of Athenian democracy under Pericles. The Assembly meets regularly on the Pnyx hill. Forty thousand Athenian citizens are eligible to participate. They debate, vote, hold officials accountable, and serve on juries. This is the most direct democracy in human history — and it is genuinely extraordinary. It is also built on a foundation that the democracy itself refuses to examine: the exclusion of women, enslaved people, and foreign residents from the political community. Pericles has just delivered his Funeral Oration — the most celebrated speech in Greek history, praising Athens as the school of Greece. Every role in this chapter experiences the same speech from a different position.",
+    historyNote: "<strong>Athenian Democracy:</strong> At its height, Athenian democracy included approximately 40,000 eligible male citizens out of a total population of perhaps 300,000 — meaning roughly 85% of the people in Athens had no political voice. Women, enslaved people (who may have numbered 80,000-100,000), and foreign residents (metics) were all excluded. The democracy was also funded partly by tribute from Delian League members — essentially an Athenian empire financing its democracy through the taxation of other Greeks.",
+    journalPrompt: "Pericles calls Athens 'the school of Greece' and celebrates its democracy. After this chapter — who is he talking to, and who is he not talking to?",
+    poisonRoles: ["woman"],
+    discussAfter: true,
+    discussPrompt: "Your table just experienced Athenian democracy from one perspective. The table next to you experienced the same democracy from a completely different position. Before you continue — spend 90 seconds comparing: what could your role do in this democracy that theirs couldn't? What could theirs do that yours couldn't?",
+    choices: {
+      citizen: [
+        { text: "Speak in the Assembly — exercise the democratic right that makes Athens extraordinary", hint: "Participate fully", outcome: "good", result: "You speak. The Assembly listens, debates, votes. The process is imperfect — demagogues exist, the crowd can be manipulated, decisions are sometimes catastrophically wrong. But the process itself is genuinely revolutionary. No king decided this. No priest blessed it. Citizens decided it — imperfectly, humanly, together. The speech you give today will not be remembered. The system that allowed it might change the world.", statChange: { food: 5, arete: 20, wealth: 5, standing: 20 } },
+        { text: "Propose extending citizenship to longtime foreign residents — the democracy should include more people", hint: "Reform from within", outcome: "neutral", result: "The proposal is rejected. Athenian citizenship is jealously guarded — Pericles himself passed the citizenship law that restricted it to those with two Athenian citizen parents. The democracy that prides itself on openness is legally committed to its own exclusivity. Your reform proposal fails. The argument you made is recorded. The question you raised will not go away.", statChange: { food: 5, arete: 15, wealth: 0, standing: 5 } },
+        { text: "Sit with the contradiction — celebrate democracy's genuine achievements while acknowledging its exclusions", hint: "Honest civic reflection", outcome: "good", result: "The contradiction is real and important. Athens produced democracy, philosophy, art, and architecture that changed the world. Athens also enslaved tens of thousands of people, excluded half its population from political life, and funded its golden age partly through imperial extraction from other Greeks. Both things are true simultaneously. The civilization that invented self-examination should be examined with the tools it created.", statChange: { food: 5, arete: 25, wealth: 5, standing: 15 } }
+      ],
+      philosopher: [
+        { text: "Question Pericles's Funeral Oration publicly — the speech is beautiful and incomplete", hint: "Apply philosophy to political speech", outcome: "good", result: "The Oration celebrates Athenian democracy's openness. You ask: open to whom? It celebrates Athens as a place where worth is recognized regardless of class. You ask: including women? Including slaves? Including the Delian League members whose tribute funded the Parthenon? The questions are Socratic — not rhetorical attacks but genuine inquiries. The crowd is uncomfortable. Pericles is gracious. The questions remain unanswered.", statChange: { food: 0, arete: 25, wealth: 0, standing: 10 } },
+        { text: "Teach in the agora — bring philosophy to the people democracy claims to serve", hint: "Democratize philosophy", outcome: "good", result: "Socrates's method is democratic in the deepest sense — it requires no tuition, no admission, no special status. Anyone who wants to think rigorously is welcome. You teach citizens, merchants, slaves when you can, foreigners, and women who seek you out. The philosophical community you build is more inclusive than the political community the democracy officially sanctions. This irony is not lost on you.", statChange: { food: 5, arete: 25, wealth: 0, standing: 15 } },
+        { text: "Write about the gap between democratic ideals and democratic practice", hint: "Philosophy as democratic critique", outcome: "good", result: "The gap between what Athens claims to be and what it actually is — this is where philosophy lives. The examined life that Socrates preaches requires examining institutions as much as individuals. A democracy that has never examined its own exclusions is a democracy that has not fully examined itself. You write carefully, aware that Athens has limits on how much self-examination it tolerates.", statChange: { food: 5, arete: 20, wealth: 0, standing: 10 } }
+      ],
+      merchant: [
+        { text: "Note that you — wealthy, tax-paying, Athens-resident — still cannot vote because you were not born here", hint: "The metic's democratic exclusion", outcome: "neutral", result: "You pay Athenian taxes. You serve in the Athenian military when required. You contribute to the Athenian economy that funds the democracy you cannot participate in. The word for your status — metic, resident alien — captures the situation precisely. You reside. You are alien. The democracy that Pericles celebrates is not for you, despite everything you contribute to it.", statChange: { food: 5, arete: 10, wealth: 10, standing: 5 } },
+        { text: "Support the democracy financially — wealthy merchants fund the festivals and warships that make Athens function", hint: "Buy influence through contribution", outcome: "good", result: "The liturgy system — wealthy residents funding public goods in exchange for honor — gives you something democracy denies you: civic recognition. You fund a trireme. Your name appears in the records as a benefactor of Athens. It is not a vote. It is the closest available substitute. The democracy that excludes you still needs your money. That dependency is its own form of leverage.", statChange: { food: 5, arete: 10, wealth: -10, standing: 20 } },
+        { text: "Build wealth regardless of political exclusion — economic power compensates for political powerlessness", hint: "Wealth as alternative power", outcome: "good", result: "Political exclusion does not prevent commercial success. You build your trading network. Your wealth grows. The citizens who cannot vote you into the Assembly still need your goods, your credit, and your commercial relationships. Economic power and political power are not the same thing. In Athens, citizens hold political power. You hold economic power. The two powers need each other.", statChange: { food: 5, arete: 5, wealth: 20, standing: 10 } }
+      ],
+      artisan: [
+        { text: "Work on the Parthenon — the greatest building commission in Greek history", hint: "Participate in Athens's greatest achievement", outcome: "good", result: "The Parthenon is everything Greek architecture aspires to — mathematical precision, apparent imperfection that corrects for optical illusion, sculpture of unprecedented quality, a building that seems to breathe rather than sit on its foundations. You work on it and understand that you are making something that will outlast everything else your generation produces. The democracy funded it controversially. The building itself is uncontroversial.", statChange: { food: 5, arete: 25, wealth: 20, standing: 20 } },
+        { text: "Notice that the Parthenon is funded by Delian League tribute — and feel the complexity of that", hint: "Art and empire", outcome: "neutral", result: "The Parthenon is the most beautiful building in the ancient world. It is funded by money that Athens collected from allied city-states who thought they were paying for mutual defense against Persia. Pericles moved the treasury from Delos to Athens and used it for building projects. The allies objected. Athens ignored them. The building is extraordinary. Its funding is imperial. Both things are permanently true.", statChange: { food: 5, arete: 20, wealth: 10, standing: 10 } },
+        { text: "Create pottery showing scenes of democratic life — art documenting the experiment in real time", hint: "Art as historical record", outcome: "good", result: "Your pottery becomes a documentary record of Athenian democratic life — the Assembly, the symposium, the agora, the courts. Future historians will use these images to reconstruct what Athenian daily life actually looked like. The official records tell us what decisions were made. Your pottery tells us what it looked like when citizens made them. Both are necessary for understanding what democracy actually was.", statChange: { food: 5, arete: 15, wealth: 15, standing: 15 } }
+      ],
+      soldier: [
+        { text: "Serve the democracy as a hoplite — military service and citizenship are inseparable in Athens", hint: "The soldier-citizen", outcome: "good", result: "The hoplite who votes in the Assembly and fights in the phalanx is the same person. Athenian military service is democratic service — you fight for a system you participate in, defended by the same men you govern with. This connection between military obligation and political participation is one of Athens's most important innovations. The soldier who has a stake in the outcome fights differently than the mercenary who does not.", statChange: { food: 5, arete: 20, wealth: 5, standing: 20 } },
+        { text: "Question the decision to use Delian League funds for the Parthenon — military alliances should not fund building projects", hint: "Military critique of imperial policy", outcome: "neutral", result: "The military critique is legitimate. The Delian League was formed for defense against Persia. Using the treasury for Athenian building projects breaks the alliance's founding purpose. Your objection is noted and ignored. The Parthenon is built. The allies' resentment accumulates. The Peloponnesian War — which you will fight — is partly a consequence of exactly the imperial overreach you are objecting to now.", statChange: { food: 5, arete: 15, wealth: 0, standing: 10 } },
+        { text: "Train rigorously — Athens needs soldiers who can protect the democracy from external threats", hint: "Defense of democracy", outcome: "good", result: "The democracy needs defending. The Persian Wars demonstrated that Greek freedom is not guaranteed. Sparta waits to the south. The Aegean is full of smaller city-states that resent Athenian power. Your military excellence is what makes the political experiment possible — without soldiers willing to defend it, democracy is just words in the Assembly. Words matter. Shields matter more.", statChange: { food: 5, arete: 20, wealth: 5, standing: 15 } }
+      ],
+      woman: [
+        { text: "Listen to the Funeral Oration from outside the official gathering — hear what democracy sounds like from outside it", hint: "Witness exclusion", outcome: "neutral", result: "Pericles's words are beautiful. Athens is the school of Greece. Every citizen participates. Worth is recognized regardless of class. You listen. You are not a citizen. Your worth is not recognized in the political sphere regardless of your character or intelligence. The speech celebrates a democracy you are categorically excluded from. The beauty of the speech and the injustice of your position exist simultaneously. This is your life in Athens.", statChange: { food: 0, arete: 15, wealth: 0, standing: -5 }, poison: true },
+        { text: "Find Aspasia — the most intellectually influential woman in Athens — and learn how she navigates the constraints", hint: "Find the model of influence within limits", outcome: "good", result: "Aspasia of Miletus influences Athenian policy through Pericles. She teaches rhetoric. She participates in philosophical discussions that her status as a woman and a foreigner technically disqualify her from. The route available to her — influence through a powerful man, intelligence deployed through available channels — is compromised and real simultaneously. She is not free. She is not powerless. You learn from her example and resent that it is the only one available.", statChange: { food: 5, arete: 20, wealth: 0, standing: 10 }, poison: true },
+        { text: "Participate in the Thesmophoria — the women's festival that the democracy cannot control", hint: "The space democracy cannot reach", outcome: "good", result: "The Thesmophoria is three days during which Athenian women organize, govern, and conduct public religious life without male oversight. The men of Athens — including the citizens who run the democracy — are excluded. For three days, you live in a community organized by women, for women, according to rules women set. The democracy cannot reach this space. The experience of governing — even briefly, even religiously — is one you carry back into the household.", statChange: { food: 5, arete: 20, wealth: 0, standing: 15 }, poison: true }
+      ]
+    }
+  },
+  {
+    id: "ch4",
+    number: 4,
+    title: "Chapter 4 — Gods, Questions, and the Birth of Philosophy",
+    subtitle: "When a Civilization Starts Questioning Its Own Stories",
+    scene: "The Greeks do something extraordinary and historically unprecedented: they tell stories about gods who are petty, jealous, and morally complicated — and simultaneously develop a philosophical tradition that asks whether those stories are literally true. Mythology and philosophy emerge from the same culture at nearly the same time. Homer writes the Iliad and the Odyssey. Hesiod writes the Theogony — the birth of the gods. And then Thales, Pythagoras, Socrates, Plato, Aristotle — one after another — develop systematic ways of asking questions that do not depend on mythology for their answers. What does arete actually require in a world where Zeus may or may not exist?",
+    historyNote: "<strong>Greek Philosophy:</strong> The Pre-Socratic philosophers — Thales, Anaximander, Heraclitus, Democritus — tried to explain the natural world through observation and reason rather than mythology. Socrates shifted the focus to ethics and human life. Plato systematized Socratic ideas. Aristotle applied systematic reasoning to biology, physics, politics, ethics, and aesthetics. The tradition they created — using reason rather than authority to answer fundamental questions — is the foundation of Western intellectual life.",
+    journalPrompt: "The Greeks told stories about gods who behaved badly — jealous, petty, deceptive — and simultaneously asked whether those stories were really true. What does it tell you about a civilization when it starts questioning its own most important stories?",
+    poisonRoles: [],
+    discussAfter: false,
+    choices: {
+      citizen: [
+        { text: "Attend the theater — the great tragedies and comedies are civic events as much as entertainment", hint: "Culture as democratic participation", outcome: "good", result: "The Athenian theater is funded by the state and attended by all citizens. Tragedies — Aeschylus, Sophocles, Euripides — explore the relationship between human choice and divine will, the limits of political power, the nature of justice. The plays are entertainment and civic education simultaneously. A democracy needs citizens who can think about tragic choices. The theater trains that capacity.", statChange: { food: 5, arete: 20, wealth: 5, standing: 15 } },
+        { text: "Engage with Socrates in the agora — let the philosopher's questions improve your civic judgment", hint: "Philosophy serving democracy", outcome: "good", result: "The Socratic dialogue is uncomfortable and valuable simultaneously. He asks you what justice is. Your first answer is confident. His questions dismantle it. Your second answer is better. His questions find its limits too. By the end of the conversation you know more clearly what you don't know — which, Socrates insists, is the beginning of wisdom. A citizen who knows what they don't know makes better decisions.", statChange: { food: 5, arete: 25, wealth: 0, standing: 10 } },
+        { text: "Honor the gods properly — philosophy and religion can coexist in a healthy polis", hint: "Both traditions have value", outcome: "good", result: "The religious and philosophical traditions need not be enemies. You make your sacrifices at the appropriate festivals and also attend philosophical discussions. The gods provide meaning, community, and ritual connection to the cosmos. Philosophy provides method, precision, and the tools to examine your own beliefs. Both serve the examined life Socrates recommends.", statChange: { food: 5, arete: 15, wealth: 5, standing: 15 } }
+      ],
+      philosopher: [
+        { text: "Pursue the Socratic method relentlessly — question everything, including the questioner", hint: "Philosophy without limits", outcome: "good", result: "The method works — and it produces enemies. People who discover they do not know what they thought they knew often blame the person who revealed this rather than the ignorance that was revealed. Socrates is becoming the most famous and most disliked man in Athens simultaneously. You follow his example. The questions get harder. The discomfort grows. The wisdom accumulates.", statChange: { food: 0, arete: 30, wealth: 0, standing: 10 } },
+        { text: "Study mathematics and astronomy — Pythagoras showed that reason can discover truths about the cosmos", hint: "Mathematical philosophy", outcome: "good", result: "The Pythagorean insight — that mathematical relationships describe the actual structure of reality — is one of the most powerful ideas in human history. If the cosmos obeys mathematical laws, then reason can discover those laws without relying on mythology. The implications are enormous. You study mathematics as philosophy — the first step toward a scientific understanding of the world that does not require divine explanation.", statChange: { food: 5, arete: 25, wealth: 5, standing: 15 } },
+        { text: "Write about the relationship between the gods and human morality — do the gods make something right, or do they recognize what is already right?", hint: "The Euthyphro question", outcome: "good", result: "This is the question Socrates asks Euthyphro in the dialogue that eventually contributes to his trial. Is something holy because the gods love it, or do the gods love it because it is holy? The question cuts at the foundation of divine-command morality. If morality depends on the gods' arbitrary choice, it has no stable foundation. If the gods recognize what is already moral, then morality exists independently of the gods. The question has no comfortable answer.", statChange: { food: 0, arete: 30, wealth: 0, standing: 5 } }
+      ],
+      merchant: [
+        { text: "Patronize the arts — fund the theater productions that make Athens culturally extraordinary", hint: "Commerce funding culture", outcome: "good", result: "The liturgy system makes wealthy merchants into cultural patrons. You fund a dramatic chorus. Your name appears in the festival program. The theater that produces Sophocles and Euripides is funded partly by people like you — successful merchants whose wealth flows into cultural production. Commerce funding culture is not a contradiction. It is the mechanism that makes golden ages possible.", statChange: { food: 5, arete: 15, wealth: -10, standing: 20 } },
+        { text: "Engage with the philosophical questions that apply to commerce — is profit-seeking compatible with arete?", hint: "Philosophy of commerce", outcome: "good", result: "The philosophical tradition is not uniformly hostile to commerce. Aristotle will distinguish between economics — the management of household resources for genuine need — and chrematistics — the accumulation of wealth beyond need. Your commercial activity serves genuine needs. Where it stops serving genuine needs and starts serving accumulation for its own sake is a question you engage with honestly. The examined merchant is better at their work than the unexamined one.", statChange: { food: 5, arete: 20, wealth: 10, standing: 10 } },
+        { text: "Observe how different cultures — Egyptian, Phoenician, Persian — answer the same religious questions differently", hint: "Cross-cultural religious observation", outcome: "good", result: "Your trading contacts expose you to religious diversity that most Athenians never encounter. The Egyptians have gods for everything. The Phoenicians sacrifice differently than Greeks. The Persians worship Ahura Mazda — one supreme deity — in a way that seems radically different from Greek polytheism and yet produces equally functional civilizations. The diversity you observe makes the question of which religion is correct feel more genuinely open.", statChange: { food: 5, arete: 15, wealth: 15, standing: 10 } }
+      ],
+      artisan: [
+        { text: "Make pottery showing the myths — Achilles, Odysseus, the gods — give the stories visual form", hint: "Art preserving mythology", outcome: "good", result: "The myths live in your pottery as much as in the epics. The scene you paint of Achilles and Ajax playing dice before Troy — two of the greatest heroes in Greek mythology, gambling while the war goes on around them — is both a story and a philosophical statement about fate, heroism, and the human condition. Art preserves mythology. Art also asks questions about it.", statChange: { food: 5, arete: 20, wealth: 15, standing: 15 } },
+        { text: "Pursue technical perfection — arete in craft means making something as close to ideal as human hands can achieve", hint: "Craft excellence as philosophy", outcome: "good", result: "The pursuit of arete in craft is itself philosophical. What is the ideal form of a vessel? What are the mathematical proportions that make a building beautiful? The questions Plato asks about ideal forms — what makes a chair a chair, what makes beauty beautiful — have their practical equivalent in your workshop. The artisan who pursues technical perfection is asking the same questions as the philosopher. Both seek the ideal beneath the actual.", statChange: { food: 5, arete: 25, wealth: 15, standing: 20 } },
+        { text: "Work on the Parthenon sculptures — give the gods a human form that embodies Greek ideals", hint: "Theology through sculpture", outcome: "good", result: "The sculptural program of the Parthenon makes a theological statement: the gods look like idealized humans. The same proportions, the same musculature, the same dynamic poses — but perfected. Greek theology is embodied in Greek aesthetics. The god who looks like the best possible version of a human is a very different theological claim than the Egyptian god with an animal head or the Babylonian god beyond human comprehension.", statChange: { food: 5, arete: 25, wealth: 20, standing: 20 } }
+      ],
+      soldier: [
+        { text: "Honor the gods before battle — religious practice and military practice are inseparable", hint: "Religion and military life", outcome: "good", result: "The sacrifice before battle is not superstition. It is the moment of collective acknowledgment that what you are about to do matters — that lives are at stake, that the outcome is uncertain, that something larger than individual soldiers is involved. Whether the gods actually intervene in battles is a question for philosophers. The sacrifice produces the shared ritual focus that makes a phalanx fight as a unit rather than a collection of individuals.", statChange: { food: 5, arete: 15, wealth: 5, standing: 15 } },
+        { text: "Engage with the philosophical questions about courage — is it enough to be brave, or must bravery serve justice?", hint: "Philosophy of military virtue", outcome: "good", result: "Socrates himself served as a hoplite — at Potidaea, at Delium, at Amphipolis. He is not asking theoretical questions about courage. He is asking questions a soldier who has experienced battle asks. What is courage? Is it the same as recklessness? Can you be courageous fighting for an unjust cause? The questions matter to you personally. You engage with them.", statChange: { food: 5, arete: 25, wealth: 5, standing: 15 } },
+        { text: "Train for the Olympic games — athletic excellence as the embodiment of arete", hint: "Athletic excellence", outcome: "good", result: "The Olympics are not just athletic competition. They are the embodiment of the Greek ideal of arete — the pursuit of excellence for its own sake, in the presence of all Greeks, witnessed by the gods. The athlete who wins at Olympia demonstrates what the human body can achieve when pushed to its absolute limit. Military training and athletic training overlap — both pursue excellence through discipline. Both are expressions of what Greeks mean by greatness.", statChange: { food: 5, arete: 25, wealth: 5, standing: 20 } }
+      ],
+      woman: [
+        { text: "Learn philosophy through Aspasia — she teaches rhetoric and engages with Socrates as an equal", hint: "Access philosophy through available channels", outcome: "good", result: "Aspasia's informal school — operating outside the official philosophical academies that exclude women — is where you encounter rigorous philosophical inquiry. She teaches rhetoric, engages with Socrates, influences Pericles's thinking. The channel is indirect and constrained. The philosophy is genuine. You learn to think rigorously in a society that does not consider women's rigorous thinking worth recording. The thinking happens anyway.", statChange: { food: 5, arete: 25, wealth: 0, standing: 10 } },
+        { text: "Participate in the religious festivals that give women philosophical space", hint: "Religion as philosophical practice for women", outcome: "good", result: "The religious festivals available to women — particularly those honoring Demeter and Persephone — contain within them profound meditations on loss, renewal, the relationship between living and dead, and the cycles of nature. The philosophy embedded in religious practice is less systematic than Socratic dialogue. It is also more ancient and more emotionally complete. You participate fully and think carefully about what you are doing.", statChange: { food: 5, arete: 20, wealth: 0, standing: 15 } },
+        { text: "Notice that the philosophy produced by Athens rarely asks about women's arete — and consider what that omission means", hint: "The absence as evidence", outcome: "good", result: "Plato's Republic imagines philosopher-queens. Aristotle concludes that women are by nature suited to the domestic sphere. The philosophical tradition produces both the most progressive and the most limiting ideas about women in the ancient world. What it does not produce — except in Plato's remarkable exception — is a sustained inquiry into what women's arete actually requires. The omission is itself a philosophical statement about who philosophy considers worth examining.", statChange: { food: 0, arete: 25, wealth: 0, standing: 10 } }
+      ]
+    }
+  },
+  {
+    id: "ch5",
+    number: 5,
+    title: "Chapter 5 — Greeks Killing Greeks",
+    subtitle: "The Peloponnesian War and Democracy's Darkest Hour",
+    scene: "It is 431 BCE. Athens and Sparta have been building toward war for decades. The immediate cause is a dispute between Corinth and Corcyra in which Athens intervenes. The deeper cause is Sparta's fear of Athenian power and Athens's refusal to accept limits on that power. The war that follows lasts twenty-seven years. A plague kills perhaps a quarter of Athens's population including Pericles. Athens's catastrophic expedition to Syracuse ends with the destruction of its fleet and army. And at the end — after all that death — Athens makes the decision that will haunt it forever. The democracy votes to try Socrates. He is found guilty. He drinks the hemlock.",
+    historyNote: "<strong>The Peloponnesian War (431-404 BCE):</strong> The war ended with Spartan victory and the brief installation of the Thirty Tyrants in Athens. Democracy was restored but Athens never fully recovered its power. The trial and execution of Socrates in 399 BCE — after the war's end, when Athens was traumatized and looking for scapegoats — is one of history's most examined events. Socrates was charged with impiety and corrupting the youth. He was offered exile but chose to remain and accept the jury's verdict.",
+    historyNote2: "<strong>The Trial of Socrates:</strong> Socrates was found guilty by 280 votes to 221. When asked to propose an alternative punishment, he suggested the state feed him in the Prytaneum — the honor given to Olympic champions. The jury, insulted, voted for death by a larger margin than the guilty verdict. He was seventy years old. His student Plato never fully recovered. The Republic — the greatest work of political philosophy — is partly Plato's response to what democracy did to his teacher.",
+    journalPrompt: "Athens — the city that invented democracy — executed the man many consider its greatest thinker. What does that tell you about democracy? Does it make democracy less great, or does it reveal something true about all human systems?",
+    poisonRoles: ["soldier", "citizen", "woman"],
+    discussAfter: false,
+    choices: {
+      citizen: [
+        { text: "Vote against the war — Athens cannot sustain a land war against Sparta", hint: "Strategic opposition", outcome: "neutral", result: "Your vote against the war is outvoted. The Assembly votes for war. The democracy has spoken — imperfectly, passionately, catastrophically. Twenty-seven years of Greek killing Greek begin. The vote you cast against the war is not remembered. The consequences of the vote you lost are.", statChange: { food: 5, arete: 15, wealth: -5, standing: 10 }, poison: false },
+        { text: "Vote to execute Socrates — the traumatized city needs stability, not philosophical provocation", hint: "Democratic complicity", outcome: "bad", result: "You vote guilty. Two hundred and eighty citizens vote the same way. The man who spent his life asking Athens to examine itself is executed by the democracy he lived within. The charge is impiety and corrupting the youth. The real charge is asking questions during a time of crisis that a traumatized city cannot bear to hear. The vote is democratic. It is also wrong. Both things are true.", statChange: { food: 0, arete: -15, wealth: 0, standing: 5 }, poison: true },
+        { text: "Vote to acquit Socrates — defend the philosopher the democracy is about to execute", hint: "Defend the system's best impulse", outcome: "neutral", result: "You vote to acquit. Two hundred and twenty-one citizens vote with you. It is not enough. The democracy has decided. Socrates is found guilty and executed. Your vote is outvoted but not meaningless — the 221 who voted to acquit are part of the record too. The examined life that Socrates preached includes examining what your city did. You begin that examination with your vote.", statChange: { food: 5, arete: 25, wealth: 0, standing: -5 }, poison: true }
+      ],
+      philosopher: [
+        { text: "Stand with Socrates at his trial — speak in his defense before the jury", hint: "Defend philosophy's right to exist", outcome: "good", result: "Your testimony for Socrates is part of the record. The jury hears you. It does not change the outcome. What your testimony does is establish, permanently, that Socrates had defenders — that the philosophical community stood together when democracy turned on its most honest questioner. The record of who defended him matters as much as the verdict against him.", statChange: { food: 0, arete: 25, wealth: 0, standing: 10 } },
+        { text: "Record Socrates's final conversations — preserve the philosophy that Athens is about to execute", hint: "Document for posterity", outcome: "good", result: "Plato is doing this. Xenophon is doing this. You are doing this. The conversations Socrates has in his final days — about the soul, about justice, about why he refuses to flee — are being preserved by the students who cannot bear to lose them. The Athens that executes Socrates also produces the students who preserve everything he said. Both things are Athens.", statChange: { food: 0, arete: 30, wealth: 0, standing: 10 } },
+        { text: "Continue the philosophical work after Socrates's death — the questions he raised cannot be executed", hint: "Philosophical continuity", outcome: "good", result: "Socrates is dead. The questions he asked are not. The examined life he preached continues in the students he left behind. Plato founds the Academy. Aristotle eventually founds the Lyceum. The philosophical tradition that Athens tried to silence becomes the most influential intellectual tradition in Western history. The hemlock killed the philosopher. It could not kill the philosophy.", statChange: { food: 5, arete: 30, wealth: 5, standing: 15 } }
+      ],
+      merchant: [
+        { text: "Try to maintain trade during the war — neutrality is impossible but commerce must continue", hint: "Commerce in wartime", outcome: "neutral", result: "The war disrupts everything. Athenian trade routes are contested. The Syracusan expedition — the greatest commercial opportunity in the western Mediterranean — ends in catastrophe. Your trading network, built over decades, has to be rebuilt around the war's realities. You manage. The management costs you years of accumulated commercial relationship.", statChange: { food: 5, arete: 5, wealth: -10, standing: 5 }, poison: true },
+        { text: "Support the peace party — the war is bad for commerce and catastrophic for everyone", hint: "Commercial argument for peace", outcome: "good", result: "Aristophanes makes the same argument in comedy — Lysistrata imagines women enforcing peace by other means. Your commercial argument is less theatrical but equally valid. Wars between Greek cities destroy the commercial networks that make Greek civilization possible. The peace party never wins. The war lasts twenty-seven years. Your argument is correct and ignored.", statChange: { food: 5, arete: 15, wealth: 5, standing: 10 } },
+        { text: "Rebuild after the war — Greek commerce survives even when Greek politics doesn't", hint: "Commercial resilience", outcome: "good", result: "The war ends. The trade routes reopen. The commercial networks you maintained through the war — carefully, partially, pragmatically — reform faster than Athenian political prestige recovers. Commerce is more resilient than empire. The merchant who survives the war intact is positioned for the post-war recovery. You survived. You rebuild.", statChange: { food: 10, arete: 5, wealth: 15, standing: 10 } }
+      ],
+      artisan: [
+        { text: "Continue working through the war — the Parthenon is complete but Athens still needs its artisans", hint: "Craft persists through crisis", outcome: "good", result: "War disrupts building programs. It does not eliminate the need for craft. Weapons need making. Ships need outfitting. The ritual objects that keep Athens's religious life functioning during the war need producing. Your workshop stays open. The commissions change character — more military, less celebratory — but the work continues.", statChange: { food: 5, arete: 15, wealth: 10, standing: 10 } },
+        { text: "Document the war through pottery — the scenes change from athletic games to military campaigns", hint: "Art recording crisis", outcome: "good", result: "The pottery produced during the Peloponnesian War is different from what came before — more somber, more focused on departure scenes and homecoming, more aware of death and loss. Your work records the war's emotional reality more honestly than the official military records. Future historians will study what you made to understand what the war felt like from inside.", statChange: { food: 5, arete: 20, wealth: 10, standing: 10 } },
+        { text: "Mourn the damage to Athens's buildings and art program — the war costs more than lives", hint: "Cultural cost of war", outcome: "neutral", result: "The building program suspended by war does not fully resume. The cultural golden age that produced the Parthenon is over. Athens will never again be quite what it was in the age of Pericles. The war's cost is measured in lives first — and in the cultural production that those lives would have created, the buildings they would have built, the art they would have made.", statChange: { food: 5, arete: 10, wealth: -5, standing: 5 } }
+      ],
+      soldier: [
+        { text: "Fight with full commitment — your city has called and you answer", hint: "Duty despite doubt", outcome: "neutral", result: "You fight. You are good at it. The phalanx holds. Individual battles are won. The war is still lost — through plague, through the catastrophic Syracusan expedition, through the exhaustion of twenty-seven years. Your personal military excellence is not enough to save a war that is being lost strategically and politically. The soldier's dilemma: you can win every battle and lose the war.", statChange: { food: 5, arete: 15, wealth: -5, standing: 10 }, poison: true },
+        { text: "Question the orders that send you to Syracuse — this expedition will end in catastrophe", hint: "Military judgment against political decision", outcome: "neutral", result: "Your tactical assessment of the Syracusan expedition is correct. It is also outvoted in the Assembly. The democratic majority overrides the military expertise of its commanders. The expedition sails. You go with it. You are right about the outcome. You survive the disaster. Most of your unit does not. Being right about a military catastrophe does not make surviving it any easier.", statChange: { food: -5, arete: 20, wealth: -5, standing: 5 }, poison: true },
+        { text: "Come home changed — twenty-seven years of war does something to a person", hint: "The veteran's experience", outcome: "neutral", result: "You come home. Athens is changed. You are changed. The city that sent you to war is not the city that receives you back — it is poorer, smaller, traumatized, and in the process of executing its greatest philosopher. The democracy you fought for is making its worst decision. You watch it happen with the particular exhaustion of someone who has given everything to something and seen it fail anyway.", statChange: { food: 5, arete: 10, wealth: -10, standing: 5 }, poison: true }
+      ],
+      woman: [
+        { text: "Manage the household while the men are at war — Athens functions because someone holds it together", hint: "Domestic economy during wartime", outcome: "neutral", result: "The war takes your husband. Possibly your sons. You manage the household alone. You make the economic decisions that were previously made together. You negotiate with suppliers, manage the household finances, raise children in a city under periodic siege. When the men come back — those who come back — they return to a household you kept functioning. This contribution appears in no official record of the war.", statChange: { food: 10, arete: 10, wealth: 5, standing: 5 }, poison: true },
+        { text: "Recognize that you have been managing the household alone and discover you are more capable than the city acknowledges", hint: "Competence revealed by necessity", outcome: "good", result: "The war teaches you something Athens refused to teach officially: that you are capable of more than household management suggests. The economic decisions you make, the community networks you maintain, the children you raise under conditions of war and plague — all of it demonstrates a competence that the democracy you are excluded from has always undervalued. The war reveals what peace concealed.", statChange: { food: 10, arete: 20, wealth: 5, standing: 10 }, poison: true },
+        { text: "Grieve — and notice that no one asks whether the war was worth the grief", hint: "The cost borne by those not consulted", outcome: "neutral", result: "The Assembly voted for the war. You did not vote in the Assembly. The war takes your husband, perhaps your sons, leaves you managing alone in a plague-struck city. No one consulted you about whether to go to war. No one asks now whether it was worth it. The democracy that makes decisions about war does not include the people who bear the heaviest cost of those decisions. This is not an accident.", statChange: { food: 0, arete: 15, wealth: -5, standing: 5 }, poison: true }
+      ]
+    }
+  },
+  {
+    id: "ch6",
+    number: 6,
+    title: "Chapter 6 — Was He Great?",
+    subtitle: "Alexander, the Hellenistic World, and the DBQ Question",
+    scene: "It is 334 BCE. Alexander III of Macedon — twenty-two years old, tutored by Aristotle, militarily brilliant, possibly the most charismatic leader in the ancient world — has crossed into Persian territory with thirty-seven thousand soldiers. Over the next eleven years he will conquer the Persian Empire, Egypt, Central Asia, and reach India before his exhausted army finally refuses to go further. He spreads Greek language, culture, and philosophy across an area larger than any previous empire. He also ends the era of the independent Greek city-state — the democracy, the polis, the Assembly — forever. He dies at thirty-two in Babylon, and his empire immediately fragments. Was he great? Your role has just lived through six chapters of Greek civilization. You are now the most qualified person in your classroom to answer that question.",
+    historyNote: "<strong>Alexander and Judaism:</strong> When Alexander conquered Judea in 332 BCE, he continued his established policy of allowing conquered peoples to maintain their religious practices and local laws. Jewish communities under Alexander and his successors were generally permitted to observe Jewish law, maintain their own courts for internal matters, and practice their religion without compulsion. This policy of relative tolerance — compared to the Babylonian exile that had preceded it — shaped Jewish life in the Hellenistic world and created the conditions for the Jewish diaspora communities that would later be so significant in the ancient Mediterranean world.",
+    journalPrompt: "Based on everything your role experienced across six chapters of Greek civilization — the geography, the democracy, who it included, the philosophy, the war, and now Alexander — was Alexander truly great? What does your role's specific experience tell you about what 'great' actually means?",
+    poisonRoles: [],
+    discussAfter: true,
+    discussPrompt: "Every table just answered the same question from a different role's perspective. Before you continue — spend 90 seconds comparing: what did Alexander's conquests mean for your role? Did your role's answer to 'was he great?' match the table next to you — and if not, why not?",
+    choices: {
+      citizen: [
+        { text: "Recognize Alexander as the end of Athenian democracy's independence — greatness that destroys what you valued", hint: "Democracy's perspective on empire", outcome: "neutral", result: "Alexander ends the era of the independent polis. The Assembly that your citizenship gave you access to no longer determines Athens's fate — a Macedonian king does. Greek culture spreads across the known world. Athenian democratic self-governance ends. Both things happen simultaneously. The question of whether this trade-off represents greatness depends entirely on what you value most — the cultural achievement or the political independence.", statChange: { food: 5, arete: 20, wealth: 10, standing: 10 } },
+        { text: "Acknowledge Alexander's achievements while mourning what he ended", hint: "Honest complexity", outcome: "good", result: "The honest assessment requires holding two things simultaneously. Alexander's military achievement is extraordinary. His spread of Greek culture — libraries, cities, philosophy — is genuinely significant. He also ended the democratic experiment that is the thing you are most proud of in Greek civilization. Greatness and loss are not opposites. Sometimes the greatest achievements come with the greatest costs. The DBQ will ask you to weigh them.", statChange: { food: 5, arete: 25, wealth: 10, standing: 15 } },
+        { text: "Argue that Alexander represents everything Greek democracy opposed — one-man rule over collective self-governance", hint: "Democratic opposition to Alexander", outcome: "good", result: "The democratic critique of Alexander is serious. The polis — small enough for citizens to know each other, diverse enough to produce competing ideas, democratic enough to allow genuine participation — is replaced by an empire too large for any citizen to comprehend and governed by a man who answers to no one. The Greek cultural achievement that Alexander spreads is severed from the political system that produced it.", statChange: { food: 5, arete: 20, wealth: 5, standing: 10 } }
+      ],
+      philosopher: [
+        { text: "Examine Alexander through the philosophical tools Greece developed — apply reason to the question of greatness", hint: "Philosophy evaluating its own product", outcome: "good", result: "Alexander was Aristotle's student. The philosophical tradition of Athens shaped the man who conquered the world. Whether it shaped him well is a question the philosophical tradition must answer honestly. Aristotle taught him to value excellence, to think systematically, to understand that virtue requires both knowledge and practice. Alexander demonstrated military excellence and political shrewdness. Whether he demonstrated wisdom — whether his conquests served genuine human flourishing — is the more important question.", statChange: { food: 5, arete: 30, wealth: 5, standing: 15 } },
+        { text: "Note that Alexander spread Greek philosophy across the known world — is that not the greatest possible philosophical achievement?", hint: "Philosophy's global reach", outcome: "good", result: "The Hellenistic world that Alexander creates becomes the greatest distribution network for Greek philosophy in history. The Library of Alexandria. The philosophical schools in Antioch and Pergamon. The synthesis of Greek and Eastern thought that produces Stoicism, Neoplatonism, and eventually influences early Christianity and Islam. The philosophy that Athens developed in a small city-state becomes the intellectual heritage of the known world. Whether this required conquest is a question you cannot avoid asking.", statChange: { food: 5, arete: 25, wealth: 5, standing: 15 } },
+        { text: "Ask the Socratic question — what do we mean by great, and does Alexander meet that definition?", hint: "Define the terms first", outcome: "good", result: "Socrates would begin here — with the definition. What is greatness? Military conquest? Cultural influence? The welfare of those conquered? Longevity of achievement? The happiness of the people who live in what you built? By each measure, Alexander scores differently. The military conquest is extraordinary. The cultural influence is lasting. The welfare of conquered peoples is mixed. The longevity is limited — the empire fragments immediately. The question admits no simple answer. That is the point.", statChange: { food: 5, arete: 30, wealth: 5, standing: 15 } }
+      ],
+      merchant: [
+        { text: "Celebrate Alexander's creation of the largest unified trading zone in history", hint: "Commercial greatness", outcome: "good", result: "The Hellenistic world Alexander creates is the greatest commercial opportunity in history to this point. One set of cultural conventions, the Greek language as lingua franca, stable sea and land routes, and a policy of religious tolerance that allows Jewish merchants to operate under their own commercial law in cities across the empire. From a purely commercial perspective, Alexander's conquests are the best thing that has happened to Mediterranean trade since the Phoenicians invented long-distance commerce.", statChange: { food: 10, arete: 15, wealth: 25, standing: 15 } },
+        { text: "Note the treatment of Jewish communities under Alexander — tolerance as commercial policy", hint: "Religious tolerance enabling commerce", outcome: "good", result: "Alexander's policy toward Jewish communities in Judea and across the empire is notable — he permits Jewish law, Jewish courts, and Jewish religious practice to continue without interference. For Jewish merchants operating across the Hellenistic world, this tolerance is commercially significant — they can maintain the dietary and commercial practices that define Jewish identity while operating in a Greek-language commercial environment. The Hellenistic diaspora communities that this creates will be economically significant for centuries.", statChange: { food: 5, arete: 20, wealth: 20, standing: 15 } },
+        { text: "Assess Alexander pragmatically — great for commerce, complicated for everything else", hint: "Commercial realism", outcome: "good", result: "The commercial assessment is positive. The political assessment is complex. The cultural assessment is mixed — Greek culture spreads, but local cultures are pressured and sometimes suppressed. The humanitarian assessment depends on which side of the conquest you were on. No single answer covers all the dimensions of Alexander's legacy. The merchant who thinks clearly about all of them is more honest than either the hagiographer who celebrates him or the critic who condemns him.", statChange: { food: 5, arete: 20, wealth: 15, standing: 10 } }
+      ],
+      artisan: [
+        { text: "Recognize the Hellenistic art world Alexander creates as a genuine expansion of Greek artistic tradition", hint: "Art achieving global reach", outcome: "good", result: "Hellenistic art — the synthesis of Greek aesthetic traditions with Persian, Egyptian, and Central Asian influences — is one of history's great artistic experiments. The Winged Victory of Samothrace. The Pergamon Altar. The Fayum mummy portraits. The Gandharan Buddha sculptures that blend Greek and Indian aesthetic traditions. Alexander's conquests created the conditions for an artistic synthesis that neither Greece nor Asia could have produced alone.", statChange: { food: 5, arete: 25, wealth: 20, standing: 20 } },
+        { text: "Notice that Hellenistic art becomes more emotionally expressive — conquest and suffering change what art does", hint: "War changes art", outcome: "good", result: "Classical Greek art idealized. Hellenistic art agonizes. The calm perfection of the Parthenon sculptures gives way to the writhing figures of the Laocoön, the anguished faces of the Pergamon Altar's Giants, the wild drama of the Winged Victory. The world Alexander created was larger, richer, more cosmopolitan — and more aware of suffering. Art records that awareness. The change in Greek art between classical and Hellenistic periods is Alexander's emotional legacy.", statChange: { food: 5, arete: 25, wealth: 15, standing: 15 } },
+        { text: "Build in the new Hellenistic cities — Alexandria, Antioch, Pergamon — Greek craft finding new markets", hint: "New markets for craft", outcome: "good", result: "Alexandria alone employs more artisans than classical Athens ever did. The Hellenistic cities — planned on Greek principles, funded by the wealth of former Persian treasuries, populated by a mix of Greek settlers and local populations — are the greatest market for Greek craft in history. Your aesthetic tradition finds expression across a world far larger than the Aegean. The polis is dead. The art it produced lives everywhere.", statChange: { food: 5, arete: 20, wealth: 25, standing: 20 } }
+      ],
+      soldier: [
+        { text: "March with Alexander — the military achievement is genuinely extraordinary", hint: "Military perspective on military greatness", outcome: "good", result: "From inside Alexander's army, the achievement is staggering. Persia — the empire that launched two invasions of Greece within living memory — is conquered in three years. Egypt falls without a battle. The passes of Central Asia are forced. The Indian subcontinent is reached. The soldiers who make this journey are the finest military force the ancient world has produced. You are one of them. The achievement is real.", statChange: { food: 5, arete: 25, wealth: 15, standing: 20 } },
+        { text: "Question the march to India — when the army finally refuses to go further, recognize that even the greatest general has limits", hint: "Military judgment on overreach", outcome: "good", result: "The army's refusal at the Hyphasis River is one of history's most significant military moments. The soldiers who stopped Alexander — who told the greatest conqueror in history that they were going home — demonstrated something important: even military greatness has limits set by the humans who execute it. Alexander wept. Then he turned back. The great general who respects the limits of his army is wiser than the great general who does not.", statChange: { food: 5, arete: 25, wealth: 10, standing: 15 } },
+        { text: "Assess Alexander honestly — extraordinary military talent, unclear political wisdom, uncertain legacy", hint: "Military realism about a military figure", outcome: "good", result: "The military assessment of Alexander is straightforward — he is the greatest military commander in the ancient world. The political assessment is less clear — his empire fragments immediately after his death, suggesting the structure depended entirely on his personal presence. The legacy assessment is complex — Greek culture spreads, but whether the conquered peoples are better off is genuinely contested. The soldier's honest assessment: brilliant general, incomplete statesman, uncertain legacy.", statChange: { food: 5, arete: 25, wealth: 10, standing: 15 } }
+      ],
+      woman: [
+        { text: "Notice that the Hellenistic world creates new possibilities for women — Hellenistic queens will eventually hold real power", hint: "Long arc of change", outcome: "good", result: "The Hellenistic world that Alexander creates will eventually produce Cleopatra — a queen who rules Egypt, speaks nine languages, and directs the foreign policy of one of the ancient world's most powerful states. That change is generations away. But it begins with the breakdown of the rigid polis system that confined Athenian women so completely. The world Alexander makes is not just — but it is, in some ways, more open than what preceded it. Change arrives slowly and incompletely.", statChange: { food: 5, arete: 20, wealth: 5, standing: 15 } },
+        { text: "Assess Alexander from the perspective of what Greek greatness excluded — and ask whether spreading that exclusion is greatness", hint: "Greatness evaluated by who it serves", outcome: "good", result: "Greek civilization spread by Alexander carries with it Greek democracy's achievements and Greek democracy's exclusions. The philosophy. The mathematics. The art. And also: the systematic exclusion of women from public life, the institution of slavery presented as natural, the assumption that some people are by nature suited to be ruled. If Greek greatness included these things, then spreading it spread them too. The question of whether Alexander was great cannot be separated from the question of what exactly he was spreading.", statChange: { food: 5, arete: 30, wealth: 5, standing: 10 } },
+        { text: "Find that after six chapters of being excluded, the question 'was he great?' itself reveals something", hint: "Who gets to define greatness", outcome: "good", result: "The question 'was Alexander great?' assumes a definition of greatness that was written by people who participated in Greek public life — citizens, philosophers, historians. You have spent six chapters outside that participation. The definition of greatness that emerges from Greek civilization was written without consulting half the population. Alexander spread that definition across the known world. Perhaps the most important question is not whether he was great by that definition — but who wrote the definition, and whether they were asking the right question.", statChange: { food: 5, arete: 30, wealth: 5, standing: 15 } }
+      ]
+    }
+  }
+];
+
+// ══════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════
+let state = {
+  screen: "art_open",
+  role: null,
+  chapterIndex: 0,
+  pendingOutcome: null,
+  stats: { food: 50, arete: 50, wealth: 50, standing: 50 },
+  timerInterval: null,
+};
+
+function go(s) { state.screen = s; render(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+function getRole() { return ROLES.find(r => r.id === state.role); }
+function clamp(v) { return Math.max(0, Math.min(100, v)); }
+function applyStats(change) { if (!change) return; for (let k in change) { if (state.stats[k] !== undefined) state.stats[k] = clamp(state.stats[k] + change[k]); } }
+function statColor(v) { return v >= 60 ? "#6ABF6A" : v >= 35 ? "#E8C840" : "#E05050"; }
+function isDead() { return state.stats.food <= 0; }
+
+function areteResult(v) {
+  if (v >= 75) return { icon: "🏆", title: "True Arete Achieved", text: "Your choices pursued excellence in a way that the Greeks would have recognized — not just skill or success, but the genuine pursuit of the best your role could be. The philosopher who questioned everything, the citizen who voted with conscience, the artisan who pursued perfection, the woman who found wisdom within constraint — all are forms of arete. You found yours." };
+  if (v >= 50) return { icon: "🫒", title: "Arete Pursued", text: "Your choices pursued excellence imperfectly — as most people do. The Greeks understood that arete is a direction, not a destination. The soldier who fights with courage and doubts the war's justice. The merchant who profits and asks whether the profit serves something beyond profit. You pursued the question. That pursuit is itself a form of excellence." };
+  if (v >= 25) return { icon: "⚖️", title: "Arete Contested", text: "Your choices often prioritized immediate advantage over genuine excellence. The Greeks would not condemn you for this — they understood that human nature pulls toward self-interest. But arete requires something more than self-interest. The examined life Socrates preached is the life that asks whether what you are pursuing is actually worth pursuing." };
+  return { icon: "🔥", title: "Arete Missed", text: "Your choices moved away from excellence rather than toward it. The Greek tradition does not judge this harshly — it simply notes that the unexamined life is not worth living. The question is not whether you failed to achieve arete. The question is whether you examined why." };
+}
+
+function renderStats() {
+  const defs = [
+    { key: "food", label: "Food", icon: "🌾" },
+    { key: "arete", label: "Arete", icon: "⚡" },
+    { key: "wealth", label: "Wealth", icon: "⚓" },
+    { key: "standing", label: "Standing", icon: "🏛️" },
+  ];
+  return `<div class="stats-row">${defs.map(d => {
+    const v = state.stats[d.key];
+    return `<div class="stat-box"><span class="stat-icon">${d.icon}</span><div class="stat-label">${d.label}</div><div class="stat-value" style="color:${statColor(v)}">${Math.round(v)}</div><div class="stat-track"><div class="stat-fill" style="width:${v}%;background:${statColor(v)}"></div></div></div>`;
+  }).join("")}</div>`;
+}
+
+function renderProgress() {
+  const dots = CHAPTERS.map((c, i) => `<div class="prog-dot ${i < state.chapterIndex ? 'done' : i === state.chapterIndex ? 'active' : ''}"></div>`).join("");
+  return `<div class="progress-row">${dots}<span class="prog-label">Chapter ${state.chapterIndex + 1} of ${CHAPTERS.length}</span></div>`;
+}
+
+function screenArtOpen() {
+  return `
+    <div class="screen-label">Before we begin — look closely</div>
+    <div class="screen-heading">Achilles and Ajax Playing Dice</div>
+    <div class="art-frame">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/0/07/Black-figure_olpe_with_Achilles_and_Ajax_%28Rome%2C_Mus_Cap_vase_inv._6%29.jpg" alt="Black-figure olpe showing Achilles and Ajax playing dice" onerror="this.style.display='none';document.getElementById('vase-fallback').style.display='block'" />
+      <div id="vase-fallback" style="display:none;padding:2rem;text-align:center;color:var(--aegean);font-family:Arial,sans-serif;font-size:13px">[Achilles and Ajax Vase — search "Achilles Ajax dice black figure" to view]</div>
+      <div class="art-caption">Black-figure olpe · Achilles and Ajax playing a board game · c. 510 BCE · Attributed to the Leagros Group · Capitoline Museums, Rome · Public Domain</div>
+    </div>
+    <div class="scene-text">Two of the greatest heroes in Greek mythology — Achilles, the greatest warrior who ever lived; Ajax, his equal in strength and loyalty — are playing a board game. Between them sits a table with what appears to be a dice game. Behind them, the Trojan War continues. Before you begin your story in ancient Greece, look closely. Take 30 seconds of silence first. Then answer the three prompts in your field journal:</div>
+    <div class="art-prompts">
+      <div class="art-prompt-box"><div class="apt-label">Prompt 1</div><div class="apt-q">One thing I find interesting...</div></div>
+      <div class="art-prompt-box"><div class="apt-label">Prompt 2</div><div class="apt-q">One thing that puzzles me...</div></div>
+      <div class="art-prompt-box"><div class="apt-label">Prompt 3</div><div class="apt-q">One question I have for the creator...</div></div>
+    </div>
+    <div class="history-note"><strong>Answer in your field journal.</strong> When your teacher gives the signal, continue.</div>
+    <button class="btn btn-aegean" onclick="go('role_select')">Enter ancient Greece →</button>`;
+}
+
+function screenRoleSelect() {
+  return `
+    <div class="screen-label">Choose your role — your table decides together</div>
+    <div class="screen-heading">Who are you in ancient Greece?</div>
+    <div class="scene-text">Every person at your table plays the same role. Each role will experience the same events — but from a completely different position within Greek civilization. Notice the <strong>Arete</strong> stat — this is a Greek word (pronounced ah-REH-tay) that means excellence, or the quality of being the best version of what you are meant to be. A soldier's arete is courage and skill. A philosopher's arete is wisdom and honest inquiry. An artisan's arete is craft so perfect it outlasts the person who made it. Watch this stat — and pay attention to whose arete the Greeks defined, and whose they ignored. Choose together.</div>
+    <div class="role-grid">
+      ${ROLES.map(r => `<div class="role-card" onclick="selectRole('${r.id}')"><span class="rc-icon">${r.icon}</span><div class="rc-name">${r.name}</div><div class="rc-own"><strong>You control:</strong> ${r.own}</div><div class="rc-fear">⚠ You fear: ${r.fear}</div></div>`).join("")}
+    </div>`;
+}
+
+function screenChapter() {
+  const ch = CHAPTERS[state.chapterIndex];
+  const role = getRole();
+  const choices = ch.choices[state.role];
+  const isPoison = ch.poisonRoles.includes(state.role);
+  const histNote = ch.historyNote2
+    ? `<div class="history-note">${ch.historyNote}</div><div class="history-note" style="margin-top:0.5rem">${ch.historyNote2}</div>`
+    : `<div class="history-note">${ch.historyNote}</div>`;
+  return `
+    ${renderProgress()}
+    ${renderStats()}
+    <div class="role-badge"><span class="rb-icon">${role.icon}</span><div><div class="rb-name">${role.name}</div><div class="rb-desc">${role.desc}</div></div></div>
+    <div class="screen-label">${ch.title}</div>
+    <div class="screen-heading" style="font-size:18px">${ch.subtitle}</div>
+    <div class="scene-text">${ch.scene}</div>
+    <div class="role-context">${role.context[ch.id]}</div>
+    ${isPoison ? `<div class="poison-note">⚠ There may be no good option for your role in this chapter. Choose the least difficult path — and notice what the available options reveal about your position in Greek civilization.</div>` : ""}
+    ${histNote}
+    <div class="choices-label">Discuss with your table — then choose:</div>
+    <div class="choices">${choices.map((c, i) => `<button class="choice-btn" onclick="makeChoice(${i})"><div class="choice-text">${c.text}</div><div class="choice-hint">${c.hint}</div></button>`).join("")}</div>`;
+}
+
+function screenOutcome() {
+  const ch = CHAPTERS[state.chapterIndex];
+  const o = state.pendingOutcome;
+  const outcomeClass = o.poison ? "outcome-poison" : `outcome-${o.outcome}`;
+  const outcomeLabel = o.outcome === "good" ? "✓ What happened" : o.outcome === "bad" ? "✗ What happened" : o.poison ? "⚠ The constrained choice" : "→ What happened";
+  return `
+    ${renderProgress()}
+    ${renderStats()}
+    <div class="outcome-box ${outcomeClass}"><div class="outcome-label">${outcomeLabel}</div>${o.result}</div>
+    ${ch.discussAfter
+      ? `<button class="btn btn-aegean" onclick="startDiscussion()">Continue to table discussion →</button>`
+      : `<div class="journal-prompt"><strong>✏ Field Journal Prompt —</strong> answer before your teacher signals to continue:<br><br>${ch.journalPrompt}</div>
+         <button class="btn btn-aegean" onclick="advanceChapter()">${state.chapterIndex < CHAPTERS.length - 1 ? 'Continue →' : 'See how your story ends →'}</button>`}`;
+}
+
+function screenDiscussion() {
+  const ch = CHAPTERS[state.chapterIndex];
+  clearInterval(state.timerInterval);
+  setTimeout(() => {
+    let secs = 90;
+    state.timerInterval = setInterval(() => {
+      secs--;
+      const el = document.getElementById("timer-display");
+      const fill = document.getElementById("timer-fill");
+      const btn = document.getElementById("cont-btn");
+      if (el) el.textContent = `${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')}`;
+      if (fill) fill.style.width = `${(secs/90)*100}%`;
+      if (secs <= 0) { clearInterval(state.timerInterval); if (btn) btn.classList.add("ready"); }
+    }, 1000);
+  }, 100);
+  return `
+    ${renderProgress()}
+    <div class="discussion-box">
+      <div class="disc-header">⏱ Table Discussion — 90 seconds</div>
+      <div class="disc-prompt">${ch.discussPrompt}</div>
+      <div class="timer-row">
+        <div class="timer-display" id="timer-display">1:30</div>
+        <div class="timer-track"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+        <button class="continue-btn" id="cont-btn" onclick="afterDiscussion()">Continue →</button>
+      </div>
+    </div>
+    <div class="journal-prompt"><strong>✏ Field Journal Prompt —</strong> write your response while the timer runs:<br><br>${CHAPTERS[state.chapterIndex].journalPrompt}</div>`;
+}
+
+function screenGameOver() {
+  return `
+    <div style="text-align:center;padding:2rem 1rem">
+      <div style="font-size:48px;margin-bottom:1rem">🌿</div>
+      <div class="screen-heading">Your story in Greece ends here</div>
+      ${renderStats()}
+      <div class="history-note" style="text-align:left;margin-bottom:1.25rem">Even in the civilization that invented the concept of arete — the pursuit of excellence — survival required food. The philosophy, the democracy, the architecture: all of it rested on the agricultural foundation that fed the people who created it.</div>
+      <div class="journal-prompt" style="text-align:left">What does a food crisis reveal about the foundations beneath Greek greatness?</div><br>
+      <button class="btn btn-aegean" onclick="restart()">Start again as a different role</button>
+    </div>`;
+}
+
+function screenArtClose() {
+  return `
+    <div class="screen-label">Closing — one more image</div>
+    <div class="screen-heading">The Parthenon Frieze<br><span style="font-size:16px;color:var(--aegean)">c. 447–432 BCE · Athens</span></div>
+    <div class="art-frame">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/3/33/Parthenon_frieze_north_XLIII.JPG" alt="Parthenon Frieze North section - Panathenaic procession" onerror="this.style.display='none';document.getElementById('frieze-fallback').style.display='block'" />
+      <div id="frieze-fallback" style="display:none;padding:2rem;text-align:center;color:var(--aegean);font-family:Arial,sans-serif;font-size:13px">[Parthenon Frieze — search "Parthenon Frieze north Panathenaic" to view]</div>
+      <div class="art-caption">Parthenon Frieze — North Section · Panathenaic Procession · c. 447–432 BCE · Pentelic marble · British Museum (Elgin Marbles) · Public Domain</div>
+    </div>
+    <div class="scene-text">You opened this campaign with two heroes playing dice — intimate, human-scale, the greatest warriors in mythology doing something completely ordinary. Now look at this frieze from the Parthenon — carved citizens, horses, and offerings moving in procession toward the goddess Athena. Use your three prompts in your field journal:</div>
+    <div class="art-prompts">
+      <div class="art-prompt-box"><div class="apt-label">Prompt 1</div><div class="apt-q">One thing I find interesting...</div></div>
+      <div class="art-prompt-box"><div class="apt-label">Prompt 2</div><div class="apt-q">One thing that puzzles me...</div></div>
+      <div class="art-prompt-box"><div class="apt-label">Prompt 3</div><div class="apt-q">One question I have for the creator...</div></div>
+    </div>
+    <div class="journal-prompt"><strong>Year-long comparison question:</strong> You have now seen art from the Stone Age, Mesopotamia, Egypt, India, China, and Greece. Look at this frieze — citizens moving in procession, all of similar size, all participating together. How does this image of humans feel different from the Egyptian tomb painting where the pharaoh towers above everyone else? What changed — and what does that change tell you about what Greece believed about people?</div>
+    <button class="btn btn-aegean" onclick="go('ending')">See what your story revealed →</button>`;
+}
+
+function screenEnding() {
+  const role = getRole();
+  const a = areteResult(state.stats.arete);
+  return `
+    <div class="screen-label">End of the Greece Campaign</div>
+    <div class="screen-heading" style="font-size:18px">${role.name} — Your Story Through Ancient Greece</div>
+    ${renderStats()}
+    <div class="arete-result"><span class="ar-icon">${a.icon}</span><div class="ar-label">Arete Assessment</div><div class="ar-title">${a.title}</div><div class="ar-text">${a.text}</div></div>
+    <div class="history-note"><strong>What this campaign covered:</strong><br>Greek geography and the sea-trading culture · Minoans and Mycenaeans briefly · City-states and the Athens-Sparta contrast · Athenian democracy — who it included and who it excluded · Greek mythology and the birth of philosophy · The Peloponnesian War and the trial of Socrates · Alexander's conquests and the Hellenistic world · Judaism under Alexander's policy of tolerance</div>
+    <div class="dbq-box">
+      <h4>Your DBQ is coming — you are ready for it</h4>
+      <p>The question you will examine: <strong>Was Alexander truly great?</strong> You have just lived through six chapters of Greek civilization from one role's perspective. You know what democracy meant and what it excluded. You know what philosophy cost Socrates. You know what the Peloponnesian War did to the civilization that produced it. You know what Alexander ended and what he spread. The primary sources in your DBQ will give you evidence. This campaign gave you context. Use both.</p>
+    </div>
+    <div style="margin-bottom:1.25rem">
+      <div class="screen-label" style="margin-bottom:8px">What Greece gave the world</div>
+      <div class="achievements-grid">
+        <div class="achievement-card"><span class="ac-icon">🗳️</span><div class="ac-title">Democracy</div><div class="ac-desc">The first system of government in which citizens directly participate in their own governance — imperfect, exclusive, and foundational to every democracy that followed.</div></div>
+        <div class="achievement-card"><span class="ac-icon">🦉</span><div class="ac-title">Philosophy</div><div class="ac-desc">Socrates, Plato, Aristotle — the systematic use of reason to examine human life, ethics, politics, and the nature of reality. Still the foundation of Western intellectual tradition.</div></div>
+        <div class="achievement-card"><span class="ac-icon">📐</span><div class="ac-title">Mathematics</div><div class="ac-desc">Pythagoras, Euclid, Archimedes — mathematical proofs and geometric principles that remain in use today.</div></div>
+        <div class="achievement-card"><span class="ac-icon">🏛️</span><div class="ac-title">Architecture</div><div class="ac-desc">The Parthenon, the Doric and Ionic orders, the proportional systems that define Western architecture from Rome to Washington D.C.</div></div>
+        <div class="achievement-card"><span class="ac-icon">🎭</span><div class="ac-title">Theater</div><div class="ac-desc">Tragedy and comedy — Aeschylus, Sophocles, Euripides, Aristophanes — the dramatic forms that still structure storytelling worldwide.</div></div>
+        <div class="achievement-card"><span class="ac-icon">🌍</span><div class="ac-title">The Hellenistic World</div><div class="ac-desc">Alexander's conquests spread Greek language, philosophy, and culture from Greece to India — creating a cosmopolitan world where ideas traveled faster than armies.</div></div>
+      </div>
+    </div>
+    <div class="discussion-questions">
+      <h4>Class Discussion Questions</h4>
+      <p>1. Athens invented democracy and executed its greatest philosopher. Does that contradiction make Athens less great — or does it reveal something true about all human systems?</p>
+      <p>2. The Woman role experienced six chapters of being excluded from Greek greatness. Based on that experience — what does it mean to call a civilization great if half its population is excluded from that greatness?</p>
+      <p>3. Athens and Sparta were both Greek — same gods, same language, same myths. But they organized society completely differently. What does that tell you about whether there is one right way to build a civilization?</p>
+      <p>4. Alexander spread Greek culture across the known world. He also ended Greek democratic independence forever. Using your role's specific experience — was he great?</p>
+      <p>5. Arete means excellence — being the best version of what you are meant to be. Who in Greek civilization got to define what each person was meant to be? And whose definition of arete did Alexander spread?</p>
+    </div>
+    <button class="btn btn-aegean" onclick="restart()">Play again as a different role</button>
+    <button class="btn btn-secondary" onclick="restart()">Return to start</button>`;
+}
+
+function selectRole(id) { state.role = id; state.chapterIndex = 0; go("chapter"); }
+function makeChoice(i) {
+  const ch = CHAPTERS[state.chapterIndex];
+  const choice = ch.choices[state.role][i];
+  applyStats(choice.statChange);
+  state.pendingOutcome = choice;
+  if (isDead()) { go("gameover"); return; }
+  go("outcome");
+}
+function startDiscussion() { go("discussion"); }
+function afterDiscussion() { clearInterval(state.timerInterval); advanceChapter(); }
+function advanceChapter() {
+  state.pendingOutcome = null;
+  if (state.chapterIndex < CHAPTERS.length - 1) { state.chapterIndex++; go("chapter"); }
+  else { go("art_close"); }
+}
+function restart() {
+  clearInterval(state.timerInterval);
+  state = { screen: "art_open", role: null, chapterIndex: 0, pendingOutcome: null, stats: { food: 50, arete: 50, wealth: 50, standing: 50 }, timerInterval: null };
+  render(); window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function render() {
+  const el = document.getElementById("content");
+  const screens = { art_open: screenArtOpen, role_select: screenRoleSelect, chapter: screenChapter, outcome: screenOutcome, discussion: screenDiscussion, gameover: screenGameOver, art_close: screenArtClose, ending: screenEnding };
+  el.innerHTML = (screens[state.screen] || (() => "<p>Loading...</p>"))();
+}
+render();
+</script>
+</body>
+</html>
