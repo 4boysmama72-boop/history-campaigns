@@ -1,0 +1,752 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ancient Rome — The Story of Us</title>
+<style>
+  :root {
+    --roman-red: #8B1A1A;
+    --roman-red-light: #F5C8C8;
+    --roman-red-glow: rgba(139,26,26,0.15);
+    --senate: #2A3A6B;
+    --senate-light: #C8D4F8;
+    --toga: #F5F0E8;
+    --toga-dark: #D8D0C0;
+    --gold: #A87A00;
+    --gold-light: #FFF4C0;
+    --marble: #E8E4DC;
+    --stone: #5A5040;
+    --stone-light: #E8E0D0;
+    --red: #8B2020;
+    --red-light: #F5D0D0;
+    --green: #2A6B3A;
+    --green-light: #C8F0D0;
+    --shadow: #0A0800;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Georgia, 'Times New Roman', serif; background: #0A0800; color: var(--toga); min-height: 100vh; }
+  #app { max-width: 780px; margin: 0 auto; padding: 1.5rem 1.5rem 3rem; }
+
+  .site-header { text-align: center; padding: 1.5rem 1rem 1rem; border-bottom: 2px solid var(--roman-red); margin-bottom: 1.5rem; background: linear-gradient(180deg, rgba(139,26,26,0.08) 0%, transparent 100%); }
+  .site-header .campaign-tag { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--roman-red-light); font-family: Arial, sans-serif; margin-bottom: 6px; }
+  .site-header h1 { font-size: 30px; font-weight: bold; color: var(--toga); letter-spacing: 0.06em; margin-bottom: 4px; }
+  .site-header h2 { font-size: 14px; font-weight: normal; color: var(--toga-dark); font-family: Arial, sans-serif; font-style: italic; }
+
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.25rem; }
+  .stat-box { background: rgba(139,26,26,0.1); border: 1px solid rgba(139,26,26,0.3); border-radius: 6px; padding: 8px 10px; text-align: center; }
+  .stat-icon { font-size: 16px; display: block; margin-bottom: 2px; }
+  .stat-label { font-size: 10px; color: var(--roman-red-light); letter-spacing: 0.05em; text-transform: uppercase; font-family: Arial, sans-serif; }
+  .stat-value { font-size: 18px; font-weight: bold; margin: 2px 0; }
+  .stat-track { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 4px; }
+  .stat-fill { height: 4px; border-radius: 2px; transition: width 0.5s, background 0.5s; }
+
+  .role-badge { display: flex; align-items: center; gap: 10px; background: rgba(139,26,26,0.1); border: 1px solid rgba(139,26,26,0.3); border-radius: 8px; padding: 10px 14px; margin-bottom: 1.25rem; }
+  .role-badge .rb-icon { font-size: 24px; }
+  .role-badge .rb-name { font-size: 15px; font-weight: bold; color: var(--toga); }
+  .role-badge .rb-desc { font-size: 12px; color: var(--toga-dark); font-family: Arial, sans-serif; }
+
+  .progress-row { display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem; }
+  .prog-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(139,26,26,0.2); border: 1.5px solid rgba(139,26,26,0.4); }
+  .prog-dot.active { background: var(--roman-red); border-color: var(--roman-red); }
+  .prog-dot.done { background: var(--gold); border-color: var(--gold); }
+  .prog-label { font-size: 11px; color: var(--toga-dark); font-family: Arial, sans-serif; }
+
+  .screen-label { font-size: 11px; color: var(--roman-red-light); letter-spacing: 0.1em; text-transform: uppercase; font-family: Arial, sans-serif; margin-bottom: 6px; }
+  .screen-heading { font-size: 22px; font-weight: bold; color: var(--toga); margin-bottom: 1rem; line-height: 1.3; }
+  .scene-text { font-size: 15px; line-height: 1.85; color: var(--toga); margin-bottom: 1rem; }
+  .role-context { background: var(--roman-red-glow); border-left: 3px solid var(--roman-red); border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 14px; font-style: italic; color: var(--roman-red-light); margin-bottom: 1.25rem; line-height: 1.65; font-family: Arial, sans-serif; }
+
+  .history-note { background: rgba(42,58,107,0.2); border-left: 3px solid var(--senate); border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 13px; color: var(--senate-light); margin-bottom: 1.25rem; line-height: 1.65; font-family: Arial, sans-serif; }
+  .history-note strong { color: #E8F0FF; font-weight: 600; }
+
+  .journal-prompt { background: rgba(139,26,26,0.1); border-left: 3px solid var(--roman-red); border-radius: 0 6px 6px 0; padding: 12px 14px; font-size: 14px; color: var(--roman-red-light); margin-bottom: 1.25rem; line-height: 1.7; font-family: Arial, sans-serif; }
+  .journal-prompt strong { color: var(--toga); font-weight: 600; }
+
+  .poison-note { background: rgba(139,32,32,0.2); border-left: 3px solid var(--red); border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 13px; color: var(--red-light); margin-bottom: 1.25rem; line-height: 1.65; font-family: Arial, sans-serif; }
+
+  .discussion-box { background: var(--stone); border-radius: 10px; padding: 16px 20px; margin-bottom: 1.25rem; }
+  .discussion-box .disc-header { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-family: Arial, sans-serif; color: var(--toga-dark); margin-bottom: 6px; }
+  .discussion-box .disc-prompt { font-size: 15px; line-height: 1.6; margin-bottom: 14px; font-style: italic; color: var(--toga); }
+  .timer-row { display: flex; align-items: center; gap: 14px; }
+  .timer-display { font-size: 32px; font-weight: bold; font-family: Arial, sans-serif; min-width: 60px; color: var(--toga); }
+  .timer-track { flex: 1; height: 8px; background: rgba(255,255,255,0.15); border-radius: 4px; }
+  .timer-fill { height: 8px; background: var(--roman-red); border-radius: 4px; transition: width 1s linear; }
+  .continue-btn { background: var(--roman-red); color: white; border: none; border-radius: 6px; padding: 8px 16px; font-size: 13px; font-weight: bold; cursor: pointer; font-family: Arial, sans-serif; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .continue-btn.ready { opacity: 1; pointer-events: all; }
+
+  .choices-label { font-size: 11px; color: var(--toga-dark); letter-spacing: 0.08em; text-transform: uppercase; font-family: Arial, sans-serif; margin-bottom: 8px; }
+  .choices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+  .choice-btn { background: rgba(139,26,26,0.08); border: 1.5px solid rgba(139,26,26,0.3); border-radius: 8px; padding: 12px 16px; text-align: left; cursor: pointer; transition: all 0.15s; font-family: Georgia, serif; }
+  .choice-btn:hover { background: rgba(139,26,26,0.2); border-color: var(--roman-red); }
+  .choice-btn .choice-text { font-size: 14px; color: var(--toga); line-height: 1.5; }
+  .choice-btn .choice-hint { font-size: 11px; color: var(--toga-dark); margin-top: 4px; font-family: Arial, sans-serif; font-style: italic; }
+
+  .outcome-box { border-radius: 8px; padding: 14px 16px; margin-bottom: 1.25rem; font-size: 14px; line-height: 1.7; font-family: Arial, sans-serif; }
+  .outcome-good { background: rgba(42,107,58,0.2); border: 1.5px solid var(--green); color: var(--green-light); }
+  .outcome-bad { background: rgba(139,32,32,0.2); border: 1.5px solid var(--red); color: var(--red-light); }
+  .outcome-neutral { background: rgba(90,80,64,0.3); border: 1.5px solid var(--stone); color: var(--stone-light); }
+  .outcome-poison { background: rgba(139,32,32,0.15); border: 1.5px solid #6B1A1A; color: #F0B0B0; }
+  .outcome-label { font-size: 11px; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; font-family: Arial, sans-serif; }
+
+  .art-frame { border: 2px solid var(--roman-red); border-radius: 8px; overflow: hidden; margin-bottom: 1.25rem; background: var(--shadow); box-shadow: 0 0 20px rgba(139,26,26,0.15); }
+  .art-frame img { width: 100%; display: block; max-height: 360px; object-fit: contain; object-position: center; background: #1A1008; }
+  .art-caption { padding: 8px 14px; font-size: 11px; color: var(--roman-red-light); font-family: Arial, sans-serif; font-style: italic; background: rgba(10,8,0,0.9); line-height: 1.5; }
+
+  .art-prompts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.25rem; }
+  .art-prompt-box { background: rgba(139,26,26,0.1); border: 1px solid rgba(139,26,26,0.3); border-radius: 6px; padding: 10px 14px; }
+  .art-prompt-box .apt-label { font-size: 11px; font-weight: bold; color: var(--roman-red-light); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 4px; }
+  .art-prompt-box .apt-q { font-size: 14px; color: var(--toga-dark); font-style: italic; }
+
+  .role-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1rem; }
+  .role-card { background: rgba(139,26,26,0.08); border: 2px solid rgba(139,26,26,0.3); border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.15s; }
+  .role-card:hover { background: rgba(139,26,26,0.2); border-color: var(--roman-red); transform: translateY(-1px); }
+  .role-card .rc-icon { font-size: 28px; margin-bottom: 6px; display: block; }
+  .role-card .rc-name { font-size: 15px; font-weight: bold; color: var(--toga); margin-bottom: 4px; }
+  .role-card .rc-own { font-size: 12px; color: var(--toga-dark); font-family: Arial, sans-serif; line-height: 1.5; margin-bottom: 6px; }
+  .role-card .rc-fear { font-size: 11px; color: var(--red-light); font-family: Arial, sans-serif; font-style: italic; }
+
+  .power-result { background: rgba(139,26,26,0.12); border: 1.5px solid var(--roman-red); border-radius: 10px; padding: 16px 18px; margin-bottom: 1.25rem; text-align: center; }
+  .power-result .pr-icon { font-size: 36px; margin-bottom: 8px; display: block; }
+  .power-result .pr-label { font-size: 12px; color: var(--roman-red-light); text-transform: uppercase; letter-spacing: 0.08em; font-family: Arial, sans-serif; margin-bottom: 6px; }
+  .power-result .pr-title { font-size: 20px; font-weight: bold; color: var(--toga); margin-bottom: 8px; }
+  .power-result .pr-text { font-size: 14px; color: var(--toga-dark); line-height: 1.7; font-family: Arial, sans-serif; }
+
+  .achievements-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1.25rem; }
+  .achievement-card { background: rgba(139,26,26,0.1); border: 1px solid rgba(139,26,26,0.3); border-radius: 8px; padding: 12px 14px; }
+  .achievement-card .ac-icon { font-size: 20px; margin-bottom: 4px; display: block; }
+  .achievement-card .ac-title { font-size: 13px; font-weight: bold; color: var(--toga); margin-bottom: 4px; }
+  .achievement-card .ac-desc { font-size: 12px; color: var(--toga-dark); font-family: Arial, sans-serif; line-height: 1.5; }
+
+  .discussion-questions { background: rgba(42,58,107,0.15); border: 1px solid var(--senate); border-radius: 8px; padding: 14px 16px; margin-bottom: 1.25rem; }
+  .discussion-questions h4 { font-size: 12px; font-weight: bold; color: var(--senate-light); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 10px; }
+  .discussion-questions p { font-size: 13px; color: #A8C0F0; line-height: 1.7; font-family: Arial, sans-serif; margin-bottom: 8px; }
+
+  .btn { background: var(--stone); color: var(--toga); border: none; border-radius: 8px; padding: 11px 22px; font-size: 14px; font-weight: bold; cursor: pointer; font-family: Arial, sans-serif; transition: background 0.15s; margin-right: 8px; margin-bottom: 8px; }
+  .btn:hover { background: #3A3020; }
+  .btn-roman { background: var(--roman-red); color: white; }
+  .btn-roman:hover { background: #6B1010; }
+  .btn-secondary { background: transparent; color: var(--roman-red-light); border: 1.5px solid var(--roman-red); }
+  .btn-secondary:hover { background: var(--roman-red-glow); }
+
+  @media (max-width: 500px) {
+    .role-grid { grid-template-columns: 1fr; }
+    .stats-row { grid-template-columns: repeat(2, 1fr); }
+    .achievements-grid { grid-template-columns: 1fr; }
+  }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="site-header">
+    <div class="campaign-tag">The Story of Us · Campaign 6</div>
+    <h1>ANCIENT ROME</h1>
+    <h2>Rome Didn't Want a King. How Did They Get One? · c. 753 BCE – 476 CE</h2>
+  </div>
+  <div id="content"></div>
+</div>
+
+<script>
+const ROLES = [
+  {
+    id: "senator",
+    name: "Roman Senator",
+    icon: "🏛️",
+    desc: "You serve in the Senate — the governing body of the Roman Republic, made up of Rome's most powerful patrician families.",
+    own: "Political authority, ancestral prestige, wealth, and the Senate's collective power to make law and direct Rome's future.",
+    fear: "A general who puts his army before the Republic. A demagogue who turns the people against the Senate. The day Rome stops being a republic.",
+    want: "A Rome governed by law, by tradition, by the Senate's collective wisdom — exactly as the founders intended.",
+    context: {
+      ch1: "Rome was founded on rejection — rejection of kings, of tyranny, of one person having too much power. Your family's authority descends from the men who threw out the Etruscan kings and said: never again. That 'never again' is what the Senate exists to protect.",
+      ch2: "The Republic works — when everyone follows the rules. Cincinnatus followed the rules perfectly. He took power when Rome needed him and gave it back the moment he didn't. Every Senator should be Cincinnatus. Very few are.",
+      ch3: "The Punic Wars make Rome powerful and wealthy. They also begin the process that will destroy the Republic — the concentration of land in patrician hands, the displacement of small farmers, the growing gap between rich and poor that the Senate refuses to address.",
+      ch4: "Caesar has crossed the Rubicon. The river that no Roman general was permitted to cross with an army. He has crossed it. This is the moment your nightmare becomes real — and your role is either to stop it or to accommodate it.",
+      ch5: "The Senate still exists under the empire. But the emperor's word overrides it. You have all the forms of power — the title, the chamber, the procedures — and almost none of the substance. This is what losing a republic looks like from inside its institutions.",
+      ch6: "The empire is fracturing. The Senate debates while barbarians move. You have governed Rome through seven emperors in the last decade. The institution you serve has outlasted every individual who tried to control it. Whether it can outlast the empire itself is the question your generation will answer."
+    }
+  },
+  {
+    id: "plebeian",
+    name: "Plebeian / Tribune",
+    icon: "✊",
+    desc: "You are a Roman commoner — one of the plebeians who fought for centuries to make the Republic actually work for ordinary people.",
+    own: "The vote. The Tribune's veto — the right to say 'I forbid' to any law that harms the common people. Rights won through generations of struggle.",
+    fear: "A Senate that ignores the Twelve Tables when convenient. A general who promises the people what the Senate won't give them. Winning the rights and then watching them become meaningless.",
+    want: "A Republic that works for everyone — not just the patricians who built it for themselves.",
+    context: {
+      ch1: "The Republic that replaced the kings was a republic for patricians — Rome's noble families. Your people, the plebeians, helped build Rome and had almost no voice in governing it. The story of the Republic is partly the story of your people fighting to be included in what they helped create.",
+      ch2: "The Twelve Tables. Written law that applies to everyone — including the patricians who would prefer to make the rules up as they go. Your people fought for this. The Tribune's veto — 'Veto' means 'I forbid' in Latin — is your people's greatest achievement. One Tribune can stop any law that harms ordinary Romans.",
+      ch3: "The Punic Wars produce wealth that flows mostly to the patricians. Small farmers — your people — lose their land while fighting Rome's wars. They return to find wealthy landowners have taken what they left behind. The Republic that finally gave you rights is now distributing its wealth in ways that hollow those rights out.",
+      ch4: "Caesar offers your people things the Senate never would — land reform, grain distribution, public works. He is also dismantling the Republic that your people died to make inclusive. The choice is genuinely difficult: a Republic that technically includes you but practically ignores you, or an emperor who helps you but rules without your consent.",
+      ch5: "The empire provides bread and circuses — literal grain distributions and entertainment. Your material conditions may actually be better than under the late Republic. Your political voice is gone. Whether that trade-off is acceptable is a question every generation of Romans under the empire had to answer for themselves.",
+      ch6: "The empire is failing. The systems that provided bread and circuses are breaking down. The rights your ancestors fought for — the Tribune's veto, the Twelve Tables — survive as legal forms but mean little when the emperor's soldiers determine what law actually is. You are watching the thing your people built fall apart."
+    }
+  },
+  {
+    id: "soldier",
+    name: "Legionary Soldier",
+    icon: "⚔️",
+    desc: "You serve in the Roman legion — the most disciplined and effective military force the ancient world has ever seen.",
+    own: "Military training, your unit, the eagle standard of your legion, and loyalty to Rome — whichever Rome currently exists.",
+    fear: "Being asked to choose between your general and your Republic. Dying in a civil war against other Romans. An empire too large to defend.",
+    want: "Clear orders, a general worth following, victory, land when you retire, and a Rome worth fighting for.",
+    context: {
+      ch1: "Rome's military power begins with geography — the Italian peninsula gives Rome defensible positions and a central location for projecting power across the Mediterranean. The early Roman army was a citizen militia. Over time it becomes a professional force. That professionalization changes everything about Rome's politics.",
+      ch2: "The Republic's army fights for Rome — the abstract idea, the Senate, the traditions. Cincinnatus commanded that army and returned it to civilian control when the crisis passed. Every general who comes after him is measured against that standard.",
+      ch3: "The Punic Wars transform the Roman army. Hannibal nearly destroys it. Rome rebuilds, reforms, and eventually destroys Carthage. The army that defeats Carthage is harder, more professional, and more dependent on its generals than the citizen militia that preceded it. That dependence matters.",
+      ch4: "Your general has ordered you to cross the Rubicon. You know what this means — every soldier knows what this means. Roman law forbids a general from bringing his army into Italy. Caesar is asking you to help him break that law. What you do next determines Rome's future.",
+      ch5: "Under the empire, the soldier's loyalty shifts from Rome-the-Republic to the emperor personally. The army that was the Republic's instrument becomes the emperor's instrument. When emperors are good this works reasonably well. When emperors are bad the army becomes the only check on power — which means soldiers choose emperors, which means power flows from the sword.",
+      ch6: "The empire is too large to defend with the army Rome can afford. Barbarian groups are crossing borders that Roman legions used to hold. You are being asked to defend everything simultaneously with forces adequate to defend nothing completely. The greatest military machine in history is being stretched past its breaking point."
+    }
+  },
+  {
+    id: "merchant",
+    name: "Merchant / Trader",
+    icon: "⚓",
+    desc: "You trade across the Roman world — from Britain to Egypt, from Spain to Syria — in the greatest commercial network the ancient world has ever seen.",
+    own: "Trading ships, commercial relationships across the empire, knowledge of roads and sea routes, contacts in a dozen provinces.",
+    fear: "Civil war disrupting trade routes. An emperor who seizes merchant wealth. The collapse of the currency that makes empire-wide trade possible.",
+    want: "Pax Romana — the Roman peace that keeps roads safe, ports open, currency stable, and the empire's vast market accessible.",
+    context: {
+      ch1: "Rome's geography makes it a trading hub — central Mediterranean location, rivers connecting the interior to the sea, Italian peninsula extending toward Africa and the east. The merchant who understands Roman geography understands Roman power.",
+      ch2: "The Republic creates the legal infrastructure that makes large-scale commerce possible — contract law, property rights, commercial courts. The Twelve Tables that the plebeians fought for also protect merchant contracts. Law is the foundation of commerce.",
+      ch3: "The Punic Wars open the western Mediterranean to Roman commerce. Carthage — Rome's greatest commercial rival — is destroyed. The trade routes that Carthaginian merchants controlled now run through Roman ports. War and commerce, in Rome, are the same strategy expressed differently.",
+      ch4: "Civil war is commerce's worst enemy. When Caesar and Pompey fight, when Antony and Octavian fight, trade routes close, currency becomes unreliable, contracts are unenforceable. You survive by staying neutral and keeping your networks intact across political changes.",
+      ch5: "The Pax Romana — the Roman Peace established by Augustus — is the greatest commercial period in the ancient world. Safe roads across Europe and the Middle East. A unified currency. A legal system that protects contracts from Britain to Babylon. The empire that your senator neighbors built for political reasons turns out to be extraordinarily good for commerce.",
+      ch6: "The collapse begins economically before it becomes military. Currency debasement — emperors reducing the silver content of coins to pay their armies — produces inflation. Trade routes become unsafe. The commercial network that held the empire together financially begins to fray. The merchant sees the fall coming before the general does."
+    }
+  },
+  {
+    id: "conquered",
+    name: "Citizen of a Conquered Land",
+    icon: "🌿",
+    desc: "Rome has conquered your homeland. You are not a Roman citizen — but you live under Roman law, pay Roman taxes, and serve Roman interests.",
+    own: "Your community, your traditions, your language, your gods — and whatever dignity you can maintain under occupation.",
+    fear: "That Roman culture will replace your own. That your children will grow up Roman and forget what came before. That resistance will cost your community everything.",
+    want: "To maintain your people's identity, traditions, and dignity while navigating the reality of Roman power.",
+    context: {
+      ch1: "Rome began as one city among many in Italy. It conquered its neighbors — the Latins, the Etruscans, the Samnites — one by one. Each conquest brought more people under Roman rule who were not Roman. Your people were among them. The Republic that Romans celebrate as a triumph of freedom was built partly on the conquest of people who had their own freedoms.",
+      ch2: "Roman law applies to you — but not equally. Roman citizens have rights that you do not. The Twelve Tables that Romans celebrate as the foundation of justice were written for Romans. Your disputes are settled by Roman magistrates who may not know your language, your customs, or your traditions.",
+      ch3: "The Punic Wars expand Rome's reach across the Mediterranean. Each expansion brings more conquered peoples into the Roman system. Some conquered peoples eventually become Roman citizens — but it takes generations and is never automatic. In the meantime you navigate a system that was not built for you.",
+      ch4: "Caesar's civil war is fought between Romans over Roman power. For your people it matters primarily in terms of which Roman wins and what they will demand. Caesar is somewhat more interested in extending citizenship than his opponents. Octavian will eventually be more systematic about it. But citizenship extension is always on Rome's terms, not yours.",
+      ch5: "The empire's achievement is real and complicated. Roman roads connect your region to the wider world. Roman peace reduces the local conflicts that used to threaten your community. Roman commerce creates economic opportunity. These are genuine benefits. They arrive alongside Roman taxation, Roman cultural pressure, and the permanent subordination of your traditions to Roman ones.",
+      ch6: "As the empire weakens, your region faces new threats — the barbarian groups that cross the former frontiers. The Roman military that used to protect you is stretched thin. The question your community faces: was Roman protection worth what it cost — and what do you do now that the protection is failing?"
+    }
+  },
+  {
+    id: "christian",
+    name: "Early Christian",
+    icon: "✝️",
+    desc: "You follow the teachings of Jesus of Nazareth in a Roman Empire that finds your faith strange, suspicious, and occasionally dangerous.",
+    own: "Your faith, your community of fellow believers, the letters and teachings being collected and shared across the empire's trade routes.",
+    fear: "Imperial persecution. Being blamed for Rome's problems. The faith being distorted by those who use it for power rather than living it.",
+    want: "To practice your faith freely, to spread the teachings you believe are true, and to live by a different set of values than the empire demands.",
+    context: {
+      ch1: "Christianity has not yet arrived in this chapter — it emerges from Jewish tradition in the Roman province of Judea approximately in the first century CE. But the Roman world you will navigate is already being shaped by the forces that will both persecute and eventually adopt your faith.",
+      ch2: "The Roman legal tradition — the Twelve Tables, the system of courts — will eventually both persecute Christians and protect them. The same legal infrastructure that makes Roman commerce possible will be used to prosecute Christians for refusing to sacrifice to Roman gods, and later to officially recognize Christianity as a legal religion.",
+      ch3: "Judaism — from which Christianity emerges — exists in Roman territories under varying conditions of tolerance. Jewish communities maintain their religious practices under Roman rule, with periodic conflict. The faith you will eventually follow grows from this tradition and inherits both its resilience and its complicated relationship with Roman power.",
+      ch4: "The civil wars that produce the empire create the conditions for Christianity's emergence and spread. Augustus's Pax Romana — the Roman peace — creates the safe roads and unified culture through which the faith travels. The empire that persecutes Christians also, unintentionally, creates the infrastructure that spreads their message.",
+      ch5: "This is your chapter. The Roman Empire requires its subjects to honor Roman gods and the emperor's divine status. You refuse — not from stubbornness but from conviction. The refusal is dangerous. Christians are blamed for fires, plagues, and military defeats — scapegoated for problems the empire cannot solve. You meet in homes, in catacombs, in the spaces the empire's attention does not reach.",
+      ch6: "Constantine. The emperor who converts to Christianity in 312 CE and issues the Edict of Milan — making Christianity a legal religion. The faith that was persecuted becomes protected. The community that met in catacombs builds churches. The religion that the empire tried to destroy becomes the empire's official faith. The transformation is extraordinary — and it comes with its own complications."
+    }
+  }
+];
+
+const CHAPTERS = [
+  {
+    id: "ch1",
+    number: 1,
+    title: "Chapter 1 — Seven Hills and a Story",
+    subtitle: "Geography, Founding Myths, and Why Rome Rejected Kings",
+    scene: "Rome is built on seven hills above the Tiber River in central Italy. The hills provide defense. The river provides water, trade, and access to the sea. The central Italian location means Rome sits at the crossroads of the Mediterranean world — close enough to influence everything, protected enough to build deliberately. Around 509 BCE, Rome does something extraordinary: it throws out its king. The Etruscan king Tarquinius Superbus — Tarquin the Proud — is expelled and the Romans declare they will never have a king again. They mean it so deeply that they make 'king' (rex) an insulting word that no Roman leader will use for five hundred years. The question this chapter asks: what makes someone so angry at a king that they redesign their entire government to make sure it never happens again?",
+    historyNote: "<strong>The Founding of Rome:</strong> Roman tradition dated the city's founding to 753 BCE, attributed to twin brothers Romulus and Remus. The more historically significant founding moment is 509 BCE — the expulsion of the last Etruscan king and the establishment of the Roman Republic. The Romans' rejection of monarchy was so complete that they built an entire system of government around preventing any single person from accumulating too much power: two consuls instead of one ruler, annual terms, the Senate's collective authority, and eventually the tribunes' veto.",
+    journalPrompt: "Rome built its entire government system around one idea: no single person should have too much power. What does that tell you about what the Romans were most afraid of — and where do you think that fear came from?",
+    poisonRoles: ["conquered"],
+    discussAfter: false,
+    choices: {
+      senator: [
+        { text: "Study the story of Tarquin's expulsion — understand what tyranny looks like so Rome can recognize it coming", hint: "Learn from the past to protect the future", outcome: "good", result: "The story of Tarquin teaches something specific: tyranny does not announce itself. It arrives gradually — a king who ignores the Senate here, who acts without consulting the people there, who treats his position as personal property rather than public trust. The Senate you serve exists specifically to prevent this pattern from repeating. Understanding how it happened is the first step in making sure it doesn't happen again.", statChange: { food: 5, power: 20, wealth: 5, standing: 15 } },
+        { text: "Establish the Senate's procedures carefully — the rules that prevent tyranny must be written down and followed", hint: "Institutional design as protection", outcome: "good", result: "The procedures matter as much as the principles. Two consuls elected annually — so no one person rules too long. The Senate's collective approval required for major decisions. The right of any Tribune to veto harmful legislation. These are not just rules — they are the architecture of a system designed to make tyranny structurally impossible. The architecture only holds if everyone follows it.", statChange: { food: 5, power: 20, wealth: 5, standing: 20 } },
+        { text: "Honor the founding myth of Romulus and Remus — Rome's divine origin legitimizes its institutions", hint: "Sacred foundation for civic institutions", outcome: "good", result: "The story of Romulus and Remus — twins raised by a wolf, founding Rome on the seven hills — gives Roman institutions a sacred quality that makes them harder to dismantle. Rome was founded by the gods' favor. Its institutions carry that favor. The Senator who understands this understands why Romans defend their Republic with something approaching religious devotion.", statChange: { food: 5, power: 15, wealth: 5, standing: 15 } }
+      ],
+      plebeian: [
+        { text: "Participate in the Republic — even if its benefits flow mostly to patricians, participation matters", hint: "Engage with what exists while fighting for what should be", outcome: "neutral", result: "The early Republic is a patrician republic — the Senate is filled with noble families, the consulship goes to patricians, the laws favor those who already have power. Your participation is real but limited. The system that replaced the king is better than the king — and it is not yet what it should be. You participate and you fight for more.", statChange: { food: 5, power: 10, wealth: 5, standing: 10 } },
+        { text: "Join the Conflict of the Orders — fight for plebeian rights within the Republic", hint: "Reform the system from within", outcome: "good", result: "The Conflict of the Orders — the centuries-long struggle between plebeians and patricians for political equality — is one of Rome's most important stories. Your people fight for the right to hold office, for written laws that apply to everyone, for a Tribune who can protect ordinary Romans from patrician abuse. The fight is long and it works — partially, slowly, imperfectly.", statChange: { food: 5, power: 20, wealth: 5, standing: 15 } },
+        { text: "Demand written laws — unwritten law is always written in the interests of those who have power", hint: "Transparency as protection for the powerless", outcome: "good", result: "The demand for written law is your people's most important insight. When law exists only in the minds of patrician judges, patricians can change it whenever it inconveniences them. Written law that applies to everyone is the foundation of justice — not perfect justice, but justice that can be appealed to, argued about, and improved. The Twelve Tables your people will eventually win are the result of exactly this demand.", statChange: { food: 5, power: 20, wealth: 5, standing: 15 } }
+      ],
+      soldier: [
+        { text: "Train with the citizen militia — the early Roman army is Rome's citizens fighting for their own city", hint: "Military service as civic duty", outcome: "good", result: "The citizen militia is the purest expression of Republican ideals — citizens who govern themselves also defend themselves. The soldier who fights for Rome because Rome is his community fights differently than the mercenary who fights for pay. The early Roman army is extraordinarily effective partly because of this — men defending what they built are harder to break than men serving a paymaster.", statChange: { food: 5, power: 15, wealth: 5, standing: 15 } },
+        { text: "Study Rome's geographic advantage — the seven hills, the Tiber, the central Italian position", hint: "Geography as military strategy", outcome: "good", result: "Rome's location is a military asset that compounds over time. The seven hills give defenders extraordinary advantages. The Tiber provides both a barrier and a supply line. The central Italian position means Rome can project force in all directions. The soldier who understands geography understands why Rome, specifically, was able to build what it built.", statChange: { food: 5, power: 15, wealth: 10, standing: 15 } },
+        { text: "Fight the early Italian wars — Rome's expansion begins close to home", hint: "Build military experience through early campaigns", outcome: "good", result: "The early Italian wars are Rome's military education. Fighting the Samnites, the Latins, the Etruscans — each campaign teaches something about discipline, logistics, and the kind of adaptability that will eventually make the Roman legion the most effective fighting force in the ancient world. The army that will eventually defeat Carthage is being built in these early Italian campaigns.", statChange: { food: 5, power: 20, wealth: 5, standing: 15 } }
+      ],
+      merchant: [
+        { text: "Establish trading relationships along the Tiber — Rome's river position creates commercial opportunity", hint: "Geography enabling commerce", outcome: "good", result: "The Tiber connects Rome to the sea and the sea connects Rome to the Mediterranean world. The commercial position that Rome's geography creates is extraordinary — central enough to reach everything, elevated enough to be defensible, riverine enough to move goods efficiently. The merchant who establishes Tiber trading relationships early is positioned for everything that follows.", statChange: { food: 5, power: 5, wealth: 20, standing: 15 } },
+        { text: "Trade with the Etruscans — they are sophisticated, wealthy, and connected to Greek commercial networks", hint: "Commercial relationships across political divisions", outcome: "good", result: "The Etruscans — the kings Rome will eventually expel — are also sophisticated traders with connections to Greek markets and eastern luxury goods. Your commercial relationship with Etruscan merchants gives you access to networks that Roman geography alone does not provide. Commerce, as always, crosses political lines.", statChange: { food: 5, power: 5, wealth: 20, standing: 10 } },
+        { text: "Support the Republic's legal institutions — contract law protects merchants as much as citizens", hint: "Commerce requires law", outcome: "good", result: "The Republic's greatest commercial gift is legal infrastructure. Contract law that courts enforce. Property rights that patricians cannot arbitrarily override. The emerging legal system makes long-term commercial relationships possible — you can promise delivery in six months because courts will enforce the contract if you fail. Commerce and law grow together in Rome.", statChange: { food: 5, power: 10, wealth: 15, standing: 15 } }
+      ],
+      conquered: [
+        { text: "Observe the Roman system carefully — understanding how it works is the first step in navigating it", hint: "Knowledge as survival tool", outcome: "neutral", result: "The Republic that replaced the Etruscan kings is celebrated by Romans as a triumph of freedom. You notice that this freedom was won by Romans, for Romans. Your people were not consulted about whether they wanted to be part of Rome's Republic. The system that Romans call liberation you experience as a different kind of constraint. Understanding the difference between how Rome describes itself and how it actually works is the beginning of wisdom.", statChange: { food: 5, power: 10, wealth: 5, standing: 5 }, poison: true },
+        { text: "Maintain your community's traditions while adopting enough Roman practice to survive", hint: "Cultural preservation through accommodation", outcome: "neutral", result: "The balance is difficult and necessary. Complete resistance to Roman ways is dangerous — Rome responds to resistance with force. Complete adoption means losing what makes your community itself. The path your people find — maintaining language, religion, and customs in private while presenting a Roman face in public — is the path most conquered peoples navigate. It costs something every day.", statChange: { food: 5, power: 5, wealth: 5, standing: 10 }, poison: true },
+        { text: "Seek Roman citizenship — the rights Romans celebrate are worth having even if the process of obtaining them is unjust", hint: "Work toward inclusion in the system", outcome: "good", result: "The path to Roman citizenship is long and unequal. Latin allies — the people closest to Rome — have more rights than distant conquered peoples. The process of extending citizenship is always on Rome's terms and always slower than justice would require. But citizenship, when it arrives, brings real protections — legal rights, commercial access, protection from arbitrary treatment. The destination is worth pursuing even when the process is unjust.", statChange: { food: 5, power: 15, wealth: 10, standing: 15 }, poison: false }
+      ],
+      christian: [
+        { text: "Understand the Roman world you will eventually navigate — the empire being built now will shape everything your faith faces", hint: "Know the world before your faith arrives in it", outcome: "good", result: "Christianity does not yet exist in this chapter — it will emerge from Jewish tradition in Roman-controlled Judea roughly five centuries from now. But the Roman world being built in this chapter — its roads, its legal system, its trade networks, its Greek-influenced culture — will be the world through which your faith spreads. The empire that will persecute Christians will also, unintentionally, create the infrastructure through which Christianity becomes a world religion.", statChange: { food: 5, power: 5, wealth: 5, standing: 10 } },
+        { text: "Observe how Rome treats the Jewish communities in its territories — your faith will grow from that tradition", hint: "The roots of your faith in Roman territory", outcome: "good", result: "Jewish communities exist under Roman rule in complex relationship — permitted to practice their religion, subject to Roman taxation and law, periodically in tension with Roman religious demands. The faith you follow will emerge from this tradition and inherit both its resilience under pressure and its complicated relationship with Roman power. Understanding how Rome treats religious minorities now helps you understand what your community will face.", statChange: { food: 5, power: 10, wealth: 5, standing: 10 } },
+        { text: "Build community — the faith will survive because people who share it take care of each other", hint: "Community as foundation", outcome: "good", result: "The earliest Christian communities survive Roman pressure through exactly this — mutual care, shared resources, networks of support that the empire cannot easily reach. The community you build now, long before Christianity faces its greatest tests, establishes the pattern of care and mutual support that will sustain the faith through persecution. The empire has legions. Your faith has communities. Both are forms of power.", statChange: { food: 10, power: 10, wealth: 5, standing: 15 } }
+      ]
+    }
+  },
+  {
+    id: "ch2",
+    number: 2,
+    title: "Chapter 2 — The Republic That Worked",
+    subtitle: "Cincinnatus, the Twelve Tables, and the System at Its Best",
+    scene: "It is 458 BCE. Rome is at war with a neighboring people — the Aequi — and the Roman army is surrounded and in danger. The Senate sends messengers to a farm outside Rome, where a man named Lucius Quinctius Cincinnatus is plowing his fields. They tell him: Rome needs you. He washes his hands, puts on his toga, and crosses the river to Rome. He is appointed dictator — given unlimited power to save the Republic. He defeats the Aequi in fifteen days. Then he resigns his power and goes back to his farm. He has been dictator for sixteen days. This moment — a man given unlimited power who gives it back voluntarily — becomes the Roman Republic's defining ideal. Every leader who comes after Cincinnatus is measured against this standard.",
+    historyNote: "<strong>The Twelve Tables (451-449 BCE):</strong> Rome's first written legal code — inscribed on twelve bronze tablets displayed in the Forum so every citizen could see them. The plebeians demanded written law because unwritten law could be interpreted however patrician judges preferred. The Twelve Tables established that law applied to everyone — citizens, patricians, and plebeians alike. Many of their principles — innocent until proven guilty, the right to face your accuser, written contracts — still appear in modern legal systems including the United States.",
+    journalPrompt: "Cincinnatus was given unlimited power and gave it back voluntarily in sixteen days. What does that story tell Romans about what a leader should be — and why do you think Romans kept telling it for centuries?",
+    poisonRoles: ["plebeian"],
+    discussAfter: true,
+    discussPrompt: "Your table just experienced the Roman Republic from one role's perspective. The table next to you experienced the same Republic from a completely different position. Before you continue — spend 90 seconds comparing: what did the Republic offer your role that the table next to you didn't get — and what did they have that you didn't?",
+    choices: {
+      senator: [
+        { text: "Celebrate Cincinnatus as the model every Roman leader should follow — voluntary restraint of power", hint: "Establish the ideal", outcome: "good", result: "Cincinnatus becomes what the Roman Republic holds up as its highest ideal — the citizen who serves when called and returns to private life when the service is complete. The Senate celebrates him not despite his voluntary surrender of power but because of it. The man who could have kept power and didn't is more trustworthy than the man who never had power to give up. This ideal will haunt every Roman leader who comes after.", statChange: { food: 5, power: 20, wealth: 5, standing: 20 } },
+        { text: "Support the Twelve Tables — written law protects the Senate's authority as much as it protects ordinary Romans", hint: "Law as institutional protection", outcome: "good", result: "The Twelve Tables constrain the Senate as much as they constrain everyone else — and that is exactly their value. A Senate that operates by unwritten rules it can change at will is not a Senate that commands respect. A Senate that operates within a written legal framework that applies to everyone — including senators — is an institution that can claim genuine authority. You support the Twelve Tables because you understand this.", statChange: { food: 5, power: 15, wealth: 5, standing: 20 } },
+        { text: "Ensure the tripartite government functions — three branches checking each other is Rome's greatest innovation", hint: "Institutional balance", outcome: "good", result: "The three-part structure — Senate, Consuls, Assembly — is Rome's answer to the question of how to distribute power so no one person or body accumulates too much. The Senate advises and controls finances. The Consuls execute decisions and command armies — but only for one year each. The Assembly votes on laws and elections. Each branch checks the others. The system only works when everyone follows the rules. Right now, they mostly do.", statChange: { food: 5, power: 20, wealth: 5, standing: 20 } }
+      ],
+      plebeian: [
+        { text: "Fight for the Twelve Tables — unwritten law always favors those who write it", hint: "Demand written law", outcome: "good", result: "The struggle for the Twelve Tables is your people's greatest legislative victory. When patrician judges can interpret law however they choose, the interpretation always seems to favor patricians. Written law that anyone can read — displayed publicly in the Forum — cannot be secretly changed to suit the powerful. Your people's demand for written law is not just about fairness in the moment. It is about building a system that can be held accountable.", statChange: { food: 5, power: 25, wealth: 5, standing: 15 } },
+        { text: "Establish the Tribune's veto — the right to say 'I forbid' to any law that harms ordinary Romans", hint: "The veto as protection", outcome: "good", result: "The Tribune's veto — veto means 'I forbid' in Latin — is your people's most powerful tool. One Tribune, elected by the plebeian assembly, can stop any law the Senate passes that threatens ordinary Romans. This single power — the ability to say no — is the check that the Republic needs to actually function for everyone. Future systems of government will study this mechanism and use it themselves.", statChange: { food: 5, power: 25, wealth: 5, standing: 15 } },
+        { text: "Recognize that even with these gains the Republic still favors patricians — the fight continues", hint: "Honest assessment of partial progress", outcome: "neutral", result: "The Twelve Tables and the Tribune's veto are genuine victories. The Republic that emerges from the Conflict of the Orders is more inclusive than what preceded it. It is not yet what it should be — patricians still hold most offices, control most wealth, and dominate most decisions. The gains are real and insufficient simultaneously. Your people celebrate what was won and keep fighting for what wasn't.", statChange: { food: 5, power: 15, wealth: 5, standing: 10 }, poison: true }
+      ],
+      soldier: [
+        { text: "Fight alongside Cincinnatus — serve under the citizen-dictator who embodies the Republic's ideal", hint: "Serve the ideal", outcome: "good", result: "The campaign under Cincinnatus is everything the Roman Republic says military service should be — a citizen general commanding citizen soldiers, defeating the enemy efficiently, returning power to the Senate when the job is done. You are present for the moment that becomes Rome's defining story. Fifteen days of campaign. A lifetime of legend.", statChange: { food: 5, power: 20, wealth: 5, standing: 20 } },
+        { text: "Train with the developing legionary system — Rome is professionalizing its army", hint: "Military modernization", outcome: "good", result: "The Roman military is evolving. The early citizen militia is becoming a more professional force with standardized equipment, systematic training, and tactical formations that other armies cannot match. The legion — organized in cohorts, armed with pilum and gladius — is being developed through exactly these years of Italian warfare. You are part of the army's transformation from militia to the most effective fighting force the ancient world will see.", statChange: { food: 5, power: 20, wealth: 5, standing: 15 } },
+        { text: "Note what Cincinnatus does that later generals will not — he gives the power back", hint: "The standard that will be violated", outcome: "good", result: "Every soldier knows what Cincinnatus did. Every soldier also knows how unusual it is. The general who is given unlimited power and surrenders it voluntarily is a figure from legend precisely because it happens so rarely. You remember this. When future generals start making different choices about power, you will measure those choices against Cincinnatus — the man who could have kept it all and chose not to.", statChange: { food: 5, power: 20, wealth: 5, standing: 15 } }
+      ],
+      merchant: [
+        { text: "Benefit from the Twelve Tables — written contract law makes long-term commercial relationships reliable", hint: "Law enabling commerce", outcome: "good", result: "The Twelve Tables' protection of written contracts is transformative for commerce. Before written law, commercial agreements depended on personal relationships and patrician judges' goodwill. With written contract law, you can make binding agreements with people you barely know — the legal system enforces them regardless of personal connection. Long-distance trade, complex commercial relationships, and the scaling of commerce all become possible when contracts are reliably enforceable.", statChange: { food: 5, power: 10, wealth: 20, standing: 15 } },
+        { text: "Support the Republic's stability — stable government is the best environment for commerce", hint: "Political stability as commercial foundation", outcome: "good", result: "The Republic, when it functions as designed, produces the stability that commerce requires. Annual elections prevent the accumulation of power that produces the capricious decisions that disrupt markets. The Senate's collective governance distributes risk — no single bad decision-maker can destroy everything. The system's checks and balances are also commerce's best protection against the kind of arbitrary power that expropriates merchant wealth.", statChange: { food: 5, power: 10, wealth: 20, standing: 15 } },
+        { text: "Invest in Rome's road system — the roads being built connect markets across Italy", hint: "Infrastructure investment", outcome: "good", result: "Rome's roads are the most significant commercial infrastructure investment in the ancient world. Straight, well-drained, wide enough for carts — the Roman roads connect the Italian peninsula in ways that make commerce practical at scale. The merchant who invests in road connections — warehouses at key junctions, relationships with the road-station operators — is building the commercial network that will eventually span a continent.", statChange: { food: 5, power: 5, wealth: 20, standing: 15 } }
+      ],
+      conquered: [
+        { text: "Study the Twelve Tables carefully — some of their protections apply to you even as a non-citizen", hint: "Find the protections that exist", outcome: "neutral", result: "The Twelve Tables protect some rights of non-citizens — particularly in commercial transactions and property disputes. The protections are fewer than what Roman citizens receive, but they are real. Understanding exactly what legal protections you have — and what you do not — is essential for navigating Roman governance. The law that was written for Romans sometimes protects those it was not written for.", statChange: { food: 5, power: 10, wealth: 10, standing: 10 } },
+        { text: "Observe how the Republic handles the people it has conquered — learn what Rome's ideals look like in practice", hint: "Theory versus practice", outcome: "neutral", result: "The Republic celebrates liberty and law. It also maintains conquered peoples in conditions of unequal legal status, demands tribute, and imposes Roman magistrates on communities that had their own governance systems. The gap between Rome's ideals and Rome's practice is visible from your position in a way it is not visible to Roman citizens. This gap — between what Rome says it is and what it does — will define your relationship with Roman power.", statChange: { food: 5, power: 10, wealth: 5, standing: 5 }, poison: true },
+        { text: "Find allies among the plebeians — people fighting for inclusion in Roman governance may be natural partners", hint: "Coalition building", outcome: "good", result: "The plebeians fighting for inclusion in the Roman Republic are not in the same position as your people — they are Roman citizens fighting for full Roman rights, while your people are working toward citizenship at all. But the argument your people make and the argument plebeians make share a foundation: the Republic should mean what it says about equality under law. That shared foundation creates the possibility of alliance.", statChange: { food: 5, power: 15, wealth: 10, standing: 15 } }
+      ],
+      christian: [
+        { text: "Recognize that the legal system being built now will eventually both persecute and protect your faith", hint: "Law as double-edged tool", outcome: "good", result: "The Twelve Tables establish the principle that law applies to everyone — a principle that will eventually be used against Christians (prosecuted for refusing to honor Roman gods) and for Christians (when Constantine legalizes the faith, the same legal infrastructure protects it). The legal system your faith will navigate is being built in this chapter. It is imperfect, it applies unequally, and it is the best protection available in the Roman world.", statChange: { food: 5, power: 10, wealth: 5, standing: 10 } },
+        { text: "Study the Tribune's veto — the idea that one person can say 'I forbid' to protect the vulnerable will matter to your faith", hint: "The veto principle and religious protection", outcome: "good", result: "The Tribune's veto — the right of one elected official to protect ordinary people from powerful institutions — establishes a principle your faith will eventually need. When Christianity faces persecution, the argument that the powerful should not be able to crush the vulnerable without check is exactly the argument that eventually produces legal protection for minority faiths. The principle being established now will serve you later.", statChange: { food: 5, power: 10, wealth: 5, standing: 10 } },
+        { text: "Build the community structures that will sustain your faith through whatever comes", hint: "Prepare for the long journey", outcome: "good", result: "The faith you carry will face challenges your generation cannot fully anticipate. The community structures — mutual aid, shared resources, networks of care — that you build now will sustain future believers through persecution, displacement, and the slow grinding pressure of living as a minority faith in a powerful empire. You build for people you will never meet.", statChange: { food: 10, power: 10, wealth: 5, standing: 15 } }
+      ]
+    }
+  },
+  {
+    id: "ch3",
+    number: 3,
+    title: "Chapter 3 — The Republic Under Pressure",
+    subtitle: "The Punic Wars, Social Fractures, and the Cost of Empire",
+    scene: "It is 146 BCE. Carthage — Rome's greatest rival for Mediterranean dominance — has just been destroyed. The third and final Punic War is over. Rome has won a victory so complete that the city of Carthage is demolished, its population enslaved, and legend says the ground was salted so nothing would grow there again. Rome now controls the western Mediterranean. But the victories that made Rome powerful are also creating the conditions that will eventually destroy the Republic. Small farmers who left their land to fight Rome's wars return to find wealthy landowners have bought or seized their fields. The gap between rich and poor is growing in ways the Republic's institutions were not designed to address.",
+    historyNote: "<strong>The Punic Wars (264-146 BCE):</strong> Three wars between Rome and Carthage for control of the Mediterranean. Hannibal's crossing of the Alps with war elephants and his devastating victories in Italy remain among history's most audacious military campaigns. Rome's eventual victory destroyed its greatest rival and gave it control of Spain, North Africa, and the western Mediterranean — but the wars also transformed Roman society in ways that ultimately threatened the Republic. The concentration of land in wealthy hands and the displacement of small farmers created the social tensions that reformers like the Gracchi brothers would try — and fail — to address.",
+    journalPrompt: "The Punic Wars made Rome the most powerful civilization in the Mediterranean — and created the social problems that would eventually destroy the Republic. Can a civilization's greatest victories also contain the seeds of its downfall?",
+    poisonRoles: ["plebeian", "conquered"],
+    discussAfter: false,
+    choices: {
+      senator: [
+        { text: "Celebrate the victory over Carthage — Rome's dominance of the Mediterranean is the Republic's greatest achievement", hint: "Triumph and consolidation", outcome: "good", result: "The victory over Carthage is genuinely extraordinary — Rome has eliminated its greatest rival and secured the Mediterranean. The Senate's management of three generations of warfare produced the most powerful state in the ancient world. The celebration is deserved. The social costs of how that victory was achieved are also real and the Senate is not adequately addressing them. Both things are true.", statChange: { food: 5, power: 20, wealth: 20, standing: 15 } },
+        { text: "Address the land problem — displaced farmers are becoming a political crisis", hint: "Reform to preserve the Republic", outcome: "good", result: "The Gracchi brothers — Tiberius and Gaius — will attempt land reform and be killed for it. You attempt something more modest and survive — but accomplish less. The land concentration problem that the Punic Wars accelerated is real and the Senate that refuses to address it is making itself vulnerable to the demagogue who will eventually offer the dispossessed what the Senate wouldn't. The reform you achieve is incomplete. It is better than nothing.", statChange: { food: 10, power: 15, wealth: -10, standing: 10 } },
+        { text: "Resist the Gracchi brothers' land reform — the Senate's property rights must be protected", hint: "Conservative institutional defense", outcome: "bad", result: "The Gracchi brothers are killed. The land reform fails. The dispossessed farmers who needed land remain dispossessed. They become the social base for the generals and demagogues who will eventually offer them what the Senate refused — and take the Republic in exchange. The Senate's defense of property rights over social stability is politically successful in the short term and catastrophic in the long term.", statChange: { food: -5, power: 10, wealth: 15, standing: 10 } }
+      ],
+      plebeian: [
+        { text: "Support the Gracchi brothers — their land reform addresses what the Republic promised but never delivered", hint: "Support reform", outcome: "good", result: "Tiberius and Gaius Gracchus propose land reform that would distribute public land to the dispossessed farmers who served in Rome's wars. It is not radical — it simply enforces limits on land ownership that already exist in Roman law but have been ignored by wealthy landowners for generations. The Senate kills Tiberius. Later it kills Gaius. Your people's most effective advocates are murdered by the institution that claims to serve Rome's interests.", statChange: { food: 10, power: 20, wealth: 5, standing: 10 } },
+        { text: "Recognize the trap — any general who offers the people what the Senate won't will get their loyalty, regardless of what he wants in return", hint: "See the danger coming", outcome: "good", result: "The pattern becomes clear: the Senate refuses to address the legitimate grievances of ordinary Romans. A general offers to address those grievances — land, grain, security — in exchange for loyalty. The people choose the general. The Republic dies. You see this trap before it fully closes. Understanding it does not stop it. But the analysis you develop — that the Senate's refusal to reform makes Caesar possible — is historically accurate.", statChange: { food: 5, power: 20, wealth: 5, standing: 10 } },
+        { text: "Survive the displacement — maintain community while the Republic fails to serve your people", hint: "Community resilience through institutional failure", outcome: "neutral", result: "The Republic is not serving your people. The land you or your family farmed is gone. The city's crowded insulae — apartment buildings — are where displaced farmers end up. You build community in the city, maintain mutual support networks, and wait. Someone will eventually offer your people what the Republic withheld. Whether that person will be trustworthy is a different question from whether you will accept the offer.", statChange: { food: 5, power: 10, wealth: 5, standing: 5 }, poison: true }
+      ],
+      soldier: [
+        { text: "Fight in the Punic Wars — the military campaign that defines Rome", hint: "Serve in the defining conflict", outcome: "good", result: "The Punic Wars are the military experience that defines this generation of Romans. Hannibal's invasion — crossing the Alps with war elephants, winning three catastrophic battles against Roman armies — tests Rome as nothing before has. Rome's response — refusing to surrender, rebuilding its armies, adapting its tactics, eventually carrying the war to Africa — demonstrates the Republic's military resilience. You are part of that resilience.", statChange: { food: 5, power: 20, wealth: 10, standing: 20 } },
+        { text: "Return home to find your farm gone — the soldier's reward for defending Rome", hint: "The veteran's betrayal", outcome: "bad", result: "You left your farm to fight Rome's wars for fifteen years. When you return, a wealthy landowner has acquired your family's fields through debt purchase or simple seizure while you were gone. The Republic you defended did not defend your property while you were defending its property. The soldier who discovers this — and thousands do — becomes the social base for anyone who promises land redistribution. That person will be Julius Caesar.", statChange: { food: -10, power: 5, wealth: -15, standing: 5 } },
+        { text: "Follow Marius — the general who reforms the army and recruits the dispossessed", hint: "Military reform as social force", outcome: "neutral", result: "Gaius Marius reforms the Roman army — opening it to men without property, providing equipment from the state, promising land grants upon discharge. His soldiers' loyalty is to Marius personally rather than to Rome abstractly. This is the military reform that makes Caesar possible — the professional army loyal to its general rather than the Republic. You join this army and understand, later, what you participated in.", statChange: { food: 10, power: 15, wealth: 10, standing: 10 } }
+      ],
+      merchant: [
+        { text: "Profit from the Punic Wars — Rome's victory opens the western Mediterranean to Roman commerce", hint: "War as commercial opportunity", outcome: "good", result: "Carthage's destruction eliminates Rome's greatest commercial rival. The trade routes Carthaginian merchants controlled — Spanish silver, North African grain, western Mediterranean luxury goods — now flow through Roman commercial networks. Your investment in post-war commercial expansion is rewarded as Rome's commercial reach expands to match its military reach.", statChange: { food: 5, power: 5, wealth: 25, standing: 15 } },
+        { text: "Note the growing inequality — concentrated wealth destabilizes the markets you depend on", hint: "Commercial risk assessment of social inequality", outcome: "good", result: "The concentration of land in wealthy hands and the displacement of small farmers creates a social instability that eventually disrupts commerce. Markets depend on people having money to buy things. Dispossessed farmers flooding Rome's cities create social tension but not purchasing power. The inequality that enriches some merchants in the short term destabilizes the social conditions that commerce requires in the long term.", statChange: { food: 5, power: 10, wealth: 15, standing: 10 } },
+        { text: "Invest in provincial commerce — the newly conquered territories are commercial opportunities", hint: "Empire as market", outcome: "good", result: "The territories Rome acquires through the Punic Wars — Spain, North Africa, eventually Greece — are commercial opportunities as much as military conquests. Provincial governors need commercial suppliers. Provincial populations need imported goods. The commercial networks connecting Rome to its provinces are being built now. The merchant who builds those networks early benefits from Rome's expansion for generations.", statChange: { food: 5, power: 5, wealth: 25, standing: 15 } }
+      ],
+      conquered: [
+        { text: "Watch Rome destroy Carthage and understand what total defeat looks like", hint: "Witness the consequence of resistance", outcome: "neutral", result: "The destruction of Carthage — a city demolished, its population enslaved, its fields reportedly salted — sends a message to every people living under or near Roman power. Rome does not simply conquer. When it decides to make an example, it erases. The lesson is not lost on your community. The calculation of how to navigate Roman power includes understanding what maximum Roman displeasure looks like.", statChange: { food: 5, power: 5, wealth: 5, standing: 5 }, poison: true },
+        { text: "Navigate the expanding Roman provincial system — find the spaces where your community can maintain itself", hint: "Adaptation under empire", outcome: "neutral", result: "The provincial system Rome builds to administer conquered territories is extractive and bureaucratic. It demands taxes, military service, and deference to Roman magistrates. It also provides — imperfectly, unevenly — Roman roads, Roman peace, and Roman commercial access. Your community navigates this system finding the spaces where Roman administration creates opportunity alongside obligation.", statChange: { food: 5, power: 10, wealth: 10, standing: 10 }, poison: true },
+        { text: "Maintain your religious practices — Rome generally tolerates conquered peoples' religions", hint: "Religious continuity under Roman rule", outcome: "good", result: "Rome's religious policy toward conquered peoples is generally tolerant — local gods are often incorporated into the Roman pantheon rather than suppressed. Your community's religious practices continue, watched carefully but not actively suppressed. This tolerance has limits — Roman gods must receive their proper honors and the emperor's divine status must be acknowledged. Within those limits, your faith survives.", statChange: { food: 5, power: 10, wealth: 5, standing: 15 } }
+      ],
+      christian: [
+        { text: "Observe how Rome treats minority religious communities — Judaism's experience will shape your faith's future", hint: "Learn from the precedent", outcome: "good", result: "Jewish communities in Roman territories navigate a complex relationship with Roman religious demands — generally permitted to practice their faith, sometimes in tension with Roman requirements, periodically experiencing significant conflict. The faith you follow will emerge from this tradition and inherit its complicated relationship with Roman power. The patterns being established now — tolerance with limits, periodic persecution, eventual negotiated coexistence — will repeat.", statChange: { food: 5, power: 10, wealth: 5, standing: 10 } },
+        { text: "Build the network of communities that will carry your faith across the empire", hint: "Prepare the infrastructure of faith", outcome: "good", result: "The spread of Christianity across the Roman Empire will happen along Roman roads, through Roman commercial networks, using the Greek language that Rome's eastern empire made universal. The infrastructure Rome builds for political and commercial purposes becomes the infrastructure your faith uses for spiritual ones. You begin building the community connections that will eventually span the empire.", statChange: { food: 10, power: 10, wealth: 5, standing: 15 } },
+        { text: "Develop the theological foundations that will sustain your community through persecution", hint: "Intellectual preparation for trials ahead", outcome: "good", result: "The letters, the collected teachings, the developing theology of your faith — all of it is being worked out in communities across the Roman world before the persecution that will test it. The faith that survives Roman persecution survives because its theological foundations are strong enough to sustain believers through extreme pressure. The intellectual work happening now prepares people for what they cannot yet see coming.", statChange: { food: 5, power: 15, wealth: 5, standing: 15 } }
+      ]
+    }
+  },
+  {
+    id: "ch4",
+    number: 4,
+    title: "Chapter 4 — The Rubicon",
+    subtitle: "Caesar, the End of the Republic, and How a Democracy Becomes an Empire",
+    scene: "It is January 49 BCE. Julius Caesar stands at the Rubicon River — the boundary that Roman law forbids any general from crossing with an army. The Senate has ordered him to disband his legions. If he obeys, he returns to Rome as a private citizen — his enemies waiting to prosecute him. If he crosses the Rubicon with his army, he commits treason — but his army will be with him. He crosses. 'The die is cast,' he reportedly says. What follows is civil war, Caesar's dictatorship, his assassination on the Ides of March 44 BCE, and then more civil war — Octavian and Mark Antony fighting for Caesar's legacy, each seeking political alliance across the Mediterranean world. When it is over, Octavian — renamed Augustus — is the first emperor of Rome. The Republic is over. Rome doesn't call it that. But it is.",
+    historyNote: "<strong>The Fall of the Republic:</strong> Caesar's crossing of the Rubicon began the civil war that ended the Roman Republic. His assassination on March 15, 44 BCE — by senators who believed they were saving the Republic — instead triggered further civil war. Octavian defeated Mark Antony and emerged as sole ruler, taking the title 'Augustus' (revered one) rather than 'king' — because Romans still would not accept that word. He kept the Senate, the elections, and the Republican forms — while making all the real decisions himself. The Republic ended not with a dramatic overthrow but with its institutions becoming decorative.",
+    journalPrompt: "Rome built its entire system of government to prevent what just happened. Yet it happened anyway. What does that tell you about the relationship between good systems and the people who run them?",
+    poisonRoles: ["senator", "soldier"],
+    discussAfter: false,
+    choices: {
+      senator: [
+        { text: "Oppose Caesar — defend the Republic even at the cost of your life", hint: "Principled resistance", outcome: "neutral", result: "The senators who oppose Caesar — Cicero, Cato, Brutus, Cassius — are defending something real. The Republic they fight for is imperfect and genuine simultaneously. The assassination of Caesar on the Ides of March is their most dramatic act of resistance. It does not save the Republic. It produces more civil war. The men who kill Caesar to save the Republic inadvertently ensure the Republic will not survive. Principled resistance and effective resistance are not always the same thing.", statChange: { food: -5, power: 15, wealth: -10, standing: 10 }, poison: true },
+        { text: "Accommodate Caesar — preserve what you can of the Senate's authority under the new reality", hint: "Pragmatic survival", outcome: "neutral", result: "You keep your seat in the Senate. You vote for Caesar's proposals. You maintain the forms of Republican governance while the substance drains away. The Senate that accommodates Caesar survives longer than the Senate that resists — but it survives as decoration rather than institution. The body continues. Its power does not. This is what the death of a republic looks like from inside its surviving institutions.", statChange: { food: 5, power: 5, wealth: 10, standing: 10 }, poison: true },
+        { text: "Ask the question Rome refuses to answer — did the Republic's failure to reform make Caesar possible?", hint: "Honest historical analysis", outcome: "good", result: "The most honest answer to why Caesar succeeded is that the Republic he replaced had failed the people who eventually supported him. Dispossessed farmers. Veterans without land. A Senate that protected wealth over justice. Caesar offered what the Republic withheld. The senators who killed him were defending an institution that had already failed most Romans. The tragedy of the Republic's fall is that both sides of that argument are correct.", statChange: { food: 5, power: 20, wealth: 5, standing: 10 } }
+      ],
+      plebeian: [
+        { text: "Support Caesar — he offers what the Republic never did", hint: "Caesar as the people's champion", outcome: "neutral", result: "Caesar offers land, grain distributions, public works, and representation — the things the Senate refused your people for generations. His dictatorship replaces a Republic that technically included you but practically ignored you. The choice is genuinely difficult. You choose Caesar. The material benefits are real. The political voice you trade for them will not come back in your lifetime.", statChange: { food: 10, power: -10, wealth: 10, standing: 10 } },
+        { text: "Mourn the loss of the Tribune's veto — even a flawed Republic had protections an empire removes", hint: "Grieve what is being lost", outcome: "good", result: "The Tribune who could say 'I forbid' to any law harming ordinary Romans was your people's greatest protection. Under Caesar — and later under Augustus — the Tribune's power becomes the emperor's power. Augustus holds the power of Tribune permanently — the ability to veto anything — without any Tribune being able to veto him. The form survives. The protection it provided does not.", statChange: { food: 5, power: 15, wealth: 5, standing: 10 } },
+        { text: "Recognize that whoever wins the civil war your people will still be ordinary Romans navigating power", hint: "Realism about power", outcome: "neutral", result: "Caesar or Pompey, Octavian or Antony — the civil wars between powerful men are not wars your people chose. You survive them as best you can. When Octavian wins and becomes Augustus, he maintains the grain distributions and public works that keep ordinary Romans fed and entertained. Your material conditions are managed. Your political voice is gone. The empire provides bread. The Republic — imperfect as it was — provided the possibility of more.", statChange: { food: 10, power: 5, wealth: 5, standing: 5 } }
+      ],
+      soldier: [
+        { text: "Cross the Rubicon with Caesar — your loyalty is to your general, and your general has made his choice", hint: "Military loyalty to the general", outcome: "neutral", result: "You cross. The die is cast. The army follows Caesar because Caesar is the man who led it, supplied it, and kept its loyalty through fifteen years of Gallic campaigns. The Republic that Caesar is destroying is an abstraction. The general who remembered your name and promoted you on merit is real. You understand, on some level, what you are participating in. You cross anyway.", statChange: { food: 5, power: -10, wealth: 10, standing: 10 }, poison: true },
+        { text: "Refuse to cross — loyalty to the Republic over loyalty to your general", hint: "Loyalty to the Republic", outcome: "bad", result: "You refuse. Most of your unit crosses. You are alone on the wrong side of a river with a disintegrating cause. The men who choose Republic over general are heroic and ineffective in roughly equal measure. The Republic you stay loyal to does not survive. Your loyalty is genuine and costs you everything. The soldier who chooses principle over survival is admirable — and rarely survives to be admired.", statChange: { food: -10, power: 20, wealth: -15, standing: 5 }, poison: true },
+        { text: "Follow Octavian after Caesar's death — back the winner of the civil wars", hint: "Pragmatic military survival", outcome: "good", result: "The civil wars after Caesar's assassination are fought between powerful men seeking Caesar's legacy. You assess the situation and back Octavian — who is colder, more calculating, and ultimately more effective than Antony. Octavian wins. You survive. The soldier who reads political situations correctly and backs the winner is not admirable in the same way as the soldier who backs the right cause. It is more effective.", statChange: { food: 5, power: 10, wealth: 10, standing: 15 } }
+      ],
+      merchant: [
+        { text: "Survive the civil wars by staying neutral — commerce needs all sides to eventually stop fighting", hint: "Commercial neutrality", outcome: "good", result: "The civil wars between Caesar and Pompey, between Octavian and Antony, are commercial disasters. Trade routes close. Currency becomes unreliable. Contracts are unenforceable when the courts that enforce them are controlled by warring factions. You stay as neutral as possible, maintain relationships across political lines, and wait for someone to win decisively. Someone does. Commerce resumes.", statChange: { food: 5, power: 5, wealth: 10, standing: 10 } },
+        { text: "Back Octavian — his victory will produce the stability commerce requires", hint: "Back the likely winner for commercial reasons", outcome: "good", result: "Octavian's victory produces the Pax Romana — the Roman Peace that is the greatest commercial period in ancient history. Your early support of Octavian — modest, careful, not publicly visible — positions you well in the commercial networks of the new empire. The emperor who replaces the Republic turns out to be extraordinarily good for commerce. You helped him win. He helps you trade.", statChange: { food: 5, power: 5, wealth: 20, standing: 15 } },
+        { text: "Note that the political alliances in the eastern Mediterranean — including those involving Egypt — are primarily about commercial control", hint: "Political conflict as commercial competition", outcome: "good", result: "The alliance between Antony and Cleopatra — ruler of Egypt — is a political and strategic relationship that controls the grain supply from Egypt, the trade routes through the eastern Mediterranean, and the wealth of the Ptolemaic kingdom. When Octavian defeats Antony and annexes Egypt, he secures Rome's grain supply and eastern trade routes simultaneously. The political drama conceals commercial logic.", statChange: { food: 10, power: 5, wealth: 20, standing: 10 } }
+      ],
+      conquered: [
+        { text: "Watch the Romans fight each other and understand that civil war affects everyone under Roman rule", hint: "Witness the consequences of Roman internal conflict", outcome: "neutral", result: "The Roman civil wars are not your wars. But their consequences reach your community — armies that need to be fed, routes that become unsafe, magistrates whose authority is uncertain when the government they serve is contested. The stability that Roman rule provides, imperfect as it is, disappears during civil war. Your community suffers the consequences of a conflict it did not choose and cannot influence.", statChange: { food: -5, power: 5, wealth: -5, standing: 5 } },
+        { text: "Assess what the empire that emerges from civil war means for your people", hint: "Pragmatic assessment of the new order", outcome: "neutral", result: "The empire that Octavian builds from the ruins of the Republic is, in some ways, better for conquered peoples than the late Republic was. Augustus standardizes provincial administration, reduces the worst abuses of provincial governors, and creates the infrastructure — roads, peace, commercial networks — that benefits everyone in the empire. The costs — Roman taxation, cultural pressure, military occupation — continue. The balance shifts slightly in your favor.", statChange: { food: 5, power: 10, wealth: 10, standing: 10 } },
+        { text: "Begin the long path toward Roman citizenship — the empire is more willing than the Republic to extend it", hint: "Citizenship as long-term goal", outcome: "good", result: "The empire gradually extends Roman citizenship more broadly than the Republic ever did — culminating in the Edict of Caracalla in 212 CE, which grants citizenship to virtually all free inhabitants of the empire. The path is long, uneven, and always on Rome's terms. But the destination — full legal equality under Roman law — is genuinely worth pursuing. Your community begins the generational project of earning what should not require earning.", statChange: { food: 5, power: 15, wealth: 10, standing: 15 } }
+      ],
+      christian: [
+        { text: "Note that the empire being created provides the infrastructure your faith will use to spread", hint: "Providence in politics", outcome: "good", result: "The Pax Romana that Augustus establishes — safe roads, common language, unified legal system, widespread commercial networks — creates the conditions under which a small religious movement in Roman Judea can spread across the known world within a few generations. The empire that will persecute your faith also, unintentionally, creates the means by which it spreads. This is the historical irony that early Christian writers will note with something like wonder.", statChange: { food: 5, power: 10, wealth: 5, standing: 10 } },
+        { text: "Prepare your community for the relationship with empire that is coming — sometimes tolerated, sometimes persecuted", hint: "Prepare for complexity", outcome: "good", result: "The relationship between your faith and Roman imperial power will never be simple. Rome tolerates minority religions generally but demands acknowledgment of Roman gods and the emperor's divine status — demands your faith cannot meet. The periods of persecution and the periods of tolerance will alternate. Your community needs to be strong enough to survive the first and wise enough not to be destroyed by complacency during the second.", statChange: { food: 5, power: 15, wealth: 5, standing: 15 } },
+        { text: "Spread the faith along the roads Augustus builds — the empire's infrastructure serves your purposes", hint: "Use the empire's tools", outcome: "good", result: "The Apostle Paul travels Roman roads and stays in Roman cities, writing letters that travel through the Roman postal network to communities he has visited or plans to visit. The empire's commercial and administrative infrastructure carries the faith the empire will later try to suppress. You walk Augustus's roads carrying a message Augustus would not have approved. The roads serve you anyway.", statChange: { food: 5, power: 15, wealth: 5, standing: 20 } }
+      ]
+    }
+  },
+  {
+    id: "ch5",
+    number: 5,
+    title: "Chapter 5 — Empire: Good, Bad, and Ugly",
+    subtitle: "What Rome Built, Who Suffered, and a Faith That Wouldn't Bow",
+    scene: "It is approximately 100 CE — the height of Roman imperial power, during what historians call the era of the Five Good Emperors. Rome's empire stretches from Britain to Mesopotamia, from the Rhine to the Sahara. Roman engineering has built roads, aqueducts, and public buildings across this vast territory. Roman law provides a framework for commerce and justice across dozens of languages and cultures. Roman philosophy — particularly Stoicism — reaches its greatest expression in the Emperor Marcus Aurelius, who writes his Meditations on campaign. But this same empire that produces Marcus Aurelius also produced Nero — who played music while Rome burned, who executed his own mother, who blamed Christians for a fire and persecuted them savagely. The empire's capacity for excellence and its capacity for cruelty coexist completely.",
+    historyNote: "<strong>Roman Achievements:</strong> Roman engineering produced the most sophisticated infrastructure the ancient world had seen — 50,000 miles of roads, aqueducts that brought clean water to cities, concrete buildings some of which still stand. Roman law's influence on Western legal systems continues today. The Stoic philosophy of Marcus Aurelius — the soldier-philosopher emperor — remains influential. Roman medicine, mathematics, and calendar systems shaped the modern world. These achievements existed alongside a society built partly on enslaved labor, periodic brutal persecution of minorities, and the suppression of conquered peoples' self-governance.",
+    historyNote2: "<strong>Christianity Under the Empire:</strong> Early Christians refused to sacrifice to Roman gods or acknowledge the emperor's divine status — making them appear disloyal in Roman eyes. The persecution was not continuous but could be severe when it came. Christians were blamed for the Great Fire of Rome under Nero. The Diocletianic Persecution (303-313 CE) was the most systematic. Yet the faith spread — through the empire's roads, through its commercial networks, through the Greek language that was Rome's eastern lingua franca, and through the communities of mutual care that the faith built.",
+    journalPrompt: "The same empire that built aqueducts and wrote the Meditations also persecuted Christians and enslaved millions. Does a civilization's greatness depend on what it achieved — or on what it cost to achieve it?",
+    poisonRoles: ["christian"],
+    discussAfter: true,
+    discussPrompt: "The Roman Empire meant completely different things to different roles. Before you continue — spend 90 seconds comparing: what did the empire give your role that the table next to you didn't get? What did it take from someone else to give to you?",
+    choices: {
+      senator: [
+        { text: "Serve Marcus Aurelius — the philosopher-emperor who comes closest to Plato's philosopher-king", hint: "Serve the best the empire produces", outcome: "good", result: "Marcus Aurelius is the closest the Roman Empire comes to the ideal of the wise ruler — a man who exercises power reluctantly, governs by Stoic principle, and writes philosophical meditations during military campaigns. Serving him is as close to serving the Republic's ideals as the empire permits. You serve well. The institution you serve has diminished from what it was. The man who leads it is extraordinary.", statChange: { food: 5, power: 20, wealth: 10, standing: 20 } },
+        { text: "Survive Nero — navigate the corrupt emperor without becoming complicit in his worst acts", hint: "Institutional survival through personal darkness", outcome: "neutral", result: "Nero is the empire's worst impulse given absolute power — capricious, cruel, interested in his own artistic self-image over the empire's welfare. Surviving his reign without being destroyed requires careful navigation of his paranoia. You keep your head down, perform your duties adequately, avoid drawing his attention, and wait. The Senate outlasts Nero. The question of what the Senate compromised to outlast him is one you try not to examine.", statChange: { food: 5, power: 10, wealth: 10, standing: 5 } },
+        { text: "Record the empire's achievements honestly — including both what was built and what it cost", hint: "Historical witness", outcome: "good", result: "The honest record of the Roman Empire must include both the roads and the enslaved people who built them, both the aqueducts and the conquered peoples whose land was seized to pay for them, both Marcus Aurelius and Nero. The historians who write only about the achievements produce propaganda. The historians who write about everything — Tacitus, who describes imperial corruption without flinching — produce history that serves future generations.", statChange: { food: 5, power: 15, wealth: 5, standing: 20 } }
+      ],
+      plebeian: [
+        { text: "Accept the bread and circuses — material welfare matters even when political voice is gone", hint: "Pragmatic acceptance", outcome: "neutral", result: "The empire provides grain distributions that keep ordinary Romans fed and entertainment — the Colosseum, the chariot races — that fills their time. The political voice your people fought for in the Republic is gone. The material conditions are, arguably, better. Whether this trade-off is acceptable — political participation for material security — is a question your people answer differently depending on which emperor holds power and how the grain arrives.", statChange: { food: 15, power: -10, wealth: 10, standing: 5 } },
+        { text: "Recognize what was lost — the Tribune's veto that protected your people is now the emperor's power", hint: "Mourn what was traded away", outcome: "good", result: "The Tribune's power — your people's greatest political achievement — still exists in name. The emperor holds tribunician power permanently, using it to veto anything that threatens his position. The protection your ancestors died to create for ordinary Romans now protects only the emperor. The form survives as decoration. The substance — the ability of one ordinary Roman to say 'I forbid' to power — is gone.", statChange: { food: 5, power: 15, wealth: 5, standing: 10 } },
+        { text: "Find meaning in community and the emerging religious movements — when politics fails, faith sometimes fills the space", hint: "Faith as alternative to political participation", outcome: "good", result: "The political space your people occupied is closed. The new religious communities — Christianity among them — offer something politics no longer provides: genuine participation, genuine community, genuine voice. The early Christian communities are remarkably egalitarian for their time — in faith, enslaved and free, Roman and non-Roman, male and female are equal before God. This is not nothing. It is not the Tribune's veto. But it is something real.", statChange: { food: 5, power: 15, wealth: 5, standing: 15 } }
+      ],
+      soldier: [
+        { text: "Serve Marcus Aurelius on the Danube campaigns — fight for an emperor worth following", hint: "Military service under the best", outcome: "good", result: "The Danube campaigns against Germanic peoples are the military reality that underlies Marcus Aurelius's philosophical meditations. He writes about the examined life while managing an examined army. You serve in the campaigns that produce the Meditations — the practical military experience that grounds the philosophy. The soldier and the philosopher coexist in one campaign, one emperor, one extraordinary moment in Roman history.", statChange: { food: 5, power: 20, wealth: 10, standing: 20 } },
+        { text: "Make an emperor — the army that makes and unmakes emperors is the empire's real power", hint: "Military power determines succession", outcome: "neutral", result: "After the Five Good Emperors, succession becomes chaotic — the army increasingly determines who rules. The soldier who understands this understands the empire's actual power structure. The Senate votes. The emperor decides. The army acts. Of these three, the army is most real. The soldier who recognizes this has more political power than most Romans acknowledge — and less institutional legitimacy than the Republic provided.", statChange: { food: 5, power: 10, wealth: 10, standing: 10 } },
+        { text: "Defend the empire's borders — the greatest military force in history protecting civilization's edge", hint: "Mission as meaning", outcome: "good", result: "The Roman frontier is the largest military commitment in the ancient world — legions strung from Britain to the Euphrates, holding back peoples who push continuously against the empire's edges. The soldier who guards that frontier is performing a service that is genuinely significant. The civilization behind the frontier — its roads, its aqueducts, its law, its philosophy — is what you are defending. That is worth defending.", statChange: { food: 5, power: 20, wealth: 10, standing: 20 } }
+      ],
+      merchant: [
+        { text: "Profit from the Pax Romana — the Roman Peace is the greatest commercial period in ancient history", hint: "Commerce in the empire's golden age", outcome: "good", result: "The Pax Romana produces the most sophisticated commercial environment the ancient world has seen. Safe roads connecting Britain to Syria. A unified legal system protecting contracts across the empire. A currency accepted from Hadrian's Wall to the Euphrates. The Silk Road connecting Rome to China — Roman glass found in Han dynasty tombs, Chinese silk found in Roman ones. The empire that replaced the Republic turns out to be extraordinarily good for commerce.", statChange: { food: 10, power: 5, wealth: 30, standing: 20 } },
+        { text: "Extend commerce along the Silk Road — Rome connects to China through Central Asian intermediaries", hint: "Global commerce", outcome: "good", result: "The Silk Road reaches its classical operation during the Roman imperial period. Roman merchants travel east. Central Asian intermediaries connect Rome to China. Roman gold flows east for Chinese silk. Chinese luxury goods appear in Roman markets. The empire that built roads for armies inadvertently creates the infrastructure for the most extensive commercial network the ancient world has known.", statChange: { food: 5, power: 5, wealth: 25, standing: 15 } },
+        { text: "Note the economic cost of empire — maintaining the army and the bureaucracy is increasingly expensive", hint: "Commercial assessment of imperial economics", outcome: "neutral", result: "The empire's military and administrative costs are enormous and growing. Maintaining legions across thousands of miles of frontier, paying the bureaucracy that administers the provinces, funding the construction that makes Rome impressive — all of it requires revenue that eventually outpaces what the empire's economy can produce. The merchant who watches the currency being debased to pay army salaries sees the financial crisis coming before the military one.", statChange: { food: 5, power: 10, wealth: 15, standing: 10 } }
+      ],
+      conquered: [
+        { text: "Benefit from Roman infrastructure while maintaining your community's identity", hint: "Strategic acceptance of Roman benefits", outcome: "good", result: "Roman roads connect your region to markets your community could not previously reach. Roman peace reduces the local conflicts that used to threaten you. Roman commercial networks create economic opportunities. These are genuine benefits of Roman rule. They arrive alongside Roman taxation, cultural pressure, and political subordination. Your community takes the benefits and pays the costs, maintaining its identity in the spaces Rome's attention does not reach.", statChange: { food: 10, power: 10, wealth: 15, standing: 15 } },
+        { text: "Pursue Roman citizenship — Caracalla's edict will eventually grant it to virtually everyone", hint: "The long path to legal equality", outcome: "good", result: "The path to Roman citizenship that your community began generations ago arrives at its destination — the Edict of Caracalla in 212 CE grants citizenship to virtually all free inhabitants of the empire. The edict is partly practical — citizens pay more taxes than non-citizens — but its legal effect is real. Your people become fully equal under Roman law. The equality arrives late and imperfectly. It arrives.", statChange: { food: 5, power: 15, wealth: 10, standing: 20 } },
+        { text: "Connect with the early Christian communities — a faith that crosses ethnic lines offers something Roman citizenship does not", hint: "Faith as alternative community", outcome: "good", result: "The early Christian communities in your region are remarkable for their openness — they include Romans, provincial people like yourself, people from across the empire's ethnic diversity. The faith that Paul describes — where there is neither Jew nor Greek, enslaved nor free — offers a form of equality that Roman citizenship, even when you eventually receive it, does not fully deliver. You find in this community something the empire cannot provide.", statChange: { food: 5, power: 15, wealth: 5, standing: 20 } }
+      ],
+      christian: [
+        { text: "Survive the persecution — meet in homes, in catacombs, in the spaces the empire's attention does not reach", hint: "Survival through community", outcome: "neutral", result: "The persecution is real and sporadic — worst under Nero, systematic under Diocletian, with periods of relative tolerance between. Your community survives by being harder to find than the authorities expect, by taking care of each other in ways that make persecution more costly than it's worth, and by a faith that does not break under pressure. The faith that survives persecution is stronger than the faith that was never tested.", statChange: { food: 5, power: 15, wealth: 5, standing: 10 }, poison: true },
+        { text: "Refuse to acknowledge the emperor's divine status — accept the consequences", hint: "Principled refusal at personal cost", outcome: "neutral", result: "The requirement that subjects honor Roman gods and acknowledge the emperor's divine status is the one Rome makes that your faith cannot meet. You refuse. The refusal marks you as suspicious, potentially dangerous, subject to persecution when the political climate turns. You accept these consequences as the cost of integrity. The faith you carry says that no human being is divine — not even the most powerful one in the world.", statChange: { food: -5, power: 20, wealth: -5, standing: 5 }, poison: true },
+        { text: "Care for the sick during plagues — Roman society is shocked by a faith that tends to the dying", hint: "Faith expressed through action", outcome: "good", result: "When plagues strike — and the Antonine Plague kills perhaps five million people — Roman society's response is often flight from the infected. Your community stays and cares for the sick — including non-Christians. The survival rate in communities with care is measurably higher than in communities without it. The empire that persecutes your faith notices that the faith's communities survive plagues better. The witness of caring for the dying spreads the faith more effectively than any argument.", statChange: { food: 5, power: 20, wealth: 5, standing: 25 } }
+      ]
+    }
+  },
+  {
+    id: "ch6",
+    number: 6,
+    title: "Chapter 6 — The Long Fall",
+    subtitle: "Diocletian, Constantine, Barbarian Invasions, and the End of the West",
+    scene: "It is 410 CE. The Visigoths — a Germanic people who have been living on Rome's frontier for decades — have sacked Rome. The city that called itself eternal has been looted for the first time in eight hundred years. The shock across the Roman world is profound. How did this happen? The answer is complicated and a century in the making. Diocletian split the empire into eastern and western halves to make it governable. Constantine moved the capital to Constantinople — New Rome in the east. The western empire, without the wealth of the eastern provinces and stretched across too much territory with too few soldiers, gradually lost control of its frontiers. Barbarian groups — Visigoths, Vandals, Huns, Ostrogoths — moved into Roman territory, sometimes as allies, sometimes as conquerors. The Western Roman Empire officially ended in 476 CE when a barbarian general deposed the last western emperor. The Eastern Empire — what historians call the Byzantine Empire — survived for another thousand years.",
+    historyNote: "<strong>Constantine and Christianity:</strong> Constantine's conversion in 312 CE and the Edict of Milan (313 CE) — which granted religious tolerance to Christians — transformed the faith from persecuted minority to protected religion. By the end of the 4th century, Christianity was the Roman Empire's official religion. Constantine moved the empire's capital to Constantinople (modern Istanbul) in 330 CE. The Eastern Empire he built there survived the fall of the West by a millennium, finally ending in 1453 CE when Constantinople fell to the Ottoman Empire.",
+    journalPrompt: "Rome built the most sophisticated government in the ancient world to prevent tyranny — and eventually fell anyway. Think back to Chapter 1, when Rome threw out its kings. What would the Romans who built the Republic think of how their civilization ended?",
+    poisonRoles: ["merchant", "senator"],
+    discussAfter: false,
+    choices: {
+      senator: [
+        { text: "Continue the Senate's work as the empire fractures — institutions outlast the people who build them", hint: "Institutional persistence", outcome: "neutral", result: "The Senate of Rome continues meeting and passing resolutions as the Western Empire dissolves around it. The institution your family has served for generations is still formally functioning when the last western emperor is deposed. The persistence is both admirable and poignant — the body that the founders built to prevent tyranny outlasts the empire but cannot prevent its fall. Institutions are more durable than empires. They are not invulnerable.", statChange: { food: 5, power: 10, wealth: -10, standing: 10 }, poison: true },
+        { text: "Support Constantine's conversion — a Christian empire may be more unified than a pagan one", hint: "Religious pragmatism", outcome: "good", result: "Constantine's conversion and the subsequent Christianization of the empire change the Roman world fundamentally. The religious unity that Roman paganism never fully achieved — too many gods, too many local traditions — Christianity provides more effectively. The senator who supports this transformation understands that the empire needs new sources of cohesion as its old ones fail.", statChange: { food: 5, power: 15, wealth: 5, standing: 15 } },
+        { text: "Ask the question that Rome refuses to ask — did the concentration of power in one person make the empire more fragile, not less?", hint: "Historical analysis of imperial failure", outcome: "good", result: "The Republic's distributed power — two consuls, a Senate, a Tribune's veto — was inefficient. The empire's concentrated power was efficient. But efficiency purchased at the cost of resilience. When the Republic faced crisis, multiple institutions could respond. When the empire faced crisis, everything depended on whether the emperor was Marcus Aurelius or one of the crisis-era emperors who lasted months. The system Rome built to be strong turned out to be brittle.", statChange: { food: 5, power: 20, wealth: 5, standing: 10 }, poison: true }
+      ],
+      plebeian: [
+        { text: "Find that the barbarian groups settling in Roman territory are not so different from your people", hint: "Common ground across difference", outcome: "neutral", result: "The barbarian groups crossing Rome's frontiers are not the monsters Roman propaganda describes. Many of them have been living on Rome's borders for generations, serving in Roman armies, trading with Roman merchants. The Visigoths who sack Rome in 410 CE have been Roman allies and enemies alternately for decades. The 'fall of Rome' looks different from your position — less like civilization ending and more like the boundaries of who counts as Roman shifting.", statChange: { food: 10, power: 5, wealth: 5, standing: 5 } },
+        { text: "Recognize that Christianity's rise changes what Rome means — the faith survives where the empire does not", hint: "Faith outlasting empire", outcome: "good", result: "The Western Roman Empire falls in 476 CE. The Church does not fall. The Bishop of Rome — the Pope — continues to exercise authority in the West long after the last western emperor is deposed. The faith that was persecuted under Nero becomes the institution that maintains continuity through the fall. Christianity inherits Rome's organizational structure, its Latin language, and its administrative reach — and carries them into the Middle Ages.", statChange: { food: 5, power: 15, wealth: 5, standing: 15 } },
+        { text: "Survive the transition — ordinary people outlast empires by adapting to whoever holds power", hint: "Ordinary resilience", outcome: "neutral", result: "The fall of the Western Roman Empire is catastrophic for some and a change of management for others. Ordinary people — farmers, craftspeople, merchants, the poor — continue their lives under Visigoth kings much as they continued under Roman emperors. The administrative apparatus changes. The fundamental conditions of ordinary life change more slowly. Your people's skill at surviving whoever holds power serves you through Rome's fall as it served you through Rome's rise.", statChange: { food: 10, power: 5, wealth: 5, standing: 10 } }
+      ],
+      soldier: [
+        { text: "Defend the frontiers with inadequate forces — the greatest military in history stretched past its breaking point", hint: "Military impossible mission", outcome: "neutral", result: "The Roman military in the late empire is too small for the territory it must defend, paid in debased currency that buys less than it used to, and increasingly composed of barbarian soldiers who fight for pay rather than civic identity. You defend your section of the frontier as well as the resources allow. The section to your left falls. You fill the gap. The section to your right falls. There are no more gaps to fill. The frontier is a line that cannot be held.", statChange: { food: 5, power: 15, wealth: -5, standing: 10 } },
+        { text: "Serve Constantine — the Christian emperor who tries to hold the empire together", hint: "Serve the last serious attempt", outcome: "good", result: "Constantine's reorganization of the empire — new capital in Constantinople, new administrative structure, new religious foundation in Christianity — is the most serious attempt to address the empire's structural problems. You serve this project. The Eastern Empire that Constantine builds will survive for a thousand years after the West falls. The soldier who serves Constantine serves something that endures.", statChange: { food: 5, power: 20, wealth: 10, standing: 15 } },
+        { text: "Recognize that the army's loyalty to individual generals rather than to Rome contributed to the fall", hint: "Military self-examination", outcome: "good", result: "The Roman army that crossed the Rubicon with Caesar created a pattern — armies loyal to generals rather than to the Republic or empire — that repeated through the crisis of the third century, when multiple emperors were made and unmade by army factions within a single generation. The military professionalization that made Rome great also made it fragile in ways the citizen militia never was. The soldier who sees this is seeing clearly.", statChange: { food: 5, power: 20, wealth: 5, standing: 15 } }
+      ],
+      merchant: [
+        { text: "Watch the commercial network that sustained empire unravel — currency collapse, unsafe roads, broken supply chains", hint: "Commercial collapse preceding political collapse", outcome: "bad", result: "The merchant sees the fall coming before the senator does — in the debased currency that buys less each year, in the roads that become unsafe as frontier defense weakens, in the supply chains that break when political instability makes contracts unenforceable. The commercial network that held the Roman world together economically begins to fragment decades before the political structures fail. The fall of Rome looks, from inside commerce, like a slow unwinding that accelerated.", statChange: { food: -5, power: 5, wealth: -20, standing: -5 }, poison: true },
+        { text: "Redirect commerce toward the Eastern Empire — Constantinople is the future", hint: "Commercial reorientation", outcome: "good", result: "The commercial instinct for survival points east. Constantinople — the new Rome that Constantine built on the Bosporus — controls the trade routes between Europe and Asia, between the Black Sea and the Mediterranean. The Eastern Empire's commercial infrastructure is more robust than the West's. The merchant who redirects toward Constantinople is not abandoning Rome — they are following Rome's future.", statChange: { food: 5, power: 5, wealth: 15, standing: 15 }, poison: false },
+        { text: "Build commercial relationships with the barbarian groups taking over the West — they need merchants too", hint: "Commerce across political transition", outcome: "good", result: "The Visigoth kings who replace Roman emperors in the West still need grain, still need manufactured goods, still need the commercial networks that keep populations fed. Your commercial relationships — carefully maintained across the political transition — make you useful to the new rulers. The merchant who served Rome serves the successors of Rome. Commerce outlasts every particular political arrangement that tries to organize it.", statChange: { food: 10, power: 5, wealth: 15, standing: 15 }, poison: false }
+      ],
+      conquered: [
+        { text: "Find that the empire's fall changes your community's situation — for better and for worse", hint: "Transition and its complexity", outcome: "neutral", result: "The fall of the Western Empire removes the Roman administrative apparatus that taxed and constrained your community — and also removes the Roman peace that protected it. The barbarian kingdoms that replace Roman administration are neither worse nor better in simple terms — they are different, and the difference affects your community in complicated ways. The Roman citizenship your people finally won means less when Rome itself is fragmenting.", statChange: { food: 5, power: 10, wealth: 5, standing: 5 } },
+        { text: "Find continuity in the Church — Christianity provides institutional continuity where empire cannot", hint: "Faith outlasting political structure", outcome: "good", result: "The Church provides something the falling empire cannot — institutional continuity, a shared identity, an organizational structure that crosses the political fragmentation of the post-Roman West. Your community, which found something real in Christian faith during the empire, finds in the Church's persistence a form of stability that Roman political structures no longer provide. The faith that promised something beyond empire outlasts the empire.", statChange: { food: 5, power: 15, wealth: 5, standing: 20 } },
+        { text: "Recognize that your people's story continues beyond Rome's story — conquered peoples outlast empires", hint: "Historical perspective", outcome: "good", result: "Rome conquered your people. Rome fell. Your people continue. The language, the traditions, the identity that Roman rule tried to subsume — partially, incompletely, over generations — persists. The barbarian kingdoms that replace Rome will in turn be replaced. The peoples they conquer will continue. History is not only the story of empires. It is also the story of the people empires tried to absorb who remained themselves anyway.", statChange: { food: 5, power: 15, wealth: 5, standing: 20 } }
+      ],
+      christian: [
+        { text: "Celebrate Constantine's conversion — the faith that was persecuted becomes the faith of the empire", hint: "The great reversal", outcome: "good", result: "The Edict of Milan in 313 CE — granting religious tolerance — and Constantine's own conversion transform your faith's situation completely. The communities that met in catacombs can now build churches. The faith that was blamed for Rome's problems becomes the faith Rome officially endorses. The transformation is extraordinary. It also brings complications — an imperial faith is not quite the same thing as the faith that survived by caring for the dying during plagues.", statChange: { food: 5, power: 25, wealth: 10, standing: 25 } },
+        { text: "Navigate the complications of becoming the official faith — power changes faith as much as faith changes power", hint: "The cost of success", outcome: "good", result: "The faith that becomes official is also the faith that becomes an institution with institutional interests, political entanglements, and the temptation to use imperial power to enforce theological positions. The Council of Nicaea that Constantine calls to resolve theological disputes is also an exercise of imperial power over religious questions. You navigate this carefully — grateful for the protection, aware that the faith that needed no emperor's approval is not quite the same as the faith that has one.", statChange: { food: 5, power: 20, wealth: 10, standing: 20 } },
+        { text: "Recognize that the Church will outlast the empire — the faith survives Rome's fall", hint: "The longer arc", outcome: "good", result: "The Western Roman Empire falls in 476 CE. The Church does not fall. Augustine of Hippo — writing as the Visigoths sack Rome — argues in The City of God that earthly empires are not the ultimate home of Christian hope. The faith that outlasts the empire that once persecuted it continues into the Middle Ages, carrying with it the Latin language, Roman organizational structures, and a vision of human dignity that will shape European civilization for a thousand years.", statChange: { food: 5, power: 25, wealth: 10, standing: 25 } }
+      ]
+    }
+  }
+];
+
+// ══════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════
+let state = {
+  screen: "art_open",
+  role: null,
+  chapterIndex: 0,
+  pendingOutcome: null,
+  stats: { food: 50, power: 50, wealth: 50, standing: 50 },
+  timerInterval: null,
+};
+
+function go(s) { state.screen = s; render(); window.scrollTo({ top: 0, behavior: "smooth" }); }
+function getRole() { return ROLES.find(r => r.id === state.role); }
+function clamp(v) { return Math.max(0, Math.min(100, v)); }
+function applyStats(change) { if (!change) return; for (let k in change) { if (state.stats[k] !== undefined) state.stats[k] = clamp(state.stats[k] + change[k]); } }
+function statColor(v) { return v >= 60 ? "#6ABF6A" : v >= 35 ? "#E8C840" : "#E05050"; }
+function isDead() { return state.stats.food <= 0; }
+
+function powerResult(v) {
+  if (v >= 75) return { icon: "🦅", title: "Power Used Wisely", text: "Your choices reflect what Rome's founders hoped the Republic would produce — power held accountable, checked by institutions, wielded in service of something larger than the person holding it. Cincinnatus would recognize your choices. Whether Rome's system was ultimately capable of sustaining this kind of wisdom across generations is the question its history answers." };
+  if (v >= 50) return { icon: "⚖️", title: "Power Navigated", text: "Your choices navigated the reality of Roman power — its genuine achievements and its genuine costs — with reasonable care. Most Romans across most of the Republic and Empire lived this way: not the beneficiaries of the system's best impulses or its worst, but ordinary people trying to live well within a system that was neither fully just nor fully unjust." };
+  if (v >= 25) return { icon: "🗡️", title: "Power Accumulated", text: "Your choices trended toward accumulating power rather than serving it. Rome's history is full of people who made exactly these choices — and the accumulation of those choices across generations is part of what transformed the Republic into the Empire. Every Rubicon crossed begins with someone deciding their interests outweigh the institution's." };
+  return { icon: "🔥", title: "Power Without Accountability", text: "Your choices reflect the pattern Rome's founders feared most — power without meaningful accountability. The system they built to prevent this failed slowly, then quickly. Your choices illuminate why it failed: not because the system was badly designed, but because people with power found ways around it." };
+}
+
+function renderStats() {
+  const defs = [
+    { key: "food", label: "Food", icon: "🌾" },
+    { key: "power", label: "Power", icon: "🦅" },
+    { key: "wealth", label: "Wealth", icon: "⚓" },
+    { key: "standing", label: "Standing", icon: "🏛️" },
+  ];
+  return `<div class="stats-row">${defs.map(d => {
+    const v = state.stats[d.key];
+    return `<div class="stat-box"><span class="stat-icon">${d.icon}</span><div class="stat-label">${d.label}</div><div class="stat-value" style="color:${statColor(v)}">${Math.round(v)}</div><div class="stat-track"><div class="stat-fill" style="width:${v}%;background:${statColor(v)}"></div></div></div>`;
+  }).join("")}</div>`;
+}
+
+function renderProgress() {
+  const dots = CHAPTERS.map((c, i) => `<div class="prog-dot ${i < state.chapterIndex ? 'done' : i === state.chapterIndex ? 'active' : ''}"></div>`).join("");
+  return `<div class="progress-row">${dots}<span class="prog-label">Chapter ${state.chapterIndex + 1} of ${CHAPTERS.length}</span></div>`;
+}
+
+function screenArtOpen() {
+  return `
+    <div class="screen-label">Before we begin — look closely</div>
+    <div class="screen-heading">Cave Canem — Beware of the Dog</div>
+    <div class="art-frame">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/9/97/Cave_Canem_Poeta_Tr%C3%A1gico_04.jpg" alt="Cave Canem mosaic from Pompeii — a chained dog with Latin warning" onerror="this.style.display='none';document.getElementById('mosaic-fallback').style.display='block'" />
+      <div id="mosaic-fallback" style="display:none;padding:2rem;text-align:center;color:var(--roman-red-light);font-family:Arial,sans-serif;font-size:13px">[Cave Canem mosaic — search "Cave Canem Pompeii mosaic" to view]</div>
+      <div class="art-caption">Cave Canem mosaic · House of the Tragic Poet · Pompeii · c. 1st century CE · In situ, Pompeii Archaeological Site · Public Domain<br><em>"Cave Canem" means "Beware of the Dog" in Latin</em></div>
+    </div>
+    <div class="scene-text">This mosaic was set into the floor of a house in Pompeii — a warning to visitors at the doorstep. The city was buried by the eruption of Mount Vesuvius in 79 CE and preserved almost perfectly under the ash. The dog, the Latin warning, the detailed craft — all of it frozen in a single moment nearly two thousand years ago. Before you begin your story in ancient Rome, look closely. Take 30 seconds of silence first. Then answer the three prompts in your field journal:</div>
+    <div class="art-prompts">
+      <div class="art-prompt-box"><div class="apt-label">Prompt 1</div><div class="apt-q">One thing I find interesting...</div></div>
+      <div class="art-prompt-box"><div class="apt-label">Prompt 2</div><div class="apt-q">One thing that puzzles me...</div></div>
+      <div class="art-prompt-box"><div class="apt-label">Prompt 3</div><div class="apt-q">One question I have for the creator...</div></div>
+    </div>
+    <div class="history-note"><strong>Answer in your field journal.</strong> When your teacher gives the signal, continue.</div>
+    <button class="btn btn-roman" onclick="go('role_select')">Enter ancient Rome →</button>`;
+}
+
+function screenRoleSelect() {
+  return `
+    <div class="screen-label">Choose your role — your table decides together</div>
+    <div class="screen-heading">Who are you in ancient Rome?</div>
+    <div class="scene-text">Every person at your table plays the same role. Each role will experience Rome's 1,200-year story from a different position. Notice the <strong>Power</strong> stat — Rome is fundamentally a story about power: who has it, how they use it, how systems try to limit it, and what happens when those systems fail. The campaign's central question runs through every chapter: <em>Rome didn't want a king. How did they get one?</em> Choose together.</div>
+    <div class="role-grid">
+      ${ROLES.map(r => `<div class="role-card" onclick="selectRole('${r.id}')"><span class="rc-icon">${r.icon}</span><div class="rc-name">${r.name}</div><div class="rc-own"><strong>You control:</strong> ${r.own}</div><div class="rc-fear">⚠ You fear: ${r.fear}</div></div>`).join("")}
+    </div>`;
+}
+
+function screenChapter() {
+  const ch = CHAPTERS[state.chapterIndex];
+  const role = getRole();
+  const choices = ch.choices[state.role];
+  const isPoison = ch.poisonRoles.includes(state.role);
+  const histNote = ch.historyNote2
+    ? `<div class="history-note">${ch.historyNote}</div><div class="history-note" style="margin-top:0.5rem">${ch.historyNote2}</div>`
+    : `<div class="history-note">${ch.historyNote}</div>`;
+  return `
+    ${renderProgress()}
+    ${renderStats()}
+    <div class="role-badge"><span class="rb-icon">${role.icon}</span><div><div class="rb-name">${role.name}</div><div class="rb-desc">${role.desc}</div></div></div>
+    <div class="screen-label">${ch.title}</div>
+    <div class="screen-heading" style="font-size:18px">${ch.subtitle}</div>
+    <div class="scene-text">${ch.scene}</div>
+    <div class="role-context">${role.context[ch.id]}</div>
+    ${isPoison ? `<div class="poison-note">⚠ There may be no good option for your role in this chapter. Choose the least difficult path — and notice what the available options reveal about your position in Roman civilization.</div>` : ""}
+    ${histNote}
+    <div class="choices-label">Discuss with your table — then choose:</div>
+    <div class="choices">${choices.map((c, i) => `<button class="choice-btn" onclick="makeChoice(${i})"><div class="choice-text">${c.text}</div><div class="choice-hint">${c.hint}</div></button>`).join("")}</div>`;
+}
+
+function screenOutcome() {
+  const ch = CHAPTERS[state.chapterIndex];
+  const o = state.pendingOutcome;
+  const outcomeClass = o.poison ? "outcome-poison" : `outcome-${o.outcome}`;
+  const outcomeLabel = o.outcome === "good" ? "✓ What happened" : o.outcome === "bad" ? "✗ What happened" : o.poison ? "⚠ The constrained choice" : "→ What happened";
+  return `
+    ${renderProgress()}
+    ${renderStats()}
+    <div class="outcome-box ${outcomeClass}"><div class="outcome-label">${outcomeLabel}</div>${o.result}</div>
+    ${ch.discussAfter
+      ? `<button class="btn btn-roman" onclick="startDiscussion()">Continue to table discussion →</button>`
+      : `<div class="journal-prompt"><strong>✏ Field Journal Prompt —</strong> answer before your teacher signals to continue:<br><br>${ch.journalPrompt}</div>
+         <button class="btn btn-roman" onclick="advanceChapter()">${state.chapterIndex < CHAPTERS.length - 1 ? 'Continue →' : 'See how your story ends →'}</button>`}`;
+}
+
+function screenDiscussion() {
+  const ch = CHAPTERS[state.chapterIndex];
+  clearInterval(state.timerInterval);
+  setTimeout(() => {
+    let secs = 90;
+    state.timerInterval = setInterval(() => {
+      secs--;
+      const el = document.getElementById("timer-display");
+      const fill = document.getElementById("timer-fill");
+      const btn = document.getElementById("cont-btn");
+      if (el) el.textContent = `${Math.floor(secs/60)}:${String(secs%60).padStart(2,'0')}`;
+      if (fill) fill.style.width = `${(secs/90)*100}%`;
+      if (secs <= 0) { clearInterval(state.timerInterval); if (btn) btn.classList.add("ready"); }
+    }, 1000);
+  }, 100);
+  return `
+    ${renderProgress()}
+    <div class="discussion-box">
+      <div class="disc-header">⏱ Table Discussion — 90 seconds</div>
+      <div class="disc-prompt">${ch.discussPrompt}</div>
+      <div class="timer-row">
+        <div class="timer-display" id="timer-display">1:30</div>
+        <div class="timer-track"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+        <button class="continue-btn" id="cont-btn" onclick="afterDiscussion()">Continue →</button>
+      </div>
+    </div>
+    <div class="journal-prompt"><strong>✏ Field Journal Prompt —</strong> write your response while the timer runs:<br><br>${ch.journalPrompt}</div>`;
+}
+
+function screenGameOver() {
+  return `
+    <div style="text-align:center;padding:2rem 1rem">
+      <div style="font-size:48px;margin-bottom:1rem">🦅</div>
+      <div class="screen-heading">Your story in Rome ends here</div>
+      ${renderStats()}
+      <div class="history-note" style="text-align:left;margin-bottom:1.25rem">Even Rome — the civilization that built the most sophisticated food distribution system in the ancient world, that moved grain from Egypt to feed a city of a million people — could not always feed everyone within it. The aqueducts and grain doles that defined Roman civilization had limits that its leaders often refused to acknowledge.</div>
+      <div class="journal-prompt" style="text-align:left">What does a food crisis in the world's most powerful empire tell you about the relationship between power and responsibility?</div><br>
+      <button class="btn btn-roman" onclick="restart()">Start again as a different role</button>
+    </div>`;
+}
+
+function screenArtClose() {
+  return `
+    <div class="screen-label">Closing — one more image</div>
+    <div class="screen-heading">The Colosseum<br><span style="font-size:16px;color:var(--roman-red-light)">Built 72-80 CE · Rome, Italy</span></div>
+    <div class="art-frame">
+      <img src="https://upload.wikimedia.org/wikipedia/commons/5/53/Colosseum_in_Rome%2C_Italy_-_April_2007.jpg" alt="The Colosseum in Rome" onerror="this.style.display='none';document.getElementById('colos-fallback').style.display='block'" />
+      <div id="colos-fallback" style="display:none;padding:2rem;text-align:center;color:var(--roman-red-light);font-family:Arial,sans-serif;font-size:13px">[The Colosseum — search "Colosseum Rome exterior" to view]</div>
+      <div class="art-caption">The Colosseum (Flavian Amphitheatre) · Rome, Italy · Built 72-80 CE · Capacity approximately 50,000-80,000 spectators · UNESCO World Heritage Site · Public Domain</div>
+    </div>
+    <div class="scene-text">You opened this campaign with a small mosaic at a doorstep — a warning about a dog, a moment of ordinary Roman life frozen in volcanic ash. Now look at this: a structure that held fifty thousand people, built for public entertainment, still standing nearly two thousand years later. Use your three prompts in your field journal:</div>
+    <div class="art-prompts">
+      <div class="art-prompt-box"><div class="apt-label">Prompt 1</div><div class="apt-q">One thing I find interesting...</div></div>
+      <div class="art-prompt-box"><div class="apt-label">Prompt 2</div><div class="apt-q">One thing that puzzles me...</div></div>
+      <div class="art-prompt-box"><div class="apt-label">Prompt 3</div><div class="apt-q">One question I have for the creator...</div></div>
+    </div>
+    <div class="journal-prompt"><strong>Year-long comparison question:</strong> You opened this year with cave paintings — humans leaving their mark on stone with pigment. Now look at the Colosseum — humans organizing fifty thousand people into one space for collective entertainment. What changed between the cave paintings and this building — and what, if anything, stayed the same about what humans were trying to do?</div>
+    <button class="btn btn-roman" onclick="go('ending')">See what your story revealed →</button>`;
+}
+
+function screenEnding() {
+  const role = getRole();
+  const p = powerResult(state.stats.power);
+  return `
+    <div class="screen-label">End of the Rome Campaign</div>
+    <div class="screen-heading" style="font-size:18px">${role.name} — Your Story Through Ancient Rome</div>
+    ${renderStats()}
+    <div class="power-result"><span class="pr-icon">${p.icon}</span><div class="pr-label">Power Assessment</div><div class="pr-title">${p.title}</div><div class="pr-text">${p.text}</div></div>
+    <div class="history-note"><strong>What this campaign covered:</strong><br>Roman geography and founding myths · The rejection of kings and the establishment of the Republic · Cincinnatus and the ideal of voluntary restraint of power · The Twelve Tables, the Tribune's veto, and checks and balances · The Punic Wars and the social fractures they created · Caesar's crossing of the Rubicon and the fall of the Republic · The empire — good emperors and bad · Roman achievements in engineering, law, and philosophy · The emergence and persecution of Christianity · Constantine's conversion and the Edict of Milan · The fall of the Western Empire and the survival of the East</div>
+    <div style="margin-bottom:1.25rem">
+      <div class="screen-label" style="margin-bottom:8px">What Rome gave the world</div>
+      <div class="achievements-grid">
+        <div class="achievement-card"><span class="ac-icon">⚖️</span><div class="ac-title">Roman Law</div><div class="ac-desc">The Twelve Tables, contract law, innocent until proven guilty, the right to face your accuser — principles still in modern legal systems including the United States.</div></div>
+        <div class="achievement-card"><span class="ac-icon">🏛️</span><div class="ac-title">Republican Government</div><div class="ac-desc">Three branches checking each other, the veto, written laws, elected officials with limited terms — the architecture the American Founders studied and adapted.</div></div>
+        <div class="achievement-card"><span class="ac-icon">🛣️</span><div class="ac-title">Engineering</div><div class="ac-desc">50,000 miles of roads, concrete construction, aqueducts delivering clean water — infrastructure so well built that some Roman roads and aqueducts still function today.</div></div>
+        <div class="achievement-card"><span class="ac-icon">🌍</span><div class="ac-title">The Pax Romana</div><div class="ac-desc">Two centuries of relative peace across the Mediterranean world — enabling trade, cultural exchange, and the spread of ideas including Christianity.</div></div>
+        <div class="achievement-card"><span class="ac-icon">📖</span><div class="ac-title">Latin and Romance Languages</div><div class="ac-desc">Latin became the foundation of French, Spanish, Portuguese, Italian, and Romanian — and the language of European scholarship for over a thousand years.</div></div>
+        <div class="achievement-card"><span class="ac-icon">✝️</span><div class="ac-title">Christianity's Spread</div><div class="ac-desc">Roman roads, Roman peace, Roman commercial networks, and eventually Roman imperial support carried Christianity from a small community in Judea to a world religion.</div></div>
+      </div>
+    </div>
+    <div class="discussion-questions">
+      <h4>Class Discussion Questions</h4>
+      <p>1. Rome built an entire system of government to prevent one person from having too much power. That system produced the Republic for five hundred years — and then produced emperors. What does that tell you about the relationship between good systems and the people who run them?</p>
+      <p>2. The Tribune had the power to say "veto" — "I forbid" — to any law that harmed ordinary people. Where have you heard the word "veto" before? What does it tell you that modern governments still use this Roman concept?</p>
+      <p>3. Rome built the most sophisticated government in the ancient world and still fell. What do you think was the most important cause — and does your answer depend on which role you played?</p>
+      <p>4. The Twelve Tables established that written law applies to everyone — including the powerful. What happens when powerful people find ways around written law? What evidence from this campaign supports your answer?</p>
+      <p>5. The Founders of the United States read Roman history carefully before designing the American government. After playing this campaign — what do you think they were most determined to avoid repeating?</p>
+    </div>
+    <button class="btn btn-roman" onclick="restart()">Play again as a different role</button>
+    <button class="btn btn-secondary" onclick="restart()">Return to start</button>`;
+}
+
+function selectRole(id) { state.role = id; state.chapterIndex = 0; go("chapter"); }
+function makeChoice(i) {
+  const ch = CHAPTERS[state.chapterIndex];
+  const choice = ch.choices[state.role][i];
+  applyStats(choice.statChange);
+  state.pendingOutcome = choice;
+  if (isDead()) { go("gameover"); return; }
+  go("outcome");
+}
+function startDiscussion() { go("discussion"); }
+function afterDiscussion() { clearInterval(state.timerInterval); advanceChapter(); }
+function advanceChapter() {
+  state.pendingOutcome = null;
+  if (state.chapterIndex < CHAPTERS.length - 1) { state.chapterIndex++; go("chapter"); }
+  else { go("art_close"); }
+}
+function restart() {
+  clearInterval(state.timerInterval);
+  state = { screen: "art_open", role: null, chapterIndex: 0, pendingOutcome: null, stats: { food: 50, power: 50, wealth: 50, standing: 50 }, timerInterval: null };
+  render(); window.scrollTo({ top: 0, behavior: "smooth" });
+}
+
+function render() {
+  const el = document.getElementById("content");
+  const screens = { art_open: screenArtOpen, role_select: screenRoleSelect, chapter: screenChapter, outcome: screenOutcome, discussion: screenDiscussion, gameover: screenGameOver, art_close: screenArtClose, ending: screenEnding };
+  el.innerHTML = (screens[state.screen] || (() => "<p>Loading...</p>"))();
+}
+render();
+</script>
+</body>
+</html>
