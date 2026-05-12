@@ -1,0 +1,700 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Renaissance & Reformation — The Story of Us</title>
+<style>
+  :root {
+    --gold: #B8860B;
+    --gold-light: #FFF8DC;
+    --gold-glow: rgba(184,134,11,0.15);
+    --crimson: #8B1A1A;
+    --crimson-light: #F5C8C8;
+    --lapis: #1A3A6B;
+    --lapis-light: #C8D4F8;
+    --parchment: #F5ECD8;
+    --parchment-dark: #D8CCAA;
+    --forest: #2A4A1A;
+    --forest-light: #C8E0B0;
+    --stone: #5A5040;
+    --stone-light: #E8E0D0;
+    --red: #8B2020;
+    --red-light: #F5D0D0;
+    --green: #2A6B3A;
+    --green-light: #C8F0D0;
+    --shadow: #0A0800;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Georgia, 'Times New Roman', serif; background: #0A0800; color: var(--parchment); min-height: 100vh; }
+  #app { max-width: 780px; margin: 0 auto; padding: 1.5rem 1.5rem 3rem; }
+  .site-header { text-align: center; padding: 1.5rem 1rem 1rem; border-bottom: 2px solid var(--gold); margin-bottom: 1.5rem; background: linear-gradient(180deg, rgba(184,134,11,0.08) 0%, transparent 100%); }
+  .site-header .campaign-tag { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--gold); font-family: Arial, sans-serif; margin-bottom: 6px; }
+  .site-header h1 { font-size: 28px; font-weight: bold; color: var(--gold-light); letter-spacing: 0.04em; margin-bottom: 4px; }
+  .site-header h2 { font-size: 14px; font-weight: normal; color: var(--parchment-dark); font-family: Arial, sans-serif; font-style: italic; }
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.25rem; }
+  .stat-box { background: rgba(184,134,11,0.1); border: 1px solid rgba(184,134,11,0.3); border-radius: 6px; padding: 8px 10px; text-align: center; }
+  .stat-icon { font-size: 16px; display: block; margin-bottom: 2px; }
+  .stat-label { font-size: 10px; color: var(--gold); letter-spacing: 0.05em; text-transform: uppercase; font-family: Arial, sans-serif; }
+  .stat-value { font-size: 18px; font-weight: bold; margin: 2px 0; }
+  .stat-track { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 4px; }
+  .stat-fill { height: 4px; border-radius: 2px; transition: width 0.5s, background 0.5s; }
+  .role-badge { display: flex; align-items: center; gap: 10px; background: rgba(184,134,11,0.1); border: 1px solid rgba(184,134,11,0.3); border-radius: 8px; padding: 10px 14px; margin-bottom: 1.25rem; }
+  .role-badge .rb-icon { font-size: 24px; }
+  .role-badge .rb-name { font-size: 15px; font-weight: bold; color: var(--gold-light); }
+  .role-badge .rb-desc { font-size: 12px; color: var(--parchment-dark); font-family: Arial, sans-serif; }
+  .progress-row { display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem; }
+  .prog-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(184,134,11,0.2); border: 1.5px solid rgba(184,134,11,0.4); }
+  .prog-dot.active { background: var(--gold); border-color: var(--gold); }
+  .prog-dot.done { background: var(--crimson); border-color: var(--crimson); }
+  .prog-label { font-size: 11px; color: var(--parchment-dark); font-family: Arial, sans-serif; }
+  .screen-label { font-size: 11px; color: var(--gold); letter-spacing: 0.1em; text-transform: uppercase; font-family: Arial, sans-serif; margin-bottom: 6px; }
+  .screen-heading { font-size: 22px; font-weight: bold; color: var(--gold-light); margin-bottom: 1rem; line-height: 1.3; }
+  .scene-text { font-size: 15px; line-height: 1.85; color: var(--parchment); margin-bottom: 1rem; }
+  .role-context { background: var(--gold-glow); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 14px; font-style: italic; color: var(--gold-light); margin-bottom: 1.25rem; line-height: 1.65; font-family: Arial, sans-serif; }
+  .history-note { background: rgba(26,58,107,0.2); border-left: 3px solid var(--lapis); border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 13px; color: var(--lapis-light); margin-bottom: 1.25rem; line-height: 1.65; font-family: Arial, sans-serif; }
+  .history-note strong { color: #E8F0FF; font-weight: 600; }
+  .journal-prompt { background: rgba(184,134,11,0.1); border-left: 3px solid var(--gold); border-radius: 0 6px 6px 0; padding: 12px 14px; font-size: 14px; color: var(--gold-light); margin-bottom: 1.25rem; line-height: 1.7; font-family: Arial, sans-serif; }
+  .journal-prompt strong { color: var(--parchment); font-weight: 600; }
+  .poison-note { background: rgba(139,32,32,0.2); border-left: 3px solid var(--red); border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 13px; color: var(--red-light); margin-bottom: 1.25rem; line-height: 1.65; font-family: Arial, sans-serif; }
+  .discussion-box { background: var(--stone); border-radius: 10px; padding: 16px 20px; margin-bottom: 1.25rem; }
+  .discussion-box .disc-header { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-family: Arial, sans-serif; color: var(--parchment-dark); margin-bottom: 6px; }
+  .discussion-box .disc-prompt { font-size: 15px; line-height: 1.6; margin-bottom: 6px; font-style: italic; color: var(--parchment); }
+  .disc-pairs { background: rgba(0,0,0,0.2); border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; font-size: 13px; color: var(--parchment-dark); font-family: Arial, sans-serif; line-height: 1.8; }
+  .timer-row { display: flex; align-items: center; gap: 14px; }
+  .timer-display { font-size: 32px; font-weight: bold; font-family: Arial, sans-serif; min-width: 60px; color: var(--parchment); }
+  .timer-track { flex: 1; height: 8px; background: rgba(255,255,255,0.15); border-radius: 4px; }
+  .timer-fill { height: 8px; background: var(--gold); border-radius: 4px; transition: width 1s linear; }
+  .continue-btn { background: var(--gold); color: var(--shadow); border: none; border-radius: 6px; padding: 8px 16px; font-size: 13px; font-weight: bold; cursor: pointer; font-family: Arial, sans-serif; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .continue-btn.ready { opacity: 1; pointer-events: all; }
+  .choices-label { font-size: 11px; color: var(--parchment-dark); letter-spacing: 0.08em; text-transform: uppercase; font-family: Arial, sans-serif; margin-bottom: 8px; }
+  .choices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+  .choice-btn { background: rgba(184,134,11,0.08); border: 1.5px solid rgba(184,134,11,0.3); border-radius: 8px; padding: 12px 16px; text-align: left; cursor: pointer; transition: all 0.15s; font-family: Georgia, serif; }
+  .choice-btn:hover { background: rgba(184,134,11,0.2); border-color: var(--gold); }
+  .choice-btn .choice-text { font-size: 14px; color: var(--parchment); line-height: 1.5; }
+  .choice-btn .choice-hint { font-size: 11px; color: var(--parchment-dark); margin-top: 4px; font-family: Arial, sans-serif; font-style: italic; }
+  .outcome-box { border-radius: 8px; padding: 14px 16px; margin-bottom: 1.25rem; font-size: 14px; line-height: 1.7; font-family: Arial, sans-serif; }
+  .outcome-good { background: rgba(42,107,58,0.2); border: 1.5px solid var(--green); color: var(--green-light); }
+  .outcome-bad { background: rgba(139,32,32,0.2); border: 1.5px solid var(--red); color: var(--red-light); }
+  .outcome-neutral { background: rgba(90,80,64,0.3); border: 1.5px solid var(--stone); color: var(--stone-light); }
+  .outcome-poison { background: rgba(139,32,32,0.15); border: 1.5px solid #6B1A1A; color: #F0B0B0; }
+  .outcome-label { font-size: 11px; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; font-family: Arial, sans-serif; }
+  .art-frame { border: 2px solid var(--gold); border-radius: 8px; overflow: hidden; margin-bottom: 1.25rem; background: var(--shadow); box-shadow: 0 0 20px rgba(184,134,11,0.15); }
+  .art-frame img { width: 100%; display: block; max-height: 380px; object-fit: contain; object-position: center top; background: #1A1008; }
+  .art-caption { padding: 8px 14px; font-size: 11px; color: var(--gold); font-family: Arial, sans-serif; font-style: italic; background: rgba(10,8,0,0.9); line-height: 1.5; }
+  .art-prompts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.25rem; }
+  .art-prompt-box { background: rgba(184,134,11,0.1); border: 1px solid rgba(184,134,11,0.3); border-radius: 6px; padding: 10px 14px; }
+  .art-prompt-box .apt-label { font-size: 11px; font-weight: bold; color: var(--gold); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 4px; }
+  .art-prompt-box .apt-q { font-size: 14px; color: var(--parchment-dark); font-style: italic; }
+  .role-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1rem; }
+  .role-card { background: rgba(184,134,11,0.08); border: 2px solid rgba(184,134,11,0.3); border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.15s; }
+  .role-card:hover { background: rgba(184,134,11,0.2); border-color: var(--gold); transform: translateY(-1px); }
+  .role-card .rc-icon { font-size: 28px; margin-bottom: 6px; display: block; }
+  .role-card .rc-name { font-size: 15px; font-weight: bold; color: var(--gold-light); margin-bottom: 4px; }
+  .role-card .rc-own { font-size: 12px; color: var(--parchment-dark); font-family: Arial, sans-serif; line-height: 1.5; margin-bottom: 6px; }
+  .role-card .rc-fear { font-size: 11px; color: var(--red-light); font-family: Arial, sans-serif; font-style: italic; }
+  .knowledge-result { background: rgba(184,134,11,0.12); border: 1.5px solid var(--gold); border-radius: 10px; padding: 16px 18px; margin-bottom: 1.25rem; text-align: center; }
+  .knowledge-result .kr-icon { font-size: 36px; margin-bottom: 8px; display: block; }
+  .knowledge-result .kr-label { font-size: 12px; color: var(--gold); text-transform: uppercase; letter-spacing: 0.08em; font-family: Arial, sans-serif; margin-bottom: 6px; }
+  .knowledge-result .kr-title { font-size: 20px; font-weight: bold; color: var(--gold-light); margin-bottom: 8px; }
+  .knowledge-result .kr-text { font-size: 14px; color: var(--parchment-dark); line-height: 1.7; font-family: Arial, sans-serif; }
+  .achievements-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1.25rem; }
+  .achievement-card { background: rgba(184,134,11,0.1); border: 1px solid rgba(184,134,11,0.3); border-radius: 8px; padding: 12px 14px; }
+  .achievement-card .ac-icon { font-size: 20px; margin-bottom: 4px; display: block; }
+  .achievement-card .ac-title { font-size: 13px; font-weight: bold; color: var(--gold-light); margin-bottom: 4px; }
+  .achievement-card .ac-desc { font-size: 12px; color: var(--parchment-dark); font-family: Arial, sans-serif; line-height: 1.5; }
+  .discussion-questions { background: rgba(42,74,26,0.15); border: 1px solid var(--forest); border-radius: 8px; padding: 14px 16px; margin-bottom: 1.25rem; }
+  .discussion-questions h4 { font-size: 12px; font-weight: bold; color: var(--forest-light); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 10px; }
+  .discussion-questions p { font-size: 13px; color: #B0D898; line-height: 1.7; font-family: Arial, sans-serif; margin-bottom: 8px; }
+  .year-end-box { background: rgba(184,134,11,0.1); border: 2px solid var(--gold); border-radius: 10px; padding: 18px 20px; margin-bottom: 1.25rem; }
+  .year-end-box h4 { font-size: 14px; font-weight: bold; color: var(--gold-light); margin-bottom: 10px; letter-spacing: 0.04em; }
+  .year-end-box p { font-size: 14px; color: var(--parchment-dark); line-height: 1.8; font-family: Arial, sans-serif; margin-bottom: 8px; }
+  .btn { background: var(--stone); color: var(--parchment); border: none; border-radius: 8px; padding: 11px 22px; font-size: 14px; font-weight: bold; cursor: pointer; font-family: Arial, sans-serif; transition: background 0.15s; margin-right: 8px; margin-bottom: 8px; }
+  .btn:hover { background: #3A3020; }
+  .btn-gold { background: var(--gold); color: var(--shadow); }
+  .btn-gold:hover { background: #8A6000; }
+  .btn-secondary { background: transparent; color: var(--gold); border: 1.5px solid var(--gold); }
+  .btn-secondary:hover { background: var(--gold-glow); }
+  @media (max-width: 500px) { .role-grid { grid-template-columns: 1fr; } .stats-row { grid-template-columns: repeat(2, 1fr); } .achievements-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="site-header">
+    <div class="campaign-tag">The Story of Us · Campaign 8 · Final Campaign</div>
+    <h1>THE RENAISSANCE & REFORMATION</h1>
+    <h2>What Happens When People Start Asking Questions? · c. 1350 – 1700 CE</h2>
+  </div>
+  <div id="content"></div>
+</div>
+<script>
+const ROLES = [
+  { id:"patron", name:"Italian Merchant / Medici Patron", icon:"💰",
+    desc:"You are one of the wealthy merchant families of Florence or Venice whose money funds the Renaissance. Art, scholarship, and architecture exist because you pay for them.",
+    own:"Enormous wealth from banking and trade, the political influence that wealth brings, and the taste to know what excellence looks like.",
+    fear:"A Church that condemns wealth as sinful. Political rivals who use your patronage against you. A world where merchants are not respected as the creators of civilization they actually are.",
+    want:"Beautiful things made by the best artists. A city that reflects the glory of the family name. A legacy that outlasts the money.",
+    ctx:{ ch1:"Florence is the center of the world right now — at least it feels that way. The Medici banking network stretches from London to Constantinople. The wealth flowing through this city is funding something new: a systematic rediscovery of ancient Greek and Roman learning that is changing how educated people think about everything.",
+      ch2:"You are the reason this art exists. Botticelli, Brunelleschi, Ghiberti — none of them could work without patrons like you. The investment you make in art is simultaneously a spiritual act, a political statement, and a commercial one. Beautiful cities attract commerce. Beautiful cities demonstrate power. Beautiful cities outlast their builders.",
+      ch3:"The printing press is changing your world in ways you are only beginning to understand. Information that previously required your wealth to access — rare manuscripts, classical texts — is now available to anyone who can read. The democratization of knowledge is good for humanity. It is complicated for the people who previously controlled access to it.",
+      ch4:"The Reformation is directly threatening the commercial networks your family built across Europe. When Luther's ideas split Christianity, they split trading relationships, banking connections, and diplomatic arrangements that took generations to build. Religious conflict is also economic conflict.",
+      ch5:"The Counter-Reformation's new energy — the Jesuits, the reformed Church — is creating new opportunities for patronage. The Catholic Church is commissioning extraordinary art to demonstrate its authority and beauty. Your wealth can serve the renewed Church as it served the pre-Reformation one.",
+      ch6:"Your legacy is the question. The Medici family funded Michelangelo, Leonardo, Botticelli, and Galileo. The world was changed by what your money made possible. Whether the world remembers the patrons or only the artists is a question every generation of Medici has answered differently." }
+  },
+  { id:"artist", name:"Renaissance Artist", icon:"🎨",
+    desc:"You are an artist working in the new Renaissance tradition — learning anatomy, perspective, and the classical models that are transforming what art can do.",
+    own:"Technical skill developed through years of apprenticeship, the ability to see the world more precisely than anyone around you, and the growing conviction that human beauty is worth depicting.",
+    fear:"A patron who controls what you can create. A Church that condemns your interest in the human body as indecent. The possibility that your greatest work will be attributed to someone else.",
+    want:"The freedom to pursue perfection — in anatomy, in perspective, in the expression of the human face at its most alive. To make something that lasts.",
+    ctx:{ ch1:"The ancient world is being rediscovered not just in texts but in sculpture — Roman statues being unearthed across Italy, showing the human body depicted with a naturalism that medieval art entirely abandoned. You study these figures with the intensity of someone who has been given permission to look at the world honestly for the first time.",
+      ch2:"Perspective. The mathematical discovery that objects appear smaller as they recede from the viewer — and that this can be calculated precisely and depicted on a flat surface — is transforming painting. Before perspective, medieval art depicted spiritual hierarchy: the most important figures were the largest. After perspective, art depicts reality as the eye actually sees it. You are learning to paint what is actually there.",
+      ch3:"Gutenberg's press is spreading images as well as words. Dürer in Germany is making woodblock prints that distribute his work across Europe in ways no painting can match. The artist who understands the new technology of reproduction reaches an audience no individual patron can provide.",
+      ch4:"The Reformation is dividing your market. Protestant patrons in Northern Europe are suspicious of religious imagery — some of them are actively destroying it. Catholic patrons want more of it, more magnificent, more persuasive. The artist who can navigate both markets survives. The artist who takes a strong theological position may find half their potential patrons gone.",
+      ch5:"The Counter-Reformation is the greatest commission opportunity in a generation. The Church is funding extraordinary art to demonstrate the beauty and truth of Catholicism — the Baroque style emerging from this moment is the most dramatic and emotionally powerful art Europe has produced. You paint for the Church and produce something overwhelming.",
+      ch6:"You are making things that will last longer than any political or religious controversy of your lifetime. Michelangelo's Sistine ceiling. Leonardo's notebooks. Dürer's self-portrait. The art of the Renaissance outlasts the Renaissance. What you make now will be studied in 600 years." }
+  },
+  { id:"humanist", name:"Humanist Scholar", icon:"📖",
+    desc:"You are a scholar in the tradition of Petrarch — rediscovering classical texts, applying reason to human problems, and arguing that the proper study of mankind is man.",
+    own:"Deep knowledge of Latin and Greek, access to newly recovered classical texts, and the conviction that human dignity and reason are worth celebrating.",
+    fear:"A Church that condemns human-centered inquiry as pride. A political authority that sees your questions as dangerous. The possibility that reason alone cannot answer the most important questions.",
+    want:"A world where human dignity is recognized, where reason is respected, where classical wisdom and Christian faith can coexist and reinforce each other.",
+    ctx:{ ch1:"Petrarch — the first humanist — climbed Mont Ventoux simply to look at the view, and wrote about it as an experience worth having for its own sake. That sounds simple. In a medieval world where everything was supposed to point toward God rather than toward human experience, it was revolutionary. You are Petrarch's intellectual heir.",
+      ch2:"The rediscovery of classical texts is your life's work. Greek and Roman writers discussing ethics, politics, history, and the nature of the good life — these texts were never fully lost, but they were filtered through medieval theology. Reading them directly, in their original languages, produces a different understanding than reading them through a theological lens.",
+      ch3:"Erasmus is your hero. The Christian humanist who applies classical learning to Church reform — who writes the Praise of Folly mocking corruption while remaining Catholic — represents the possibility you believe in: that faith and reason can coexist, that the Church can be reformed from within by people who love it. The printing press makes Erasmus's ideas available across Europe in months.",
+      ch4:"Luther has done what Erasmus refused to do — broken with the Church rather than reform it from within. You understand why. You also see what is lost when reform becomes revolution: the unity of European Christendom, the possibility of a reformed Church that holds everyone. Thomas More will die rather than accept the break. You understand that too.",
+      ch5:"The Galileo affair is your nightmare made real. A scientist who has discovered something true about the universe — that it moves around the sun, not the sun around it — is forced by the Church to say he was wrong. He recants. He is placed under house arrest. He reportedly mutters afterward: 'And yet it moves.' The question of what authority can legitimately demand is the question your scholarship has been circling for a generation.",
+      ch6:"Shakespeare. Cervantes. Writers using the vernacular languages — English, Spanish — to explore human nature with a depth and complexity the classical tradition never achieved in its own languages. The humanist project you began by rediscovering Latin and Greek has produced something it didn't anticipate: a literature in living languages that speaks to everyone." }
+  },
+  { id:"reformer", name:"Protestant Reformer", icon:"📜",
+    desc:"You follow in the tradition of Martin Luther — convinced that the Church has corrupted the faith and that reform requires breaking with Rome rather than working within it.",
+    own:"Scripture as the only authority. The conviction that salvation comes through faith alone, not through purchased indulgences. A printing press that spreads your ideas faster than the Church can suppress them.",
+    fear:"Being declared a heretic. The violence that religious division brings. The possibility that the Reformation you started will fragment into dozens of competing versions of Christianity.",
+    want:"A Christianity that returns to what you understand as its original purity — scripture read directly, salvation understood correctly, a Church that serves its people rather than exploiting them.",
+    ctx:{ ch1:"The corruption that Luther will eventually challenge is visible already in the Renaissance. The Church spending vast sums on art and architecture. The selling of offices. The gap between what the Church preaches and how it behaves. The humanist scholars are already pointing at this gap. The question is what to do about it.",
+      ch2:"The printing press is the Reformation's most important tool. Luther's Ninety-Five Theses are posted in Wittenberg on October 31, 1517 — and within weeks, printed copies are circulating across Germany. The Church that controlled information for a thousand years suddenly finds its critics able to reach everyone who can read, simultaneously, faster than any suppression can work.",
+      ch3:"Luther's core argument: salvation comes through faith alone, not through works or purchased indulgences. Scripture alone is the authority — not the Pope, not Church councils, not centuries of tradition. Every believer can read and interpret scripture directly. These ideas are genuinely radical. They restructure the entire relationship between the individual and religious authority.",
+      ch4:"This is your chapter. Luther at the Diet of Worms: 'Here I stand. I can do no other.' Calvin building Geneva as a model Protestant city. Henry VIII — for entirely different reasons — breaking England from Rome and establishing the Church of England. The Reformation you began is larger and more varied than any single person planned.",
+      ch5:"The Thirty Years War is what religious division produces when political authority takes sides. Catholic and Protestant armies destroying Germany for a generation. The Spanish Inquisition targeting anyone who strays from Catholic orthodoxy. The violence your ideas — which were meant to free people — have helped produce is something you live with.",
+      ch6:"The legacy is complicated. You broke the medieval Church's monopoly on Christian interpretation. You made scripture available in vernacular languages — Luther's German Bible, Tyndale's English Bible. You established the principle that individuals can read and interpret religious texts directly. You also fractured European Christianity into competing denominations that will fight each other for centuries." }
+  },
+  { id:"catholic", name:"Catholic Church Official", icon:"✝️",
+    desc:"You serve the Catholic Church during its most severe crisis since the early centuries — the Protestant Reformation fracturing the unity of Western Christianity.",
+    own:"The authority of tradition, the sacraments, the institutional structure that has organized European life for a thousand years, and the genuine conviction that Luther is wrong.",
+    fear:"That the Church's real corruptions will be used to discredit its genuine truths. That religious division will produce violence. That the institution you serve will not survive the crisis.",
+    want:"A reformed Church — but reformed from within, not broken apart. The unity of Christendom. A faith that serves its people honestly.",
+    ctx:{ ch1:"The Church of the Renaissance is simultaneously the patron of the greatest art ever made and the institution selling indulgences to fund it. The corruption is real. The beauty is also real. You serve an institution that contains both and you have spent your life trying to strengthen the beauty and address the corruption.",
+      ch2:"The humanist scholars within the Church — Erasmus, More — are your allies. They see the same problems Luther sees. They want the same reforms. They believe, as you do, that the Church can be reformed from within without destroying the unity that a thousand years of Christian Europe represents. The question is whether they are right.",
+      ch3:"The printing press that Luther uses to spread his ideas is also available to you. Catholic scholars, apologists, and reformers use it to respond. The Reformation is also a war of words, and both sides print. The Church that controlled information through manuscript copying suddenly has to compete in a marketplace of ideas it didn't design.",
+      ch4:"The Council of Trent is your generation's answer to Luther. Twenty-five years of Church councils reaffirming Catholic doctrine, addressing genuine corruptions, and clarifying what the Church actually teaches. The indulgence scandal that sparked Luther's revolt is addressed. The practices that humanists criticized are reformed. Too late to bring Luther back — but not too late to save the Church.",
+      ch5:"The Jesuits — founded by Ignatius of Loyola — are the Counter-Reformation's most powerful tool. Educated, disciplined, intellectually serious missionaries who go where the Church is losing ground. The Galileo affair is your most painful chapter: a scientist who has discovered something true being forced to recant by an authority that is wrong about astronomy. You know this is wrong. The institutional pressures are more powerful than your individual judgment.",
+      ch6:"The Catholic Church survives the Reformation. It is smaller — it has lost northern Europe permanently. It is reformed — the genuine corruptions that Luther identified have been addressed. It is artistically extraordinary — the Baroque art of the Counter-Reformation is among the most powerful ever made. What it is no longer is the universal Church of Western Christendom. That loss is permanent." }
+  },
+  { id:"ordinary", name:"Ordinary Person / Craftworker", icon:"🔨",
+    desc:"You are an ordinary person living through extraordinary times — a craftworker, a farmer, a tradesperson whose world is being transformed by forces mostly beyond your control.",
+    own:"Your trade, your family, your community, and the gradually increasing access to information that the printing press is providing.",
+    fear:"Religious wars fought over questions you barely understand. A world changing faster than you can keep up with. Being on the wrong side of a religious or political divide you didn't choose.",
+    want:"To practice your trade, feed your family, and — increasingly — to understand the world you live in through the new ideas and new books that are becoming available to people like you.",
+    ctx:{ ch1:"The Renaissance is happening in Florence and Venice, in the courts of princes and the workshops of artists. For most people — craftworkers, farmers, tradespeople — it is a distant rumor. What reaches you: slightly better tools, slightly more stable commerce, and occasionally a traveling scholar or preacher who brings new ideas from the city.",
+      ch2:"The printing press changes your world more directly than any painting does. Books that previously cost as much as a house now cost as much as a few days' wages. You may not be fully literate — but your children will be, if you invest in their education. The barrier between the learned and the unlearned is beginning to come down.",
+      ch3:"Luther's ideas reach you through sermons and printed pamphlets in German — the vernacular language you actually speak. The message that you can read scripture yourself, that you don't need a priest to mediate between you and God, that the Church selling salvation is corrupt — these ideas land differently when you've watched your family spend money on indulgences they couldn't afford.",
+      ch4:"The Reformation affects you most concretely through the religious wars it produces. The Peasants' War — in which German peasants use Luther's ideas about Christian freedom to demand social equality — is crushed with Luther's own approval. You understand then that the Reformation is about theological freedom, not social freedom. The disappointment is real.",
+      ch5:"The Inquisition — both Spanish and Roman — is the shadow side of the Reformation era. The Spanish Inquisition persecutes anyone who deviates from Catholic orthodoxy. The Roman Inquisition investigates scientists and scholars whose ideas challenge Church teaching. For ordinary people, the message is clear: questions have consequences. Not everyone can afford to ask them.",
+      ch6:"Shakespeare writes for you — for the groundlings who stand in the pit at the Globe Theatre for a penny, watching plays that take on kings, question authority, and explore human nature with a complexity no previous literature achieved. Cervantes writes Don Quixote — a novel that invents the modern form of fiction — in Spanish, for everyone who reads Spanish. The Renaissance that began in the courts of princes ends in the hands of ordinary people." }
+  }
+];
+
+const CHAPTERS = [
+  { id:"ch1", number:1,
+    title:"Chapter 1 — The Rebirth Begins",
+    subtitle:"Italy, the Medicis, and the Rediscovery of the Classical World",
+    scene:"It is approximately 1400 CE. Italy is not a country — it is a collection of competing city-states, each ruled by merchant families or city councils rather than feudal lords. Florence, Venice, Milan, Rome — each one a center of wealth, competition, and intellectual energy. The Black Death killed one third of Europe fifty years ago. The survivors inherited wealth, labor shortages that raised wages, and a gnawing question: if the Church's prayers couldn't stop the Plague, what else might the Church be wrong about? The answer emerging in Italy's cities is reaching backward — toward ancient Greece and Rome — and forward toward something that hasn't existed yet.",
+    historyNote:"<strong>The Italian Renaissance:</strong> The Renaissance — 'rebirth' in French — began in the Italian city-states of the 14th and 15th centuries. The Medici family of Florence were its greatest patrons, using their banking wealth to commission art, fund scholarship, and collect classical manuscripts. Petrarch (1304-1374), often called the first humanist, pioneered the recovery of classical texts and the idea that human experience was worth studying for its own sake. The rediscovery of Greek and Roman learning — filtered through medieval Christianity — produced a new intellectual movement that would transform every field of human endeavor.",
+    journalPrompt:"The Renaissance began in Italy's wealthy trading cities, not in the countryside or the Church. What does that tell you about the connection between wealth, trade, and new ideas?",
+    poisonRoles:[], discussAfter:false,
+    choices:{
+      patron:[
+        { text:"Commission Botticelli to paint the Birth of Venus — celebrate classical mythology alongside Christian subjects", hint:"Patronage as cultural statement", outcome:"good", result:"The Birth of Venus arrives in your palazzo and causes exactly the sensation you intended. A classical goddess depicted with the same care and beauty previously reserved for the Virgin Mary — not instead of Christian art, but alongside it. The humanist synthesis you believe in, made visible in paint. The city talks about it for months. Your name is connected to it forever.", statChange:{food:5,knowledge:15,wealth:-10,standing:20} },
+        { text:"Fund a new Platonic Academy — bring scholars together to translate and discuss classical texts", hint:"Intellectual investment", outcome:"good", result:"The Academy you fund becomes the intellectual center of Florence — philosophers, poets, artists, and scientists gathering to read Plato in the original Greek, to discuss the relationship between classical wisdom and Christian faith, to imagine what a civilization informed by both might look like. The investment produces no material return. The cultural return is incalculable.", statChange:{food:5,knowledge:25,wealth:-15,standing:20} },
+        { text:"Expand the banking network into new markets — wealth is the foundation everything else rests on", hint:"Commercial foundation", outcome:"good", result:"The expanded banking network funds everything else. The artists, the scholars, the architects — all of them exist because the money exists. You are not diminishing the Renaissance by ensuring its financial foundation. You are the reason it can happen. The banker who understands this is as essential as the artist who creates it.", statChange:{food:5,knowledge:10,wealth:25,standing:15} }
+      ],
+      artist:[
+        { text:"Study the newly unearthed Roman sculptures — learn what ancient artists knew about the human body", hint:"Classical learning applied to art", outcome:"good", result:"The Roman sculptures being excavated across Italy are the most important art education available. The Greeks and Romans depicted the human body with a naturalism that medieval art completely abandoned — and completely forgot how to achieve. You study these figures with the intensity of someone given permission to see clearly for the first time. What you learn will change everything you make.", statChange:{food:5,knowledge:25,wealth:5,standing:15} },
+        { text:"Enter Brunelleschi's workshop — learn the mathematical principles of perspective", hint:"The perspective revolution", outcome:"good", result:"Perspective is not just a technique — it is a philosophy. The idea that space can be represented mathematically, that the recession of objects into distance follows predictable rules, that a flat surface can depict the world as the eye actually sees it — these are radical claims about what art is for. You learn them. Your painting after this is fundamentally different from anything made before it.", statChange:{food:5,knowledge:30,wealth:5,standing:15} },
+        { text:"Study anatomy — understand the human body from the inside to depict it on the outside", hint:"Scientific observation in service of art", outcome:"good", result:"Leonardo is doing this. You follow. The dissection of human bodies — technically illegal, practically tolerated — produces drawings of muscles, bones, and organs that are simultaneously the most accurate anatomical records ever made and some of the most beautiful drawings in human history. Art and science are not opposites in the Renaissance. They are the same inquiry applied to different materials.", statChange:{food:5,knowledge:25,wealth:5,standing:20} }
+      ],
+      humanist:[
+        { text:"Recover and translate classical Greek texts — bring Plato and Aristotle back to Latin readers", hint:"The recovery of classical learning", outcome:"good", result:"The manuscripts arriving from Constantinople — fleeing the Ottoman conquest of 1453 — contain texts that Western Europe has not read in a thousand years. You translate them. Plato's Dialogues, read directly rather than through Aristotle's summaries and medieval commentary, produce a different philosophy than the one medieval theology constructed from them. The original is always more complex than the summary.", statChange:{food:5,knowledge:30,wealth:5,standing:20} },
+        { text:"Write in the tradition of Petrarch — celebrate human experience as worthy of literary attention", hint:"Humanism as literary program", outcome:"good", result:"Petrarch wrote sonnets about Laura — a real woman, his love, his obsession — with an intensity and precision that made individual human feeling the subject of serious literary art. You follow this. The idea that your specific experience, your particular feelings, your individual observations are worth writing down carefully — this is genuinely new. It will eventually produce Shakespeare.", statChange:{food:5,knowledge:25,wealth:5,standing:15} },
+        { text:"Engage with Machiavelli's political realism — understand power as it actually works, not as it should work", hint:"Realist political philosophy", outcome:"good", result:"Machiavelli writes The Prince after watching the Medici lose and regain Florence — a firsthand observer of how political power actually operates rather than how moral philosophy says it should. His conclusion: effective rulers use whatever means achieve their goals, regardless of conventional morality. The book shocks everyone. It also describes reality with an accuracy that idealistic political philosophy refuses to acknowledge.", statChange:{food:5,knowledge:25,wealth:5,standing:10} }
+      ],
+      reformer:[
+        { text:"Study the humanist critiques of the Church — they are saying what you are beginning to think", hint:"Learn from the reformers within", outcome:"good", result:"Erasmus, Lorenzo Valla, Colet — humanist scholars who use classical learning to demonstrate that the Church's practices have drifted from their scriptural foundations. Valla proves that the Donation of Constantine — the document the Church uses to justify its political authority — is a forgery. The tools of humanist scholarship are demolishing the Church's claims one by one. You are taking notes.", statChange:{food:5,knowledge:25,wealth:5,standing:10} },
+        { text:"Read scripture directly in the original Greek — discover what it actually says versus what the Church says it says", hint:"Sola Scriptura begins here", outcome:"good", result:"Erasmus's new Greek New Testament — the first printed edition of the Greek text — arrives in your hands. Reading it directly, without the Latin Vulgate's translations and the Church's interpretive tradition layered on top, you find things that surprise you. The gap between what scripture says and what the Church has built on that scripture is significant. The conviction that scripture alone should be the authority for Christian belief begins here.", statChange:{food:5,knowledge:30,wealth:5,standing:10} },
+        { text:"Observe the indulgence sellers — watch Johann Tetzel and understand what the Church has become", hint:"The corruption that demands reform", outcome:"good", result:"Johann Tetzel travels through Germany selling indulgences — certificates that, for a price, reduce the time a soul spends in purgatory. His sales pitch: 'As soon as the coin in the coffer rings, the soul from purgatory springs.' You watch ordinary people spend money they cannot afford to buy spiritual assurances that scripture does not support. The anger you feel is the anger that will produce the Ninety-Five Theses.", statChange:{food:5,knowledge:20,wealth:5,standing:15} }
+      ],
+      catholic:[
+        { text:"Acknowledge the Church's genuine corruptions — reform requires honesty about what needs reforming", hint:"Honest self-examination", outcome:"good", result:"The humanist scholars within the Church — Erasmus most pointedly — have documented the corruptions: the selling of offices, the indulgence trade, the gap between clergy's preaching and behavior. Acknowledging these honestly is the first step toward reform that might hold the Church together. The Church that refuses to examine itself will not survive the crisis coming.", statChange:{food:5,knowledge:20,wealth:5,standing:15} },
+        { text:"Commission magnificent art to demonstrate the Church's continued centrality to civilization", hint:"Art as theological argument", outcome:"good", result:"The art the Church commissions in this period — Michelangelo's Sistine ceiling, Raphael's Vatican rooms — is the most extraordinary produced in human history. The argument it makes is visual: the Church that created this beauty cannot be the corrupt institution its critics describe. The argument is complicated. The art is not.", statChange:{food:5,knowledge:15,wealth:-10,standing:20} },
+        { text:"Support Erasmus and the Christian humanists — reform from within is the correct path", hint:"Internal reform movement", outcome:"good", result:"Erasmus's program — scholarly criticism of Church corruption combined with renewed attention to scripture and classical learning, all within the Catholic tradition — is the path that might have worked if given enough time. You support it. Whether time remains is the question the next decade will answer.", statChange:{food:5,knowledge:25,wealth:5,standing:15} }
+      ],
+      ordinary:[
+        { text:"Learn to read — the world opening up requires literacy to access it", hint:"Education as the first step", outcome:"good", result:"Your city has a school now — a civic humanist school that teaches reading, writing, Latin, and some mathematics to children whose families can afford modest fees. You send your children. The investment is significant. The return — children who can participate in the changing world rather than watch it from outside — will compound across generations.", statChange:{food:-5,knowledge:20,wealth:-5,standing:10} },
+        { text:"Work in one of the great workshops — even ordinary craftworkers participate in the Renaissance", hint:"Craft participation in the Renaissance", outcome:"good", result:"The workshops of the great Renaissance artists employ dozens of craftworkers — assistants who grind pigments, stretch canvas, carve decorative elements, and complete the backgrounds of paintings the master designs. You are one of them. You work on something extraordinary without being the person history will remember for it. This is how most of the Renaissance actually happened.", statChange:{food:10,knowledge:15,wealth:10,standing:10} },
+        { text:"Listen to the traveling scholars and preachers — new ideas are reaching ordinary people through word of mouth", hint:"Ideas traveling beyond the cities", outcome:"good", result:"The ideas of the Renaissance reach your town through returning merchants, traveling scholars, and the occasional charismatic preacher who has been to Florence or Rome. What you hear: that ancient learning is being recovered, that human dignity is worth celebrating, that the world might be organized differently than it always has been. You listen. You remember. You pass it on.", statChange:{food:5,knowledge:15,wealth:5,standing:5} }
+      ]
+    }
+  },
+  { id:"ch2", number:2,
+    title:"Chapter 2 — Seeing the World Differently",
+    subtitle:"Perspective, Anatomy, and the Art of Human Dignity",
+    scene:"It is the mid-1400s. Something is happening in Italian art that has never happened before in human history — at least not at this scale and with this intention. Painters are using mathematics to represent three-dimensional space on flat surfaces. Sculptors are depicting the human body with an accuracy that required systematic study of anatomy. Architects are building domes that the medieval world said were impossible. The human body — in all its specific, individual, measurable reality — is becoming the measure of beauty rather than a distraction from spiritual truth. This is the visual revolution of the Renaissance, and it is inseparable from the philosophical one.",
+    historyNote:"<strong>Perspective and Anatomy:</strong> Linear perspective — developed by Brunelleschi around 1420 and codified by Alberti in 1435 — allowed painters to represent three-dimensional space mathematically on a flat surface. Leonardo da Vinci's anatomical drawings, produced through illegal dissections of human corpses, were the most accurate depictions of the human body ever made. Michelangelo's Sistine Chapel ceiling (1508-1512) synthesized anatomy, perspective, and classical mythology in the most ambitious artistic project in history. The Renaissance assertion that the human body was worthy of careful, beautiful depiction was itself a philosophical claim about human dignity.",
+    journalPrompt:"Medieval art made important figures larger than less important ones — size indicated spiritual significance. Renaissance art made everyone the correct size based on their distance from the viewer. What does that change tell you about what each era believed about people?",
+    poisonRoles:[], discussAfter:false,
+    choices:{
+      patron:[
+        { text:"Commission Michelangelo for the Sistine Chapel ceiling — give him the freedom to make something unprecedented", hint:"Great patronage requires trusting great artists", outcome:"good", result:"The negotiation is difficult. Michelangelo wants to paint the ceiling his way. The Pope wants something more conventional. You intervene on the artist's behalf — the person paying for art is not always the person who knows what art can be. Michelangelo gets his freedom. Four years later, the ceiling is finished. Nothing like it has ever existed.", statChange:{food:5,knowledge:20,wealth:-20,standing:25} },
+        { text:"Fund Leonardo's notebooks — support the investigation that doesn't produce finished paintings", hint:"Patronage of process not just product", outcome:"good", result:"Leonardo produces very few finished paintings. He produces thousands of pages of drawings and notes — anatomy, engineering, geology, optics, hydraulics. The patron who funds this is not funding art in any conventional sense. They are funding inquiry itself. The notebooks will not be fully understood for centuries. The patronage is an act of faith in human curiosity.", statChange:{food:5,knowledge:25,wealth:-10,standing:15} },
+        { text:"Build a library of classical manuscripts — make them available to scholars who cannot afford them", hint:"Knowledge infrastructure", outcome:"good", result:"The public library you establish — one of the first in Europe open to scholars beyond the clergy — changes what is possible for non-wealthy intellectuals. Access to texts that previously required either wealth or Church affiliation is now available to any serious scholar. The democratization of classical learning begins here.", statChange:{food:5,knowledge:20,wealth:-15,standing:20} }
+      ],
+      artist:[
+        { text:"Master the mathematics of perspective — transform your painting completely", hint:"The visual revolution", outcome:"good", result:"The mathematics of perspective changes not just how you paint but how you think about seeing. The vanishing point, the horizon line, the recession of parallel lines to a single point — these are not tricks but truths about how human vision works. The painting you produce after mastering perspective is not just technically better. It makes a claim about reality that medieval painting never made: that the physical world, seen accurately, is worth depicting.", statChange:{food:5,knowledge:30,wealth:10,standing:20} },
+        { text:"Complete a systematic study of human anatomy — draw every muscle, every bone, every organ", hint:"Scientific art", outcome:"good", result:"The drawings you produce — muscles of the arm in three positions, the chambers of the heart opened and labeled, the skeleton from six angles — are the most accurate depictions of the human body ever made. They are also beautiful in a way that pure scientific illustration rarely achieves. You understand: to depict the human body accurately is to honor it. The scientific and the spiritual are the same inquiry.", statChange:{food:5,knowledge:30,wealth:5,standing:20} },
+        { text:"Make a woodblock print of your best work — reach an audience no patron's commission can provide", hint:"Technology of reproduction", outcome:"good", result:"Dürer in Germany has shown what woodblock printing can do for an artist's reach. Your print — technically demanding, artistically uncompromising — circulates across Europe in quantities a painting never could. Buyers who could never afford a painting hang your print in their homes. The democratization of art is happening through the same technology that is democratizing text.", statChange:{food:5,knowledge:20,wealth:15,standing:20} }
+      ],
+      humanist:[
+        { text:"Write about human dignity — Pico della Mirandola's Oration as the Renaissance's philosophical manifesto", hint:"The philosophy of humanism", outcome:"good", result:"Pico della Mirandola's Oration on the Dignity of Man argues that humans are unique in creation — capable of becoming anything, defined not by a fixed nature but by their choices. God places the human at the center of the world and says: you may become whatever you choose to become. This is the Renaissance's deepest philosophical claim. You develop it, extend it, and argue for it in your own writing.", statChange:{food:5,knowledge:30,wealth:5,standing:20} },
+        { text:"Write about politics — Dante's vision of a properly ordered civilization versus Machiavelli's realism", hint:"Political humanism", outcome:"good", result:"The humanist engagement with political life produces two very different visions: Dante's Divine Comedy depicting the cosmic moral order that should govern human affairs, and Machiavelli's Prince describing the amoral mechanics of power as it actually operates. Both are essential. The gap between them is where politics actually lives. Your scholarship navigates that gap.", statChange:{food:5,knowledge:25,wealth:5,standing:15} },
+        { text:"Study Vesalius — the anatomical science that is challenging ancient authority on the human body", hint:"Scientific humanism", outcome:"good", result:"Vesalius's De Humani Corporis Fabrica — based on direct observation of dissected human bodies — corrects hundreds of errors in Galen's ancient medical texts. The methodology is the point: knowledge based on direct observation rather than ancient authority. The same approach that humanist scholars apply to texts — read the primary source, don't trust the intermediary — is being applied to the human body itself.", statChange:{food:5,knowledge:30,wealth:5,standing:15} }
+      ],
+      reformer:[
+        { text:"Connect the humanist recovery of classical texts to the recovery of authentic scripture", hint:"Humanism in service of Reformation", outcome:"good", result:"The same philological tools that humanist scholars use to recover authentic classical texts can be used to recover authentic scripture. Erasmus's Greek New Testament demonstrates that the Vulgate — the Latin Bible the Church has used for a thousand years — contains translation errors that have become doctrinal claims. The humanist method is the Reformation's most powerful weapon.", statChange:{food:5,knowledge:30,wealth:5,standing:15} },
+        { text:"Write in German — make theological argument accessible to ordinary people", hint:"Vernacular theology", outcome:"good", result:"Luther writes in German because German is what ordinary people actually speak. The decision to argue theology in the vernacular rather than Latin is as revolutionary as the argument itself. Theology that only Latin scholars can access is theology that only confirms what Latin scholars already believe. Theology in German — printed in thousands of copies — is theology that anyone can engage with.", statChange:{food:5,knowledge:25,wealth:5,standing:15} },
+        { text:"Document the corruption that demands reform — gather evidence before making the case", hint:"Evidence-based critique", outcome:"good", result:"The Ninety-Five Theses are not merely an emotional reaction. They are a documented argument — specific claims about specific Church practices, backed by specific scriptural citations. The humanist education you have received has taught you to make arguments from evidence rather than from authority. You apply that method to the most important argument of your life.", statChange:{food:5,knowledge:25,wealth:5,standing:15} }
+      ],
+      catholic:[
+        { text:"Engage seriously with humanist art — the beauty the Renaissance is producing belongs to the Church too", hint:"Catholic engagement with Renaissance art", outcome:"good", result:"The greatest Renaissance art is mostly commissioned by the Church — the Sistine ceiling, Raphael's Vatican rooms, Michelangelo's Pietà. The argument that the Church is the enemy of human beauty and dignity is refuted by the most beautiful things humans have ever made, commissioned by the Church. You make this case clearly.", statChange:{food:5,knowledge:20,wealth:-10,standing:20} },
+        { text:"Support Erasmus's internal reform program — the Church can correct its corruptions without breaking apart", hint:"Reform from within", outcome:"good", result:"Erasmus represents the possibility you believe in — rigorous scholarly criticism of Church corruption combined with genuine theological depth, all aimed at reform rather than revolution. You support him financially and politically. Whether this path can still work before Luther makes it irrelevant is the question the next decade will answer.", statChange:{food:5,knowledge:25,wealth:-5,standing:15} },
+        { text:"Acknowledge what humanist scholars have proved — some Church traditions rest on fraudulent documents", hint:"Intellectual honesty", outcome:"good", result:"Lorenzo Valla proved the Donation of Constantine is a forgery. The document the Church used to justify its political authority was fabricated centuries after the supposed donation. Acknowledging this honestly — rather than defending the indefensible — is necessary for any genuine reform. The Church that cannot face its own documented errors cannot reform itself.", statChange:{food:5,knowledge:25,wealth:5,standing:10} }
+      ],
+      ordinary:[
+        { text:"See the new art and try to understand what it is doing differently", hint:"Ordinary engagement with the visual revolution", outcome:"good", result:"The painting in the new church looks different from any you have seen before. The figures have weight. The space behind them recedes correctly. The faces look like people you might actually know. You don't know the word 'perspective.' You know that this painting shows you something about the world more accurately than anything you have seen before. That recognition is the point.", statChange:{food:5,knowledge:15,wealth:5,standing:5} },
+        { text:"Save for your children's education — literacy is becoming essential", hint:"Invest in the next generation", outcome:"good", result:"The world requires reading now in ways it didn't before. Guild records. Town ordinances. The printed pamphlets being posted everywhere. The Bible, soon, in your own language. Your children who cannot read will be at a permanent disadvantage in a world reorganizing itself around text. You save. You sacrifice. Your children go to school.", statChange:{food:-10,knowledge:20,wealth:-10,standing:10} },
+        { text:"Learn a trade that the Renaissance needs — building, printing, bookbinding", hint:"Economic participation in the new era", outcome:"good", result:"The new era needs skilled hands as much as brilliant minds. The printers who produce Gutenberg's books. The builders who construct the new churches and palazzos. The bookbinders who finish the volumes that transform Europe. You learn a trade that puts you at the center of what is happening, working with your hands on the physical objects that carry the Renaissance's ideas.", statChange:{food:10,knowledge:15,wealth:15,standing:10} }
+      ]
+    }
+  },
+  { id:"ch3", number:3,
+    title:"Chapter 3 — The Press Changes Everything",
+    subtitle:"Gutenberg, Erasmus, and the Democratization of Knowledge",
+    scene:"It is 1517. Johannes Gutenberg's printing press — invented around 1440 in Mainz — has been operating for seventy years. In those seventy years, more books have been produced than in the previous thousand years of European manuscript copying combined. The Bible has been printed. Classical texts have been printed. And increasingly, pamphlets, arguments, satires, and critiques are being printed — and read by people who previously had no access to written ideas. The humanist scholar Erasmus is the most widely read author in Europe, his books circulating in thousands of copies across every country that has a printing press. An Augustinian monk in Wittenberg named Martin Luther is about to discover what the press can do for a revolutionary idea.",
+    historyNote:"<strong>The Printing Press:</strong> Gutenberg's movable-type printing press (c. 1440) is arguably the most consequential technological invention in the second millennium CE. By 1500, printing presses operated in over 250 European cities. The cost of books fell by roughly 80% within decades of the press's invention. Erasmus — the Christian humanist whose Praise of Folly mocked Church corruption while remaining Catholic — became Europe's first international bestselling author through print. Luther's Ninety-Five Theses, printed and distributed without his initial intent, circulated across Germany within weeks of being posted.",
+    journalPrompt:"Before the printing press, controlling information meant controlling who could make copies of manuscripts. After the printing press, information could be reproduced faster than any authority could suppress it. What does this change tell you about the relationship between technology and power?",
+    poisonRoles:[], discussAfter:false,
+    choices:{
+      patron:[
+        { text:"Invest in a printing press — the technology that will change everything needs capital to operate", hint:"Commercial investment in the new technology", outcome:"good", result:"The printing press is the most important commercial investment of the century. The books it produces create markets that didn't previously exist. The ideas it spreads create the intellectual climate your city needs to remain relevant. You invest early. The return — financial, cultural, and political — exceeds any painting commission.", statChange:{food:5,knowledge:20,wealth:20,standing:15} },
+        { text:"Commission printed editions of classical texts — make them affordable and widely available", hint:"Democratizing classical learning", outcome:"good", result:"The classical texts your family previously held in expensive manuscript copies are now printed in editions of a thousand or more. The scholar who previously needed to visit your library to read Plato can now own a copy. The democratization of classical learning removes one of the advantages wealthy patronage previously provided — and simultaneously extends the Renaissance's reach beyond anything individual patronage could achieve.", statChange:{food:5,knowledge:25,wealth:-5,standing:15} },
+        { text:"Use the press for political communication — print your position before your rivals can define it", hint:"Political use of the new technology", outcome:"good", result:"The press is as powerful politically as it is intellectually. The pamphlets you publish — making your family's case, responding to critics, communicating directly with the city's population rather than through traditional intermediaries — give you a political reach that wealth alone couldn't buy. Information is power. The press multiplies information.", statChange:{food:5,knowledge:15,wealth:5,standing:20} }
+      ],
+      artist:[
+        { text:"Make prints — woodblock and engraving that can be distributed in quantities paintings cannot match", hint:"Art through reproductive technology", outcome:"good", result:"Dürer's genius is understanding that the press changes what art can be — not just a unique object for a wealthy patron but a reproducible image for anyone who can afford a few coins. Your prints circulate across Europe. Your style influences artists you will never meet in cities you will never visit. The artist who masters reproduction reaches an audience no painting can.", statChange:{food:5,knowledge:20,wealth:15,standing:20} },
+        { text:"Illustrate books — the new printed texts need visual components", hint:"Art in service of the press", outcome:"good", result:"The printed books flooding out of every city's press need illustrations — woodcuts, engravings, decorative initials. The demand for skilled artists to provide these exceeds the supply. Your technical skill applied to book illustration reaches more people in a year than a lifetime of panel paintings would reach. The marriage of text and image in printed books is a new art form.", statChange:{food:5,knowledge:20,wealth:20,standing:15} },
+        { text:"Document the new science in images — Vesalius needs illustrators for his anatomical atlas", hint:"Scientific illustration", outcome:"good", result:"Vesalius's De Humani Corporis Fabrica is the most important medical text of the century — and it is as important visually as textually. The anatomical illustrations — accurate, detailed, artistically sophisticated — make the book's arguments visually accessible in ways that text alone cannot achieve. You contribute to this project. The combination of Renaissance art and Renaissance science produces something neither could produce alone.", statChange:{food:5,knowledge:30,wealth:10,standing:20} }
+      ],
+      humanist:[
+        { text:"Write The Praise of Folly — use humanist learning to critique the Church from within, with humor", hint:"Erasmus's method", outcome:"good", result:"Erasmus's Praise of Folly — narrated by Folly herself, praising the foolishness of popes, monks, scholars, and kings — is the most widely read book in Europe. Its method is the humanist method: classical learning, precise observation, and devastating wit applied to the corruption everyone sees but few name directly. You write in this tradition. The humor is the point. The critique underneath the humor is also the point.", statChange:{food:5,knowledge:25,wealth:5,standing:20} },
+        { text:"Write Utopia — imagine a society organized around reason and human dignity rather than power and tradition", hint:"Thomas More's vision", outcome:"good", result:"Thomas More's Utopia describes a society where property is held in common, where all citizens work and none are idle, where religious tolerance is practiced, and where reason rather than tradition organizes public life. It is explicitly fictional — a nowhere that might also be somewhere. It establishes a literary tradition of imagining better worlds that will produce political philosophy for centuries.", statChange:{food:5,knowledge:25,wealth:5,standing:15} },
+        { text:"Edit and publish the Greek New Testament — make the authentic text available to all scholars", hint:"Textual scholarship with theological consequences", outcome:"good", result:"Erasmus's Greek New Testament — based on the earliest available manuscripts, correcting centuries of accumulated errors in the Latin Vulgate — is the most consequential piece of humanist scholarship ever published. When scholars discover that the Vulgate's famous passage supporting penance doesn't actually appear in the Greek original, the entire theological structure built on that passage becomes questionable. The press makes this discovery impossible to suppress.", statChange:{food:5,knowledge:30,wealth:5,standing:20} }
+      ],
+      reformer:[
+        { text:"Post the Ninety-Five Theses — on October 31, 1517, change the world", hint:"The moment that splits Christianity", outcome:"good", result:"The Ninety-Five Theses are posted on the door of the Castle Church in Wittenberg — a standard academic invitation to debate. What happens next is not standard. Within two weeks, printed copies are circulating across Germany. Within two months, across Europe. The printing press has turned an academic protest into a continental revolution before the Church can formulate a response. Here I stand. The die is cast.", statChange:{food:5,knowledge:25,wealth:5,standing:20} },
+        { text:"Translate the Bible into German — make scripture available to every German speaker", hint:"The vernacular Bible", outcome:"good", result:"Luther's German Bible — translated in eleven weeks while in hiding at the Wartburg Castle — is the most important book published in the German language. It not only makes scripture available to German speakers — it standardizes the German language itself, giving dozens of dialects a common literary form. The press produces 200,000 copies in the first twelve years. The Bible that previously required priestly intermediary is now in ordinary people's hands.", statChange:{food:5,knowledge:30,wealth:5,standing:20} },
+        { text:"Engage with Calvin — understand how the Reformation is developing beyond Luther's initial vision", hint:"Reformed theology", outcome:"good", result:"John Calvin's Institutes of the Christian Religion — systematic, rigorous, theologically comprehensive — takes Luther's initial protest and develops it into a complete alternative theology. Calvin's Geneva becomes a model Protestant city. His ideas about predestination, about the relationship between church and state, about Christian discipline, spread across Europe and eventually to the New World. The Reformation is becoming plural.", statChange:{food:5,knowledge:25,wealth:5,standing:15} }
+      ],
+      catholic:[
+        { text:"Respond in print — the Church has scholars capable of answering Luther's arguments", hint:"Counter-argument through the press", outcome:"good", result:"The press that spreads Luther's ideas is available to Catholics too. The theological responses your scholars produce — Johannes Eck debating Luther at Leipzig, the systematic refutations of Protestant theology — are serious intellectual engagements, not dismissals. The Reformation is partly a war of ideas fought in print. You fight it that way.", statChange:{food:5,knowledge:25,wealth:5,standing:15} },
+        { text:"Recognize that the press cannot be uninvented — adapt the Church's communication strategy", hint:"Institutional adaptation to new technology", outcome:"good", result:"The Church that tries to suppress the press will fail — the technology is too widely distributed, the printers too numerous, the demand for books too strong. The Church that learns to use the press will survive. You advocate for Catholic printing houses, for popular religious literature in vernacular languages, for the Church to compete in the new information environment rather than attempting to shut it down.", statChange:{food:5,knowledge:20,wealth:5,standing:15} },
+        { text:"Support the Council of Trent — a systematic response to legitimate criticisms", hint:"Institutional reform", outcome:"good", result:"The Council of Trent (1545-1563) is the Catholic Church's most comprehensive self-examination in a thousand years. It addresses the corruption that Luther correctly identified — selling of indulgences abolished, education of clergy improved, standards for Church behavior clarified. It also reaffirms Catholic doctrine against Protestant challenges. Too late to reunite Christianity. Not too late to save the Catholic Church.", statChange:{food:5,knowledge:20,wealth:5,standing:20} }
+      ],
+      ordinary:[
+        { text:"Buy a printed pamphlet — read Luther's argument in your own language for the first time", hint:"Direct access to revolutionary ideas", outcome:"good", result:"The pamphlet costs less than a meal. It contains, in plain German, the argument that the Church has been wrong about how salvation works — that it cannot be purchased, that faith alone is sufficient, that scripture says so and the Church has hidden this. You read it. You pass it to your neighbor. You discuss it at the market. The Reformation is happening in conversations like this one, across every town in Germany simultaneously.", statChange:{food:5,knowledge:20,wealth:-5,standing:5} },
+        { text:"Learn to use the press — work as a printer's apprentice in the new industry", hint:"Economic participation in the information revolution", outcome:"good", result:"The printing houses spreading across every city need skilled workers — typesetters, pressmen, proofreaders, binders. You learn the trade. The work puts you at the center of the most consequential technological change of the century. Every pamphlet you set in type, every book you bind, every Bible you help produce changes someone's world. You are not the author. You are the person who makes authorship matter.", statChange:{food:10,knowledge:20,wealth:15,standing:10} },
+        { text:"Teach your children to read — literacy is now essential for full participation in the world", hint:"Education for the new era", outcome:"good", result:"The world your children will inhabit requires reading. The Lutheran churches being established across Germany are founding schools — Luther believes every Christian must be able to read scripture. The Catholic Church responds by expanding its own educational institutions. For the first time, literacy is becoming a social expectation rather than a elite privilege. Your children will live in that world. You prepare them for it.", statChange:{food:-5,knowledge:25,wealth:-5,standing:10} }
+      ]
+    }
+  },
+  { id:"ch4", number:4,
+    title:"Chapter 4 — The Reformation",
+    subtitle:"Luther, Calvin, Henry VIII, and the Fracturing of Christianity",
+    scene:"It is 1521. Martin Luther stands before the Diet of Worms — the assembly of the Holy Roman Empire — and is asked to recant his writings. He refuses: 'Here I stand. I can do no other. God help me.' He is declared an outlaw. He disappears — protected by a German prince — and emerges months later having translated the New Testament into German. The fracture in Western Christianity that his act began is now irreversible. John Calvin will take the Reformation in new directions in Geneva. Henry VIII — for reasons more personal than theological — will break England from Rome entirely and establish the Church of England. The unified Christianity that organized European life for a thousand years is ending.",
+    historyNote:"<strong>The Reformation:</strong> Luther's Diet of Worms refusal (1521) made the break with Rome final. Calvin's Institutes of the Christian Religion (1536) systematized Protestant theology and his Geneva became a model reformed city. Henry VIII's break with Rome (1534) was initially about his desire to annul his marriage — but produced the Church of England and eventually a distinctly English Protestant tradition. By 1560, Europe was permanently divided between Catholic south and Protestant north, with consequences for politics, culture, and warfare that lasted centuries.",
+    journalPrompt:"Luther said 'Here I stand. I can do no other.' He was one person refusing to submit to the most powerful institution in Europe. What made that possible — and what does it tell you about the relationship between individual conscience and institutional authority?",
+    poisonRoles:["catholic"], discussAfter:true,
+    discussPrompt:"Your table just experienced the Reformation from one role's perspective. The table next to you experienced the same events from a completely different position. Before you continue — spend 90 seconds comparing: What did the Reformation mean for your role? What choices did you have that the other table didn't?",
+    discussPairs:"Protestant Reformer pairs with Catholic Church Official · Italian Merchant pairs with Ordinary Person · Artist pairs with Humanist Scholar",
+    choices:{
+      patron:[
+        { text:"Navigate the religious divide commercially — maintain relationships across Catholic and Protestant territories", hint:"Commerce above religious conflict", outcome:"good", result:"The Reformation splits your commercial network along religious lines — Catholic bankers refusing Protestant clients, Protestant princes seizing Church assets, trade routes disrupted by religious warfare. You navigate carefully, maintaining relationships on both sides, keeping your commercial identity separate from your religious one. It is not comfortable. It keeps your family solvent.", statChange:{food:5,knowledge:15,wealth:15,standing:10} },
+        { text:"Support the Catholic cause with patronage — the Counter-Reformation needs wealthy allies", hint:"Political-religious alignment", outcome:"good", result:"The Counter-Reformation's enormous artistic program needs financing. The new churches, the Jesuit colleges, the magnificent art that argues visually for Catholicism's truth and beauty — all of it requires patrons like you. Your investment is simultaneously religious, political, and aesthetic. The art produced is extraordinary. The cause it serves is the one you believe in.", statChange:{food:5,knowledge:10,wealth:-15,standing:20} },
+        { text:"Note that Henry VIII's break with Rome has commercial implications — England's Church assets are redistributed", hint:"Commercial analysis of religious change", outcome:"neutral", result:"Henry VIII dissolving the monasteries and redistributing their assets creates the largest transfer of land and wealth in English history. The commercial implications — for English trade, for the merchants who buy dissolved monastery lands at favorable prices, for the long-term economic development of England — are enormous. Religion and commerce are, again, the same story.", statChange:{food:5,knowledge:15,wealth:10,standing:5} }
+      ],
+      artist:[
+        { text:"Paint for the Counter-Reformation — the Church's commissioning boom produces the Baroque", hint:"Art in service of Catholic renewal", outcome:"good", result:"The Counter-Reformation produces the Baroque — the most emotionally overwhelming art style in history. The commission you receive asks for something that moves people, that demonstrates the truth and beauty of Catholic faith through sheer sensory power. You paint drama, ecstasy, movement, light breaking through darkness. The result is extraordinary and serves a purpose you believe in.", statChange:{food:5,knowledge:15,wealth:20,standing:20} },
+        { text:"Navigate the Protestant market — Northern European patrons want portraits and landscapes, not saints", hint:"Market adaptation", outcome:"good", result:"Protestant theology is suspicious of religious imagery — some reformers actively destroy it as idolatry. The Protestant art market shifts toward portraits, landscapes, scenes of daily life, and allegory. You adapt. The portrait tradition you develop — individual faces depicted with psychological depth — becomes its own form of humanism, as powerful in its way as the religious art it replaces.", statChange:{food:5,knowledge:20,wealth:15,standing:15} },
+        { text:"Make a self-portrait in the tradition of Dürer — assert the artist's individual dignity and identity", hint:"The artist as subject", outcome:"good", result:"Dürer's 1500 self-portrait — painted when he was 28, facing the viewer directly, in the pose traditionally reserved for Christ — is the Renaissance's most radical artistic statement. You follow this tradition: the artist as a subject worthy of the same careful attention previously reserved for saints and rulers. The signature on the painting is not vanity. It is a philosophical claim about human dignity.", statChange:{food:5,knowledge:20,wealth:10,standing:20} }
+      ],
+      humanist:[
+        { text:"Mourn what the Reformation is destroying — the dream of a united reformed Christendom", hint:"The humanist tragedy", outcome:"neutral", result:"Erasmus refused to join Luther. Thomas More died rather than support Henry VIII. The Christian humanists who wanted reform without revolution watch the revolution happen and know that the unified reformed Christendom they imagined is gone. The dream was real. The political and theological forces that destroyed it were also real. You grieve what might have been.", statChange:{food:5,knowledge:20,wealth:5,standing:10} },
+        { text:"Write in the vernacular — follow Luther and Erasmus in making ideas accessible beyond Latin scholars", hint:"Vernacular literature", outcome:"good", result:"Cervantes writes in Spanish. Shakespeare writes in English. Montaigne writes in French. The humanist tradition that began by recovering Latin and Greek has produced something it didn't anticipate: serious literary and philosophical work in living languages, accessible to everyone who speaks them. The vernacular literature emerging from this moment is the Renaissance's most democratic achievement.", statChange:{food:5,knowledge:25,wealth:5,standing:20} },
+        { text:"Defend reason against both Catholic tradition and Protestant scripture alone", hint:"The philosopher's independent path", outcome:"good", result:"The humanist who refuses to accept either papal tradition or Lutheran scripture as the sole authority for truth is in a difficult position — suspected by both sides, trusted by neither. The defense of reason as an independent source of knowledge — capable of reaching conclusions that tradition and scripture have not — is the position that will eventually produce the Enlightenment. It is also lonely.", statChange:{food:5,knowledge:30,wealth:5,standing:5} }
+      ],
+      reformer:[
+        { text:"Stand at Worms — refuse to recant regardless of the consequences", hint:"Here I stand", outcome:"good", result:"'Unless I am convicted by scripture and plain reason — I do not accept the authority of popes and councils, for they have contradicted each other — my conscience is captive to the Word of God. I cannot and will not recant anything, for to go against conscience is neither right nor safe. Here I stand. I can do no other. God help me.' The words that divide Christianity permanently. You say them anyway.", statChange:{food:-5,knowledge:20,wealth:-5,standing:25} },
+        { text:"Build Geneva — show what a Protestant city actually looks like in practice", hint:"Reformed society in practice", outcome:"good", result:"Calvin's Geneva is the most ambitious attempt to build a society on Protestant principles. Education for all — because all must read scripture. Discipline enforced — because the community of believers must live by their convictions. Political authority subject to theological standards — because God's law supersedes human law. The experiment is inspiring and frightening in roughly equal measure.", statChange:{food:5,knowledge:25,wealth:5,standing:20} },
+        { text:"Watch Henry VIII with complicated feelings — the right outcome for wrong reasons", hint:"The complicated English Reformation", outcome:"neutral", result:"Henry VIII's break with Rome is driven by his desire to annul his marriage to Catherine of Aragon, not by theological conviction. The Church of England he creates is Catholic in most respects except for its rejection of papal authority. The Reformation happening in England is politically motivated rather than spiritually — and yet it produces real religious change, real Protestant development, and eventually a distinctly English Christianity. The right outcome for wrong reasons is still an outcome.", statChange:{food:5,knowledge:15,wealth:5,standing:10} }
+      ],
+      catholic:[
+        { text:"Convene the Council of Trent — the Church's systematic response to legitimate reform demands", hint:"Reform from within", outcome:"good", result:"Twenty-five years of councils. The corruptions that Luther correctly identified — the indulgence scandal, the sale of offices, the inadequate education of clergy — are addressed. Catholic doctrine is clarified against Protestant challenges. The Church emerges smaller, reformed, and theologically sharpened. The price — the permanent loss of northern Europe — is real. The alternative — the Church collapsing entirely — was also real.", statChange:{food:5,knowledge:20,wealth:5,standing:15} },
+        { text:"Support the Jesuits — the Counter-Reformation's most intellectually serious missionaries", hint:"Jesuit response to Protestantism", outcome:"good", result:"Ignatius of Loyola's Society of Jesus — the Jesuits — are the Counter-Reformation's most effective tool. Intellectually serious, rigorously educated, willing to go anywhere the Church is losing ground. They found universities across Europe and in the mission territories of Asia and the Americas. The Catholic Church that survives the Reformation is partly built on Jesuit intellectual and missionary work.", statChange:{food:5,knowledge:25,wealth:-5,standing:20} },
+        { text:"Watch Henry VIII's break from Rome as a warning — political authority claiming religious authority", hint:"The danger of Erastianism", outcome:"neutral", result:"Henry VIII demonstrates what happens when political authority claims the right to define religious truth — the monarch becomes the head of the Church, doctrine adjusts to political convenience, and the faith becomes an instrument of state power. This is exactly what the Church has always feared from secular rulers. The irony: the Church's own political entanglements over centuries helped create the conditions for exactly this. You see the warning. You are not sure the lesson can be learned in time.", statChange:{food:5,knowledge:20,wealth:5,standing:5}, isPoison:true }
+      ],
+      ordinary:[
+        { text:"Choose a side — the Reformation requires ordinary people to make decisions about religion and identity", hint:"Religious identity as choice", outcome:"neutral", result:"For the first time in your life, Christianity is not a single institution you belong to by birth. It is a set of options. Catholic or Lutheran or Calvinist or Anabaptist or, in England, Anglican. The choice has consequences — for your relationships, your community, your safety. You make it. The idea that religious identity is a choice rather than an inheritance is genuinely new and genuinely disorienting.", statChange:{food:5,knowledge:15,wealth:5,standing:5} },
+        { text:"Attend a Protestant service — hear scripture in your own language for the first time", hint:"Direct access to the faith", outcome:"good", result:"The Lutheran service is conducted in German. The scripture is read in German. The sermon is in German. For the first time in your life, the worship service is accessible to you directly — not mediated through a language you don't speak, not dependent on a priest's interpretation. Whether Luther's theology is correct is a question you are still working out. The accessibility is immediately meaningful.", statChange:{food:5,knowledge:20,wealth:5,standing:5} },
+        { text:"Watch the Peasants' War and its aftermath — the Reformation's limits for ordinary people", hint:"The Reformation's social limits", outcome:"neutral", result:"The German peasants who used Luther's ideas about Christian freedom to demand social equality are crushed — with Luther's approval. The Reformation is about theological freedom. It is not about social freedom. The distinction that makes sense to a theologian feels like betrayal to a peasant who thought the Gospel meant something about how to organize society. You are a peasant. You understand the betrayal.", statChange:{food:-5,knowledge:15,wealth:-5,standing:5} }
+      ]
+    }
+  },
+  { id:"ch5", number:5,
+    title:"Chapter 5 — The Response and the Resistance",
+    subtitle:"Counter-Reformation, Inquisition, and Galileo's Hot Goss Moment",
+    scene:"It is 1633. Galileo Galilei — mathematician, astronomer, physicist, the greatest scientist alive — has been summoned before the Roman Inquisition. His crime: publishing evidence that the Earth moves around the Sun rather than the Sun around the Earth, in direct contradiction of the Church's official position. His Dialogue Concerning the Two Chief World Systems is brilliant, funny, clearly correct — and has made the Pope look foolish by putting arguments in the mouth of a character named Simpleton. Galileo is 69 years old. He has already spent years under informal restriction. The Inquisition offers him a choice: recant, or face consequences. He recants. He is placed under house arrest for the remaining nine years of his life. He reportedly mutters, leaving the chamber: 'And yet it moves.'",
+    historyNote:"<strong>Galileo and the Inquisition:</strong> Galileo's conflict with the Church was partly about astronomy, partly about who has the authority to interpret scripture. Galileo argued — correctly — that scripture should be interpreted metaphorically on scientific questions, and that Copernicus's heliocentric model was physically correct. The Church's position was that scripture taught geocentrism and scientific claims must conform to it. Galileo's forced recantation in 1633 did not stop the eventual acceptance of heliocentrism — it just delayed it. His house arrest lasted until his death in 1642. Newton published his Principia Mathematica in 1687, establishing the mathematical framework that made heliocentrism undeniable.",
+    journalPrompt:"Galileo knew he was right. He recanted anyway to avoid worse consequences. Then he reportedly said 'And yet it moves.' What does this moment tell you about the relationship between truth, power, and individual courage?",
+    poisonRoles:["reformer","ordinary"], discussAfter:true,
+    discussPrompt:"Your table just experienced the Counter-Reformation and the Galileo affair from one role's perspective. The table next to you experienced the same events differently. Before you continue — spend 90 seconds comparing: What choices did your role have that the other table didn't? What was your role most afraid of in this chapter?",
+    discussPairs:"Protestant Reformer pairs with Catholic Church Official · Italian Merchant pairs with Humanist Scholar · Artist pairs with Ordinary Person",
+    discussPrompt2:"Now turn to a different table. Spend 90 seconds on this: Which role do you think had the hardest experience of this chapter — and why?",
+    discussPairs2:"Protestant Reformer pairs with Humanist Scholar · Catholic Church Official pairs with Ordinary Person · Italian Merchant pairs with Artist",
+    choices:{
+      patron:[
+        { text:"Fund Galileo's research — scientific inquiry deserves the same patronage as art", hint:"Patronage of science", outcome:"good", result:"The Medici have funded Galileo — he named the moons of Jupiter the 'Medicean stars' in gratitude. The patronage of scientific inquiry is as important as the patronage of art — both are forms of human excellence worth supporting. The political complications of funding someone the Church then condemns are real. The scientific work is worth it.", statChange:{food:5,knowledge:25,wealth:-10,standing:15} },
+        { text:"Support the Jesuit educational institutions — they are the Counter-Reformation's most serious intellectual contribution", hint:"Catholic intellectual investment", outcome:"good", result:"The Jesuit colleges and universities being established across Catholic Europe are the most rigorous educational institutions on the continent. Their curriculum combines classical learning, theology, mathematics, and natural philosophy. The intellectual formation they provide — careful, systematic, open to scientific inquiry within certain limits — produces some of the best minds of the century.", statChange:{food:5,knowledge:20,wealth:-10,standing:20} },
+        { text:"Commission the most magnificent Counter-Reformation art available — beauty as theological argument", hint:"Patronage in the Baroque age", outcome:"good", result:"The Baroque art of the Counter-Reformation is the most emotionally powerful ever produced — dramatic light and shadow, intense facial expressions, figures caught in moments of ecstasy or agony. Bernini, Caravaggio, Rubens. The argument it makes is sensory rather than rational: the faith that produces this beauty cannot be false. You fund it. The argument is not wrong.", statChange:{food:5,knowledge:15,wealth:-15,standing:25} }
+      ],
+      artist:[
+        { text:"Paint in the Baroque style — drama, light, ecstasy, and overwhelming emotional power", hint:"Counter-Reformation art at its height", outcome:"good", result:"Caravaggio's chiaroscuro — the dramatic use of light emerging from deep shadow — transforms painting. The emotional intensity of Baroque art is not decoration. It is argument. The faith that can be depicted this way, with this power and this beauty, is making a case for itself in the only language that reaches everyone regardless of literacy. You paint in this tradition. The work is extraordinary.", statChange:{food:5,knowledge:20,wealth:20,standing:25} },
+        { text:"Illustrate Galileo's Dialogue — scientific argument needs visual support", hint:"Art in service of science", outcome:"good", result:"Galileo's Dialogue uses diagrams, illustrations, and visual arguments alongside written ones. The scientific argument for heliocentrism is partly a visual argument — the phases of Venus, the moons of Jupiter, the features of the lunar surface as seen through the telescope. You contribute to making these observations visible in ways that text alone cannot achieve.", statChange:{food:5,knowledge:25,wealth:5,standing:15} },
+        { text:"Make a self-portrait that asserts artistic identity regardless of religious context", hint:"Individual artistic identity", outcome:"good", result:"Dürer's 1500 self-portrait remains the model: the artist as a subject of dignity, worthy of the same careful attention given to saints and rulers. Your self-portrait makes the same claim in a different moment — one where individual identity is being contested by both Catholic authority and Protestant community. The individual face looking directly at the viewer is a statement that survives the controversy.", statChange:{food:5,knowledge:20,wealth:10,standing:20} }
+      ],
+      humanist:[
+        { text:"Defend Galileo publicly — the Church is wrong about astronomy and wrong to suppress truth", hint:"Defense of scientific inquiry", outcome:"good", result:"The defense of Galileo is the defense of the humanist principle that direct observation and reason are legitimate sources of knowledge — that the scholar who observes the moons of Jupiter through a telescope is not threatening faith but extending human understanding in ways faith should welcome. The Church that condemns Galileo is making the same mistake the Church made with every scientific advance it initially resisted. You say this clearly.", statChange:{food:-5,knowledge:30,wealth:5,standing:10} },
+        { text:"Write in the tradition of Shakespeare — explore human nature in the vernacular with full complexity", hint:"The vernacular Renaissance", outcome:"good", result:"Shakespeare's plays examine human nature — ambition, love, jealousy, grief, courage, cowardice — with a psychological complexity and verbal precision that no previous literature in any language achieved. Written in English for ordinary London audiences, they are simultaneously the most popular entertainment and the deepest literary exploration of what it means to be human. You write in this tradition, in whatever vernacular language is yours.", statChange:{food:5,knowledge:30,wealth:5,standing:20} },
+        { text:"Publish Cervantes — Don Quixote as the first modern novel", hint:"The birth of the novel", outcome:"good", result:"Don Quixote — a man who has read too many chivalric romances and believes himself a knight — is simultaneously a comedy, a tragedy, a meditation on the relationship between imagination and reality, and the first novel in the modern sense. Cervantes invents a new literary form: the extended prose fiction that takes ordinary people's inner lives as seriously as epics took heroes' outer actions. The Renaissance ends by inventing the novel.", statChange:{food:5,knowledge:30,wealth:5,standing:20} }
+      ],
+      reformer:[
+        { text:"Watch the Thirty Years War begin — religious division producing violence you didn't intend", hint:"The Reformation's violent consequences", outcome:"neutral", result:"The Thirty Years War (1618-1648) kills perhaps a third of Germany's population. Catholic and Protestant armies devastate Central Europe for a generation. The religious freedom you fought for is being fought over with weapons you didn't intend to hand anyone. Luther wanted theological reform. The political and military forces that adopted his ideas had other uses for them. This is your poison pill.", statChange:{food:-5,knowledge:15,wealth:-5,standing:5}, isPoison:true },
+        { text:"Defend the principle of religious conscience — each person must answer to God directly", hint:"The Reformation's enduring principle", outcome:"good", result:"Whatever the Reformation's violent consequences, its core principle remains: each person's conscience is ultimately accountable to God rather than to any human institution. This principle — that religious belief cannot be legitimately coerced — will eventually produce religious freedom as a legal concept. The path from Luther's Worms to the First Amendment is direct, even if bloody.", statChange:{food:5,knowledge:20,wealth:5,standing:15} },
+        { text:"Support Galileo as a fellow victim of institutional overreach", hint:"Reformation and scientific freedom aligned", outcome:"good", result:"The same institutional authority that condemned Luther for questioning Church teaching on salvation is condemning Galileo for questioning Church teaching on astronomy. The principle is identical: the Church claims authority over truth in domains where its claim is not legitimate. You support Galileo from exactly this principle. The cause of intellectual freedom is the same cause, applied to different domains.", statChange:{food:5,knowledge:25,wealth:5,standing:15} }
+      ],
+      catholic:[
+        { text:"Acknowledge the Galileo affair as a mistake the Church is making in real time", hint:"Institutional courage in the moment", outcome:"good", result:"You know Galileo is right about the astronomy. You know the Church is wrong to suppress him. Saying this internally is possible — saying it publicly is not, given the institutional pressures. The most you can do is work within the system to minimize the damage: arguing for a lighter sentence, preserving Galileo's reputation as a believer, keeping the channels open for eventual acknowledgment. It is not enough. It is what is possible.", statChange:{food:5,knowledge:20,wealth:5,standing:10} },
+        { text:"Defend the Council of Trent's genuine reforms against critics who conflate them with the Inquisition", hint:"Distinguish reform from repression", outcome:"good", result:"The Counter-Reformation is not only the Inquisition. It is also the Council of Trent's genuine theological and institutional reforms, the Jesuit educational revolution, the Baroque art that has transformed European culture, and the missionary work that is carrying Christianity to Asia and the Americas. The Church that produces the Inquisition also produces Ignatius of Loyola and Francis Xavier. You make this distinction. It is true and insufficient simultaneously.", statChange:{food:5,knowledge:20,wealth:5,standing:15} },
+        { text:"Support the Jesuit scientists — the Church can engage with the new science honestly", hint:"Catholic scientific engagement", outcome:"good", result:"The Jesuits include serious mathematicians and astronomers — some of them quietly sympathetic to Galileo's findings. The Church's relationship with science is not uniformly hostile; it is complicated, contested, and evolving. You support the Jesuits who are trying to find a way for Catholic theology and the new science to coexist. The accommodation is possible. The Galileo affair demonstrates how difficult it is to achieve.", statChange:{food:5,knowledge:25,wealth:5,standing:15} }
+      ],
+      ordinary:[
+        { text:"Navigate the Inquisition's demands carefully — survive without compromising what you believe", hint:"Ordinary survival under institutional pressure", outcome:"neutral", result:"The Inquisition's reach extends into ordinary life — neighbors denouncing neighbors, questions about private religious practice, the requirement to demonstrate orthodoxy in ways the genuinely orthodox find humiliating and the heterodox find terrifying. You navigate carefully. You say what you must say. You believe what you believe. The distance between those two things is where ordinary people live under inquisitorial pressure.", statChange:{food:5,knowledge:10,wealth:5,standing:5}, isPoison:true },
+        { text:"Go to the theater — Shakespeare's Globe is where the Renaissance reaches ordinary people", hint:"Popular culture as Renaissance", outcome:"good", result:"The Globe Theatre charges a penny for groundlings — the standing audience in the pit. For a penny you see Hamlet questioning the nature of reality, Lear raging against age and ingratitude, Bottom transformed and bewildered in a fairy wood. Shakespeare writes for you — for the person who cannot read but can listen, who has no Latin but has English, who has never been to Italy but understands ambition and love and grief. The Renaissance reaches you here.", statChange:{food:5,knowledge:20,wealth:-5,standing:10} },
+        { text:"Read Don Quixote — the first novel written for people like you", hint:"The novel as democratic literature", outcome:"good", result:"Don Quixote costs what a few days' wages buy. It tells the story of an ordinary man whose imagination transforms his world — sometimes beautifully, sometimes disastrously. Cervantes writes in Spanish for Spanish speakers, about a person whose inner life is as rich and complex as any king's. The novel that Cervantes invents is the literary form that will speak most directly to ordinary people for the next five centuries. You are its first audience.", statChange:{food:5,knowledge:20,wealth:-5,standing:10}, poison:false }
+      ]
+    }
+  },
+  { id:"ch6", number:6,
+    title:"Chapter 6 — The Legacy",
+    subtitle:"Scientific Revolution, Northern Renaissance, and What Changed Forever",
+    scene:"It is approximately 1687. Isaac Newton publishes his Principia Mathematica — a mathematical description of the physical universe that explains planetary motion, gravity, and the behavior of objects in motion with a precision and elegance that makes the previous three centuries of scientific development feel like preparation for this moment. The Renaissance that began with rediscovering Plato in Florence has produced, three hundred years later, a mathematical description of how the universe works. Copernicus proposed heliocentrism. Galileo observed evidence for it. Newton explained why. The scientific revolution that the Renaissance made possible is complete — and the Enlightenment that follows will apply the same methods to politics, society, and human nature itself. Everything is about to change again.",
+    historyNote:"<strong>The Scientific Revolution:</strong> Copernicus (1543) proposed that Earth moves around the Sun. Vesalius (1543) corrected ancient medical errors through direct anatomical observation. Galileo (1610) observed moons of Jupiter and phases of Venus through the telescope, providing evidence for heliocentrism. Francis Bacon developed the scientific method — systematic observation and experiment rather than argument from authority. Newton's Principia (1687) unified terrestrial and celestial mechanics in a single mathematical framework. The microscope revealed a previously invisible world of microorganisms. These developments together constitute the Scientific Revolution — a permanent transformation of how humans understand and investigate the natural world.",
+    journalPrompt:"You began this year looking at a 36,000-year-old cave painting made by someone whose name we will never know. You are ending it here — in a world where Dürer signs his name to a self-portrait, where Shakespeare writes plays still performed 400 years later, where Newton describes the mathematics of the universe. What changed between the cave painting and this moment — and what, looking at the whole year, do you think stayed the same about what humans are trying to do?",
+    poisonRoles:[], discussAfter:false,
+    choices:{
+      patron:[
+        { text:"Fund the Royal Society — the new institution for scientific inquiry needs patronage", hint:"Patronage of the scientific revolution", outcome:"good", result:"The Royal Society of London — founded 1660, chartered by Charles II — is the institutional form of the scientific revolution: a community of investigators who share observations, debate methods, and build on each other's work rather than relying on individual genius alone. The patronage that funded individual artists and scholars is now funding institutions. The Renaissance model of patronage is evolving into the modern model of institutional support for inquiry.", statChange:{food:5,knowledge:30,wealth:-10,standing:20} },
+        { text:"Reflect on the Medici legacy — what did the wealth and patronage ultimately produce?", hint:"Assessment of Renaissance patronage", outcome:"good", result:"The Medici funded Botticelli, Michelangelo, Leonardo, Galileo, and countless others. The art they commissioned is still in Florence. The scholarship they funded produced the intellectual foundation of the modern world. The banking network they built is long gone. The legacy question — whether the patrons or the artists are remembered — has been answered by history: the art outlasts the money. You knew this. It was worth doing anyway.", statChange:{food:5,knowledge:25,wealth:5,standing:20} },
+        { text:"Invest in the new commercial opportunities the scientific revolution creates", hint:"Commerce following science", outcome:"good", result:"The scientific revolution produces practical technology — the telescope that improves navigation, the mathematical tools that improve accounting, the medical knowledge that begins to reduce mortality. The merchant who understands which new knowledge has commercial application is positioned for the next century's economy. Science and commerce, in the long run, are the same investment.", statChange:{food:5,knowledge:20,wealth:25,standing:15} }
+      ],
+      artist:[
+        { text:"Make art that reflects the new scientific understanding — the cosmos as Newton describes it", hint:"Art responding to the scientific revolution", outcome:"good", result:"The artist who understands the telescope — who has looked through it at the moon's craters and Jupiter's moons and the stars of the Milky Way — makes different art than the artist who has not. The universe is vaster and stranger than anyone imagined. Art that responds to this — that tries to depict infinity, that grapples with the smallness of human beings in an enormous cosmos — is beginning to emerge.", statChange:{food:5,knowledge:25,wealth:10,standing:20} },
+        { text:"Consider what the Renaissance's visual revolution ultimately meant — how did it change everything after it?", hint:"Assessment of the artistic legacy", outcome:"good", result:"The perspective revolution did not end with the Renaissance — it became the foundation of every subsequent Western visual tradition. The anatomical accuracy Leonardo pioneered became the standard for medical illustration, scientific illustration, and representational art for centuries. The individual portrait that Dürer's self-portrait established became the dominant mode of depicting human identity. The Renaissance's visual ideas are still operative.", statChange:{food:5,knowledge:25,wealth:5,standing:20} },
+        { text:"Make something that doesn't yet have a name — push past what the Renaissance established", hint:"Innovation beyond tradition", outcome:"good", result:"The Renaissance established certain principles — perspective, anatomical accuracy, individual identity, classical reference. The artist who has mastered these principles is now ready to question them. What would art look like that uses perspective to deliberately distort rather than accurately represent? What would portraiture look like if it showed the inner life rather than the outer face? You are beginning to ask questions that will produce Rembrandt and Velázquez.", statChange:{food:5,knowledge:30,wealth:10,standing:20} }
+      ],
+      humanist:[
+        { text:"Write about Copernicus, Galileo, and Newton — the scientific revolution as the humanist project fulfilled", hint:"Humanism and science as one project", outcome:"good", result:"The scientific revolution IS the humanist project — the direct observation of the natural world rather than deference to ancient authority, the careful argument from evidence rather than tradition, the conviction that human reason can discover truths about the universe. Copernicus and Newton are Petrarch's heirs as surely as Shakespeare and Erasmus are. The humanist insistence that human beings can investigate reality and reach reliable conclusions about it produced the scientific revolution.", statChange:{food:5,knowledge:30,wealth:5,standing:20} },
+        { text:"Celebrate Shakespeare and Cervantes — the vernacular Renaissance's lasting achievement", hint:"Literature as humanism's highest achievement", outcome:"good", result:"The humanist project that began by recovering Latin and Greek produced, three centuries later, literature in living languages more complex and enduring than anything in Latin or Greek. Hamlet's soliloquies, Don Quixote's tilting at windmills, Montaigne's essays exploring his own mind — these works are the Renaissance's most permanent legacy. They are still read because they are still true about human nature.", statChange:{food:5,knowledge:25,wealth:5,standing:25} },
+        { text:"Lay the groundwork for the Enlightenment — the questions this era raised will be answered in the next", hint:"The bridge to what comes next", outcome:"good", result:"The Renaissance raised questions it couldn't fully answer: about individual conscience (Luther), about scientific authority (Galileo), about human dignity (Pico), about political realism (Machiavelli). The Enlightenment will attempt to answer these questions systematically — using reason as the sole authority, applying scientific method to politics and society, asserting that human dignity implies specific rights. You are preparing that bridge.", statChange:{food:5,knowledge:30,wealth:5,standing:20} }
+      ],
+      reformer:[
+        { text:"Acknowledge the Reformation's complicated legacy — religious freedom, religious violence, and everything between", hint:"Honest reckoning with consequences", outcome:"good", result:"The Reformation produced: the principle of individual conscience in religion, vernacular Bibles that made scripture directly accessible, educational institutions that created the modern university system, and devastating religious wars that killed millions. All of these are the Reformation's legacy. The honest accounting includes all of them. The principle was worth establishing. The violence was real. Both are true.", statChange:{food:5,knowledge:25,wealth:5,standing:15} },
+        { text:"Celebrate religious pluralism as the Reformation's ultimately positive legacy", hint:"Religious freedom as achievement", outcome:"good", result:"The world in which multiple forms of Christianity coexist — however uneasily, however violently at first — is a world in which the principle of religious choice has been established. The legal frameworks that eventually produce religious freedom — the Peace of Augsburg, eventually the Peace of Westphalia, eventually the first Amendment — grow from the Reformation's insistence that conscience cannot be legitimately coerced. The principle took centuries to secure. It is now foundational.", statChange:{food:5,knowledge:25,wealth:5,standing:20} },
+        { text:"Connect the Reformation to the scientific revolution — both assert individual inquiry over institutional authority", hint:"The common principle", outcome:"good", result:"Luther asserts that individual conscience, guided by scripture, is the final religious authority — overriding the Pope. Galileo asserts that direct observation, guided by mathematics, is the final scientific authority — overriding Aristotle and the Church. The principle is identical: evidence and reason, accessible to any individual, overrides institutional tradition. The Reformation and the scientific revolution are the same revolution expressed in different domains.", statChange:{food:5,knowledge:30,wealth:5,standing:20} }
+      ],
+      catholic:[
+        { text:"Acknowledge what the Reformation era forced the Church to become — smaller, reformed, and more honest", hint:"Honest assessment of the Reformation's effect on Catholicism", outcome:"good", result:"The Catholic Church that emerges from the Reformation era is smaller than the pre-Reformation Church — it has permanently lost northern Europe. It is also more honest about its own corruptions, more rigorous in clergy education, and more theologically precise about what it actually teaches. The crisis that nearly destroyed it also reformed it. The price was worth paying, even if the method — losing half of Europe — was catastrophic.", statChange:{food:5,knowledge:25,wealth:5,standing:15} },
+        { text:"Celebrate the Baroque's artistic legacy — the Counter-Reformation produced extraordinary beauty", hint:"Counter-Reformation as artistic achievement", outcome:"good", result:"Bernini's Ecstasy of Saint Teresa. Caravaggio's Calling of Saint Matthew. Bach's Mass in B Minor. The artistic legacy of the Counter-Reformation is among the most extraordinary in human history. The Church that was being reformed through crisis commissioned work of overwhelming power and beauty. Both things are the Catholic Church of this era.", statChange:{food:5,knowledge:20,wealth:5,standing:25} },
+        { text:"Engage honestly with the scientific revolution — faith and reason are not enemies", hint:"Catholic intellectual engagement with science", outcome:"good", result:"The Church's condemnation of Galileo was wrong, and eventually the Church acknowledges this. The path from Galileo's condemnation to the Church's 1992 formal acknowledgment of his correctness is 350 years of painful institutional learning. The scientists who were also devout Catholics — Copernicus, Mendel, Lemaitre — demonstrate that faith and scientific inquiry are not inherently in conflict. The Galileo affair is a cautionary tale about what happens when institutions claim authority over empirical questions.", statChange:{food:5,knowledge:30,wealth:5,standing:15} }
+      ],
+      ordinary:[
+        { text:"Watch Newton's Principia change everything — science reaching ordinary understanding through its applications", hint:"The scientific revolution reaching ordinary life", outcome:"good", result:"Newton's mathematics are not accessible to most people — the calculus he invents to describe motion is not taught in ordinary schools for generations. But the telescope that reaches into shops, the improved navigation that makes trade safer, the medical knowledge that begins to reduce childhood mortality — these applications of the scientific revolution reach ordinary life directly. You experience the revolution through its consequences rather than its equations.", statChange:{food:10,knowledge:20,wealth:10,standing:10} },
+        { text:"Attend the theater and read the novels — ordinary people as the final audience for the Renaissance", hint:"The Renaissance's democratic legacy", outcome:"good", result:"The Renaissance began in the courts of princes. It ends in the Globe Theatre's pit and the pages of Don Quixote. The humanist insistence that ordinary human experience is worth depicting, understanding, and celebrating has produced a literature and a theater that speak directly to people like you — not to educate you toward someone else's values but to reflect your own experience back with precision and depth. This is the Renaissance's most democratic achievement.", statChange:{food:5,knowledge:25,wealth:5,standing:15} },
+        { text:"Imagine the world your children will inherit — shaped by everything this era produced", hint:"Looking toward the Enlightenment", outcome:"good", result:"Your children will inherit: a world with a printing press that makes information widely available, a world with multiple forms of Christianity and the slowly emerging principle that religious belief cannot be coerced, a world where scientists are beginning to establish that human reason can reliably investigate the natural world, and a world where Shakespeare and Cervantes have established that ordinary human experience is worth serious literary attention. The Enlightenment that comes next will try to systematize all of this. Your children will live in it.", statChange:{food:5,knowledge:25,wealth:5,standing:10} }
+      ]
+    }
+  }
+];
+
+// ══════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════
+let state = {
+  screen:"art_open", role:null, chapterIndex:0,
+  pendingOutcome:null, isRetry:false, retryCount:0,
+  stats:{food:50,knowledge:50,wealth:50,standing:50},
+  discussPhase:0, timerInterval:null
+};
+
+// ══════════════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════════════
+function go(s){state.screen=s;render();window.scrollTo({top:0,behavior:"smooth"});}
+function getRole(){return ROLES.find(r=>r.id===state.role);}
+function clamp(v){return Math.max(0,Math.min(100,v));}
+function applyStats(ch){if(!ch)return;for(let k in ch){if(state.stats[k]!==undefined)state.stats[k]=clamp(state.stats[k]+ch[k]);}}
+function statColor(v){return v>=60?"#6ABF6A":v>=35?"#E8C840":"#E05050";}
+function isDead(){return state.stats.food<=0;}
+
+function knowledgeResult(v){
+  if(v>=75)return{icon:"🔭",title:"The Examined Life",text:"Your choices pursued knowledge — about the world, about human nature, about the relationship between faith and reason — with the seriousness the Renaissance demanded. The Renaissance's deepest claim is that human beings can understand their world through careful observation and honest inquiry. Your choices embody that claim."};
+  if(v>=50)return{icon:"📖",title:"The Inquiring Mind",text:"Your choices engaged with the new knowledge of the Renaissance with genuine curiosity, if not always with full commitment. Most people who lived through this era navigated exactly this: aware that the world was changing, uncertain what the changes meant, trying to participate honestly in a transformation larger than any individual."};
+  if(v>=25)return{icon:"⚖️",title:"Knowledge Deferred",text:"Your choices often prioritized immediate interest over the pursuit of understanding. The Renaissance would have recognized this too — not everyone who lived through it was transformed by it. The ideas were available. Acting on them required courage and investment that not everyone could provide."};
+  return{icon:"🕯️",title:"Knowledge Resisted",text:"Your choices moved away from the new knowledge the Renaissance was producing. The institutions and traditions that resisted the Renaissance — not all of which were wrong to resist everything — ultimately could not prevent the transformation. The printing press, the scientific method, and the humanist conviction that human reason is reliable were not stopped by resistance. They were delayed by it."};}
+
+function renderStats(){
+  const defs=[{key:"food",label:"Food",icon:"🌾"},{key:"knowledge",label:"Knowledge",icon:"📚"},{key:"wealth",label:"Wealth",icon:"💰"},{key:"standing",label:"Standing",icon:"🏛️"}];
+  return`<div class="stats-row">${defs.map(d=>{const v=state.stats[d.key];return`<div class="stat-box"><span class="stat-icon">${d.icon}</span><div class="stat-label">${d.label}</div><div class="stat-value" style="color:${statColor(v)}">${Math.round(v)}</div><div class="stat-track"><div class="stat-fill" style="width:${v}%;background:${statColor(v)}"></div></div></div>`;}).join("")}</div>`;}
+
+function renderProgress(){
+  const dots=CHAPTERS.map((c,i)=>`<div class="prog-dot ${i<state.chapterIndex?"done":i===state.chapterIndex?"active":""}"></div>`).join("");
+  return`<div class="progress-row">${dots}<span class="prog-label">Chapter ${state.chapterIndex+1} of ${CHAPTERS.length}</span></div>`;}
+
+// ══════════════════════════════════════════════════════════════
+//  SCREENS
+// ══════════════════════════════════════════════════════════════
+function screenArtOpen(){return`
+  <div class="screen-label">Before we begin — look closely</div>
+  <div class="screen-heading">Vitruvian Man<br><span style="font-size:16px;color:var(--gold)">Leonardo da Vinci · c. 1490 CE</span></div>
+  <div class="art-frame">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/6/68/Halal_Vitruvianischer_Mensch.png" alt="Vitruvian Man — Leonardo da Vinci c. 1490" onerror="this.style.display='none';document.getElementById('vit-fallback').style.display='block'" />
+    <div id="vit-fallback" style="display:none;padding:2rem;text-align:center;color:var(--gold);font-family:Arial,sans-serif;font-size:13px">[Vitruvian Man — search "Vitruvian Man Leonardo da Vinci" to view]</div>
+    <div class="art-caption">Vitruvian Man · Leonardo da Vinci · c. 1490 CE · Ink on paper · Gallerie dell'Accademia, Venice · Public Domain<br><em>Based on the Roman architect Vitruvius's description of ideal human proportions — the human body inscribed within a circle and a square.</em></div>
+  </div>
+  <div class="scene-text">Leonardo da Vinci drew this figure around 1490 — approximately 140 years after the Black Death reshaped Europe and set the Renaissance in motion. The human figure is inscribed within a circle and a square — two perfect geometric forms — with mathematical precision. The text around it describes the exact proportions. Before you begin the final campaign of the year, look closely. Take 30 seconds of silence first. Then answer the three prompts in your field journal:</div>
+  <div class="art-prompts">
+    <div class="art-prompt-box"><div class="apt-label">Prompt 1</div><div class="apt-q">One thing I find interesting...</div></div>
+    <div class="art-prompt-box"><div class="apt-label">Prompt 2</div><div class="apt-q">One thing that puzzles me...</div></div>
+    <div class="art-prompt-box"><div class="apt-label">Prompt 3</div><div class="apt-q">One question I have for the creator...</div></div>
+  </div>
+  <div class="history-note"><strong>Answer in your field journal.</strong> When your teacher gives the signal, continue.</div>
+  <button class="btn btn-gold" onclick="go('role_select')">Enter the Renaissance →</button>`;}
+
+function screenRoleSelect(){return`
+  <div class="screen-label">Choose your role — your table decides together</div>
+  <div class="screen-heading">Who are you in the Renaissance and Reformation?</div>
+  <div class="scene-text">Every person at your table plays the same role. This is the final campaign of the year — and everything you have learned since the Stone Age feeds into this moment. The spine question that runs through every chapter: <em>What happens when people start asking questions that established authorities cannot answer — and what does authority do when it feels threatened?</em> Choose together.</div>
+  <div class="role-grid">${ROLES.map(r=>`<div class="role-card" onclick="selectRole('${r.id}')"><span class="rc-icon">${r.icon}</span><div class="rc-name">${r.name}</div><div class="rc-own"><strong>You control:</strong> ${r.own}</div><div class="rc-fear">⚠ You fear: ${r.fear}</div></div>`).join("")}</div>`;}
+
+function screenChapter(){
+  const ch=CHAPTERS[state.chapterIndex];
+  const role=getRole();
+  const choices=ch.choices[role.id]||[];
+  const isPoison=ch.poisonRoles&&ch.poisonRoles.includes(role.id);
+  return`${renderProgress()}${renderStats()}
+  <div class="role-badge"><span class="rb-icon">${role.icon}</span><div><div class="rb-name">${role.name}</div><div class="rb-desc">${role.desc}</div></div></div>
+  <div class="screen-label">${ch.title}</div>
+  <div class="screen-heading" style="font-size:18px">${ch.subtitle}</div>
+  <div class="scene-text">${ch.scene}</div>
+  <div class="role-context">${role.ctx[ch.id]}</div>
+  ${isPoison?`<div class="poison-note">⚠ There may be no good option for your role in this chapter. Choose the least difficult path — and notice what it reveals about your position in this era.</div>`:""}
+  <div class="history-note">${ch.historyNote}</div>
+  ${state.isRetry?`<div class="history-note" style="border-color:var(--gold);color:var(--gold)"><strong>Try a different path</strong> — the same historical reality, new choices through it.</div>`:""}
+  <div class="choices-label">Discuss with your table — then choose:</div>
+  <div class="choices">${choices.map((c,i)=>`<button class="choice-btn" onclick="makeChoice(${i})"><div class="choice-text">${c.text}</div><div class="choice-hint">${c.hint}</div></button>`).join("")}</div>`;}
+
+function screenOutcome(){
+  const ch=CHAPTERS[state.chapterIndex];
+  const o=state.pendingOutcome;
+  const isPoison=o.isPoison||o.poison;
+  const outcomeClass=isPoison?"outcome-poison":`outcome-${o.outcome}`;
+  const outcomeLabel=o.outcome==="good"?"✓ What happened":o.outcome==="bad"?"✗ What happened":isPoison?"⚠ The constrained choice":"→ What happened";
+  const canRetry=isPoison&&state.retryCount<1;
+  return`${renderProgress()}${renderStats()}
+  <div class="outcome-box ${outcomeClass}"><div class="outcome-label">${outcomeLabel}</div>${o.result}</div>
+  ${canRetry?`<div class="history-note" style="border-color:var(--gold);color:var(--gold)">Your role faced a constrained situation. You can try again with entirely new choices, or continue to the journal prompt.</div>
+  <button class="btn btn-gold" onclick="retryChapter()">Try different choices →</button>
+  <button class="btn btn-secondary" onclick="proceedFromOutcome()">Continue with this outcome →</button>`:
+  ch.discussAfter?`<button class="btn btn-gold" onclick="startDiscussion()">Continue to table discussion →</button>`:
+  `<div class="journal-prompt"><strong>✏ Field Journal Prompt —</strong> answer before your teacher signals to continue:<br><br>${ch.journalPrompt}</div>
+  <button class="btn btn-gold" onclick="advanceChapter()">${state.chapterIndex<CHAPTERS.length-1?"Continue →":"See how your year ends →"}</button>`}`;
+}
+
+function screenDiscussion(){
+  const ch=CHAPTERS[state.chapterIndex];
+  const phase=state.discussPhase;
+  const prompt=phase===0?ch.discussPrompt:(ch.discussPrompt2||ch.discussPrompt);
+  const pairs=phase===0?ch.discussPairs:(ch.discussPairs2||ch.discussPairs);
+  clearInterval(state.timerInterval);
+  setTimeout(()=>{
+    let secs=90;
+    state.timerInterval=setInterval(()=>{
+      secs--;
+      const el=document.getElementById("timer-display");
+      const fill=document.getElementById("timer-fill");
+      const btn=document.getElementById("cont-btn");
+      if(el)el.textContent=`${Math.floor(secs/60)}:${String(secs%60).padStart(2,"0")}`;
+      if(fill)fill.style.width=`${(secs/90)*100}%`;
+      if(secs<=0){clearInterval(state.timerInterval);if(btn)btn.classList.add("ready");}
+    },1000);
+  },100);
+  const hasSecond=ch.discussPrompt2&&phase===0;
+  return`${renderProgress()}
+  <div class="discussion-box">
+    <div class="disc-header">⏱ Table Discussion ${ch.discussPrompt2?`(${phase+1} of 2)`:""} — 90 seconds</div>
+    <div class="disc-prompt">${prompt}</div>
+    <div class="disc-pairs">📋 Pairings: ${pairs}</div>
+    <div class="timer-row">
+      <div class="timer-display" id="timer-display">1:30</div>
+      <div class="timer-track"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+      <button class="continue-btn" id="cont-btn" onclick="afterDiscussion(${hasSecond})">Continue →</button>
+    </div>
+  </div>
+  <div class="journal-prompt"><strong>✏ Field Journal Prompt —</strong> write your response while the timer runs:<br><br>${ch.journalPrompt}</div>`;}
+
+function screenGameOver(){return`
+  <div style="text-align:center;padding:2rem 1rem">
+    <div style="font-size:48px;margin-bottom:1rem">📚</div>
+    <div class="screen-heading">Your story in the Renaissance ends here</div>
+    ${renderStats()}
+    <div class="history-note" style="text-align:left;margin-bottom:1.25rem">Even in the most intellectually extraordinary era in European history — even surrounded by Michelangelo's art, Luther's theology, Galileo's science, and Shakespeare's plays — the most basic requirement of human existence remained food. The Renaissance that celebrated human dignity could not always feed human bodies.</div>
+    <div class="journal-prompt" style="text-align:left">What does a food crisis during the Renaissance tell you about the relationship between intellectual achievement and everyday survival?</div><br>
+    <button class="btn btn-gold" onclick="restart()">Start again as a different role</button>
+  </div>`;}
+
+function screenArtClose(){return`
+  <div class="screen-label">The final image of the year</div>
+  <div class="screen-heading">Albrecht Dürer — Self-Portrait at 28<br><span style="font-size:16px;color:var(--gold)">1500 CE · Munich</span></div>
+  <div class="art-frame">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/d/dc/Albrecht_D%C3%BCrer_-_1500_self-portrait_%28High_resolution_and_detail%29.jpg" alt="Albrecht Dürer Self-Portrait 1500" onerror="this.style.display='none';document.getElementById('durer-fallback').style.display='block'" />
+    <div id="durer-fallback" style="display:none;padding:2rem;text-align:center;color:var(--gold);font-family:Arial,sans-serif;font-size:13px">[Dürer Self-Portrait 1500 — search "Dürer self portrait 1500" to view]</div>
+    <div class="art-caption">Self-Portrait at 28 · Albrecht Dürer · 1500 CE · Oil on panel · Alte Pinakothek, Munich · Public Domain<br><em>Inscription: "I, Albrecht Dürer of Nuremberg, painted myself thus, with undying colors, at the age of 28 years." Painted in the pose traditionally reserved for depictions of Christ.</em></div>
+  </div>
+  <div class="scene-text">Read the inscription again: "I, Albrecht Dürer of Nuremberg, painted myself thus, with undying colors, at the age of 28 years." He signed his name. He painted himself facing forward — the pose of Christ in traditional iconography. He called the colors "undying." He was an ordinary person from Nuremberg asserting that his face, his identity, his individual existence was worth preserving with the same care previously reserved for saints and rulers. Use your three prompts in your field journal:</div>
+  <div class="art-prompts">
+    <div class="art-prompt-box"><div class="apt-label">Prompt 1</div><div class="apt-q">One thing I find interesting...</div></div>
+    <div class="art-prompt-box"><div class="apt-label">Prompt 2</div><div class="apt-q">One thing that puzzles me...</div></div>
+    <div class="art-prompt-box"><div class="apt-label">Prompt 3</div><div class="apt-q">One question I have for the creator...</div></div>
+  </div>
+  <div class="journal-prompt"><strong>The year-long question:</strong> You began this year looking at a 36,000-year-old cave painting made by someone whose name we will never know. You are ending it with a man who signed his name and painted himself with undying colors. What changed between the cave painting and this moment — and what, looking at the whole year, do you think stayed the same about what humans are trying to do?</div>
+  <button class="btn btn-gold" onclick="go('ending')">Complete the year →</button>`;}
+
+function screenEnding(){
+  const role=getRole();
+  const k=knowledgeResult(state.stats.knowledge);
+  return`<div class="screen-label">End of the Renaissance & Reformation — End of the Year</div>
+  <div class="screen-heading" style="font-size:18px">${role.name} — Your Story Through the Renaissance</div>
+  ${renderStats()}
+  <div class="knowledge-result"><span class="kr-icon">${k.icon}</span><div class="kr-label">Knowledge Assessment</div><div class="kr-title">${k.title}</div><div class="kr-text">${k.text}</div></div>
+  <div class="history-note"><strong>What this campaign covered:</strong><br>The Italian Renaissance — Medicis, Petrarch, and the rediscovery of classical learning · The visual revolution — perspective, anatomy, Michelangelo, Leonardo, Dürer · The printing press and Christian humanism — Erasmus, Thomas More, the democratization of knowledge · The Reformation — Luther at Worms, Calvin's Geneva, Henry VIII and the Church of England · The Counter-Reformation — Council of Trent, the Jesuits, the Baroque · Galileo and the Roman Inquisition · The Northern Renaissance — Shakespeare, Cervantes, vernacular literature · The Scientific Revolution — Copernicus, Vesalius, Newton · The legacy that shaped the modern world</div>
+
+  <div class="year-end-box">
+    <h4>🌍 The Complete Arc — Everything You Lived Through This Year</h4>
+    <p>You began in the Stone Age — nomadic, following animals, discovering by accident that seeds grow where they fall. You built the first cities in Mesopotamia. You organized an empire around a river in Egypt. You asked questions about the nature of existence in India and China. You invented democracy in Greece and government by law in Rome. You survived the fall of Rome and rebuilt civilization around faith in the Middle Ages. And now you stand here — in a world where Dürer signs his name, Newton describes the universe mathematically, and Shakespeare writes plays that are still performed 400 years after his death.</p>
+    <p>The Enlightenment that comes next — which your 7th grade year will begin — will try to systematize everything this year produced: apply reason to politics, assert that human dignity implies specific rights, use scientific method to investigate society itself. You will arrive there with everything you learned here.</p>
+  </div>
+
+  <div style="margin-bottom:1.25rem">
+    <div class="screen-label" style="margin-bottom:8px">The Renaissance's Lasting Legacy</div>
+    <div class="achievements-grid">
+      <div class="achievement-card"><span class="ac-icon">🎨</span><div class="ac-title">Perspective and Human Dignity</div><div class="ac-desc">The assertion that the human body, accurately depicted, is beautiful — and that individual human experience is worth serious artistic attention. Still the foundation of Western visual art.</div></div>
+      <div class="achievement-card"><span class="ac-icon">🖨️</span><div class="ac-title">The Printing Press</div><div class="ac-desc">More information produced in 70 years than in the previous thousand. The democratization of knowledge that made the Reformation, the Scientific Revolution, and eventually the Enlightenment possible.</div></div>
+      <div class="achievement-card"><span class="ac-icon">⛪</span><div class="ac-title">Religious Pluralism</div><div class="ac-desc">The permanent fracturing of Western Christianity — and, eventually, the principle that religious belief cannot be legitimately coerced. The path to religious freedom runs through Luther's Worms.</div></div>
+      <div class="achievement-card"><span class="ac-icon">🔭</span><div class="ac-title">The Scientific Method</div><div class="ac-desc">Direct observation and mathematical reasoning as the basis for knowledge about the natural world. Copernicus, Galileo, Newton — the foundation of every scientific advance since.</div></div>
+      <div class="achievement-card"><span class="ac-icon">📖</span><div class="ac-title">Vernacular Literature</div><div class="ac-desc">Shakespeare, Cervantes, Montaigne — serious literary and philosophical work in living languages, for everyone who speaks them. The novel, the essay, the drama as forms that survive to the present.</div></div>
+      <div class="achievement-card"><span class="ac-icon">🧍</span><div class="ac-title">Individual Identity</div><div class="ac-desc">Dürer signing his name. Luther saying "here I stand." Galileo muttering "and yet it moves." The assertion that individual conscience and observation have authority — still contested, still fundamental.</div></div>
+    </div>
+  </div>
+
+  <div class="discussion-questions">
+    <h4>Final Discussion Questions — For the Year</h4>
+    <p>1. The Renaissance spine question was: what happens when people start asking questions that established authorities cannot answer? Looking back at the whole year — which civilization handled this question best? Which handled it worst?</p>
+    <p>2. The cave paintings at Chauvet are 36,000 years old. Dürer's self-portrait is 525 years old. Both are humans trying to create something that lasts. What changed — and what stayed the same?</p>
+    <p>3. The printing press changed the Reformation the way the internet changed the Arab Spring. What technology in your own lifetime has changed what is possible in the same way — making ideas travel faster than any authority can suppress them?</p>
+    <p>4. Galileo knew he was right. He recanted anyway. He reportedly muttered "and yet it moves." Was he right to recant — or should he have stood firm like Luther at Worms? What's the difference between the two situations?</p>
+    <p>5. If you could add one thing to the Vitruvian Man's inscription — one thing about what humans are trying to do that Leonardo didn't write — what would it be?</p>
+  </div>
+  <button class="btn btn-gold" onclick="restart()">Play again as a different role</button>
+  <button class="btn btn-secondary" onclick="restart()">Return to start</button>`;}
+
+// ══════════════════════════════════════════════════════════════
+//  ACTIONS
+// ══════════════════════════════════════════════════════════════
+function selectRole(id){state.role=id;state.chapterIndex=0;state.isRetry=false;state.retryCount=0;go("chapter");}
+
+function makeChoice(i){
+  const ch=CHAPTERS[state.chapterIndex];
+  const choices=ch.choices[state.role]||[];
+  const choice=choices[i];
+  if(!choice.isPoison){applyStats(choice.statChange);}
+  state.pendingOutcome=choice;
+  if(isDead()){go("gameover");return;}
+  go("outcome");
+}
+
+function retryChapter(){state.isRetry=true;state.retryCount++;state.pendingOutcome=null;go("chapter");}
+
+function proceedFromOutcome(){
+  const ch=CHAPTERS[state.chapterIndex];
+  state.isRetry=false;state.retryCount=0;
+  if(ch.discussAfter){startDiscussion();}else{advanceChapter();}
+}
+
+function startDiscussion(){state.discussPhase=0;go("discussion");}
+
+function afterDiscussion(hasSecond){
+  clearInterval(state.timerInterval);
+  if(hasSecond&&state.discussPhase===0){state.discussPhase=1;go("discussion");}
+  else{state.discussPhase=0;advanceChapter();}
+}
+
+function advanceChapter(){
+  state.pendingOutcome=null;state.isRetry=false;state.retryCount=0;
+  if(state.chapterIndex<CHAPTERS.length-1){state.chapterIndex++;go("chapter");}
+  else{go("art_close");}
+}
+
+function restart(){
+  clearInterval(state.timerInterval);
+  state={screen:"art_open",role:null,chapterIndex:0,pendingOutcome:null,isRetry:false,retryCount:0,stats:{food:50,knowledge:50,wealth:50,standing:50},discussPhase:0,timerInterval:null};
+  render();window.scrollTo({top:0,behavior:"smooth"});
+}
+
+// ══════════════════════════════════════════════════════════════
+//  RENDER
+// ══════════════════════════════════════════════════════════════
+function render(){
+  const el=document.getElementById("content");
+  const screens={art_open:screenArtOpen,role_select:screenRoleSelect,chapter:screenChapter,outcome:screenOutcome,discussion:screenDiscussion,gameover:screenGameOver,art_close:screenArtClose,ending:screenEnding};
+  el.innerHTML=(screens[state.screen]||(() => "<p>Loading...</p>"))();
+}
+render();
+</script>
+</body>
+</html>
