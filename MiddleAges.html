@@ -1,0 +1,778 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>The Middle Ages — The Story of Us</title>
+<style>
+  :root {
+    --parchment: #F5ECD8;
+    --parchment-dark: #D8CCAA;
+    --forest: #2A4A1A;
+    --forest-light: #C8E0B0;
+    --stone: #5A5040;
+    --stone-light: #E8E0D0;
+    --crimson: #8B1A2A;
+    --crimson-light: #F5C8D0;
+    --crimson-glow: rgba(139,26,42,0.15);
+    --gold: #A87A00;
+    --gold-light: #FFF4C0;
+    --shadow: #0A0800;
+    --red: #8B2020;
+    --red-light: #F5D0D0;
+    --green: #2A6B3A;
+    --green-light: #C8F0D0;
+    --blue: #1A3A6B;
+    --blue-light: #C8D4F8;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body { font-family: Georgia, 'Times New Roman', serif; background: #0A0800; color: var(--parchment); min-height: 100vh; }
+  #app { max-width: 780px; margin: 0 auto; padding: 1.5rem 1.5rem 3rem; }
+  .site-header { text-align: center; padding: 1.5rem 1rem 1rem; border-bottom: 2px solid var(--crimson); margin-bottom: 1.5rem; background: linear-gradient(180deg, rgba(139,26,42,0.08) 0%, transparent 100%); }
+  .site-header .campaign-tag { font-size: 11px; letter-spacing: 0.16em; text-transform: uppercase; color: var(--crimson-light); font-family: Arial, sans-serif; margin-bottom: 6px; }
+  .site-header h1 { font-size: 30px; font-weight: bold; color: var(--parchment); letter-spacing: 0.06em; margin-bottom: 4px; }
+  .site-header h2 { font-size: 14px; font-weight: normal; color: var(--parchment-dark); font-family: Arial, sans-serif; font-style: italic; }
+  .stats-row { display: grid; grid-template-columns: repeat(4, 1fr); gap: 8px; margin-bottom: 1.25rem; }
+  .stat-box { background: rgba(139,26,42,0.1); border: 1px solid rgba(139,26,42,0.3); border-radius: 6px; padding: 8px 10px; text-align: center; }
+  .stat-icon { font-size: 16px; display: block; margin-bottom: 2px; }
+  .stat-label { font-size: 10px; color: var(--crimson-light); letter-spacing: 0.05em; text-transform: uppercase; font-family: Arial, sans-serif; }
+  .stat-value { font-size: 18px; font-weight: bold; margin: 2px 0; }
+  .stat-track { height: 4px; background: rgba(255,255,255,0.1); border-radius: 2px; margin-top: 4px; }
+  .stat-fill { height: 4px; border-radius: 2px; transition: width 0.5s, background 0.5s; }
+  .role-badge { display: flex; align-items: center; gap: 10px; background: rgba(139,26,42,0.1); border: 1px solid rgba(139,26,42,0.3); border-radius: 8px; padding: 10px 14px; margin-bottom: 1.25rem; }
+  .role-badge .rb-icon { font-size: 24px; }
+  .role-badge .rb-name { font-size: 15px; font-weight: bold; color: var(--parchment); }
+  .role-badge .rb-desc { font-size: 12px; color: var(--parchment-dark); font-family: Arial, sans-serif; }
+  .progress-row { display: flex; align-items: center; gap: 8px; margin-bottom: 1.25rem; }
+  .prog-dot { width: 10px; height: 10px; border-radius: 50%; background: rgba(139,26,42,0.2); border: 1.5px solid rgba(139,26,42,0.4); }
+  .prog-dot.active { background: var(--crimson); border-color: var(--crimson); }
+  .prog-dot.done { background: var(--gold); border-color: var(--gold); }
+  .prog-label { font-size: 11px; color: var(--parchment-dark); font-family: Arial, sans-serif; }
+  .screen-label { font-size: 11px; color: var(--crimson-light); letter-spacing: 0.1em; text-transform: uppercase; font-family: Arial, sans-serif; margin-bottom: 6px; }
+  .screen-heading { font-size: 22px; font-weight: bold; color: var(--parchment); margin-bottom: 1rem; line-height: 1.3; }
+  .scene-text { font-size: 15px; line-height: 1.85; color: var(--parchment); margin-bottom: 1rem; }
+  .role-context { background: var(--crimson-glow); border-left: 3px solid var(--crimson); border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 14px; font-style: italic; color: var(--crimson-light); margin-bottom: 1.25rem; line-height: 1.65; font-family: Arial, sans-serif; }
+  .history-note { background: rgba(26,58,107,0.2); border-left: 3px solid var(--blue); border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 13px; color: var(--blue-light); margin-bottom: 1.25rem; line-height: 1.65; font-family: Arial, sans-serif; }
+  .history-note strong { color: #E8F0FF; font-weight: 600; }
+  .journal-prompt { background: rgba(139,26,42,0.1); border-left: 3px solid var(--crimson); border-radius: 0 6px 6px 0; padding: 12px 14px; font-size: 14px; color: var(--crimson-light); margin-bottom: 1.25rem; line-height: 1.7; font-family: Arial, sans-serif; }
+  .journal-prompt strong { color: var(--parchment); font-weight: 600; }
+  .poison-note { background: rgba(139,32,32,0.2); border-left: 3px solid var(--red); border-radius: 0 6px 6px 0; padding: 10px 14px; font-size: 13px; color: var(--red-light); margin-bottom: 1.25rem; line-height: 1.65; font-family: Arial, sans-serif; }
+  .discussion-box { background: var(--stone); border-radius: 10px; padding: 16px 20px; margin-bottom: 1.25rem; }
+  .discussion-box .disc-header { font-size: 11px; letter-spacing: 0.1em; text-transform: uppercase; font-family: Arial, sans-serif; color: var(--parchment-dark); margin-bottom: 6px; }
+  .discussion-box .disc-prompt { font-size: 15px; line-height: 1.6; margin-bottom: 6px; font-style: italic; color: var(--parchment); }
+  .disc-pairs { background: rgba(0,0,0,0.2); border-radius: 6px; padding: 10px 14px; margin-bottom: 14px; font-size: 13px; color: var(--parchment-dark); font-family: Arial, sans-serif; line-height: 1.8; }
+  .timer-row { display: flex; align-items: center; gap: 14px; }
+  .timer-display { font-size: 32px; font-weight: bold; font-family: Arial, sans-serif; min-width: 60px; color: var(--parchment); }
+  .timer-track { flex: 1; height: 8px; background: rgba(255,255,255,0.15); border-radius: 4px; }
+  .timer-fill { height: 8px; background: var(--crimson); border-radius: 4px; transition: width 1s linear; }
+  .continue-btn { background: var(--crimson); color: white; border: none; border-radius: 6px; padding: 8px 16px; font-size: 13px; font-weight: bold; cursor: pointer; font-family: Arial, sans-serif; opacity: 0; transition: opacity 0.3s; pointer-events: none; }
+  .continue-btn.ready { opacity: 1; pointer-events: all; }
+  .choices-label { font-size: 11px; color: var(--parchment-dark); letter-spacing: 0.08em; text-transform: uppercase; font-family: Arial, sans-serif; margin-bottom: 8px; }
+  .choices { display: flex; flex-direction: column; gap: 8px; margin-bottom: 1rem; }
+  .choice-btn { background: rgba(139,26,42,0.08); border: 1.5px solid rgba(139,26,42,0.3); border-radius: 8px; padding: 12px 16px; text-align: left; cursor: pointer; transition: all 0.15s; font-family: Georgia, serif; }
+  .choice-btn:hover { background: rgba(139,26,42,0.2); border-color: var(--crimson); }
+  .choice-btn .choice-text { font-size: 14px; color: var(--parchment); line-height: 1.5; }
+  .choice-btn .choice-hint { font-size: 11px; color: var(--parchment-dark); margin-top: 4px; font-family: Arial, sans-serif; font-style: italic; }
+  .outcome-box { border-radius: 8px; padding: 14px 16px; margin-bottom: 1.25rem; font-size: 14px; line-height: 1.7; font-family: Arial, sans-serif; }
+  .outcome-good { background: rgba(42,107,58,0.2); border: 1.5px solid var(--green); color: var(--green-light); }
+  .outcome-bad { background: rgba(139,32,32,0.2); border: 1.5px solid var(--red); color: var(--red-light); }
+  .outcome-neutral { background: rgba(90,80,64,0.3); border: 1.5px solid var(--stone); color: var(--stone-light); }
+  .outcome-poison { background: rgba(139,32,32,0.15); border: 1.5px solid #6B1A1A; color: #F0B0B0; }
+  .outcome-label { font-size: 11px; font-weight: bold; letter-spacing: 0.08em; text-transform: uppercase; margin-bottom: 6px; font-family: Arial, sans-serif; }
+  .art-frame { border: 2px solid var(--crimson); border-radius: 8px; overflow: hidden; margin-bottom: 1.25rem; background: var(--shadow); box-shadow: 0 0 20px rgba(139,26,42,0.15); }
+  .art-frame img { width: 100%; display: block; max-height: 360px; object-fit: contain; object-position: center; background: #1A1008; }
+  .art-caption { padding: 8px 14px; font-size: 11px; color: var(--crimson-light); font-family: Arial, sans-serif; font-style: italic; background: rgba(10,8,0,0.9); line-height: 1.5; }
+  .art-prompts { display: flex; flex-direction: column; gap: 10px; margin-bottom: 1.25rem; }
+  .art-prompt-box { background: rgba(139,26,42,0.1); border: 1px solid rgba(139,26,42,0.3); border-radius: 6px; padding: 10px 14px; }
+  .art-prompt-box .apt-label { font-size: 11px; font-weight: bold; color: var(--crimson-light); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 4px; }
+  .art-prompt-box .apt-q { font-size: 14px; color: var(--parchment-dark); font-style: italic; }
+  .role-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1rem; }
+  .role-card { background: rgba(139,26,42,0.08); border: 2px solid rgba(139,26,42,0.3); border-radius: 10px; padding: 14px; cursor: pointer; transition: all 0.15s; }
+  .role-card:hover { background: rgba(139,26,42,0.2); border-color: var(--crimson); transform: translateY(-1px); }
+  .role-card .rc-icon { font-size: 28px; margin-bottom: 6px; display: block; }
+  .role-card .rc-name { font-size: 15px; font-weight: bold; color: var(--parchment); margin-bottom: 4px; }
+  .role-card .rc-own { font-size: 12px; color: var(--parchment-dark); font-family: Arial, sans-serif; line-height: 1.5; margin-bottom: 6px; }
+  .role-card .rc-fear { font-size: 11px; color: var(--red-light); font-family: Arial, sans-serif; font-style: italic; }
+  .faith-result { background: rgba(139,26,42,0.12); border: 1.5px solid var(--crimson); border-radius: 10px; padding: 16px 18px; margin-bottom: 1.25rem; text-align: center; }
+  .faith-result .fr-icon { font-size: 36px; margin-bottom: 8px; display: block; }
+  .faith-result .fr-label { font-size: 12px; color: var(--crimson-light); text-transform: uppercase; letter-spacing: 0.08em; font-family: Arial, sans-serif; margin-bottom: 6px; }
+  .faith-result .fr-title { font-size: 20px; font-weight: bold; color: var(--parchment); margin-bottom: 8px; }
+  .faith-result .fr-text { font-size: 14px; color: var(--parchment-dark); line-height: 1.7; font-family: Arial, sans-serif; }
+  .achievements-grid { display: grid; grid-template-columns: repeat(2, 1fr); gap: 10px; margin-bottom: 1.25rem; }
+  .achievement-card { background: rgba(139,26,42,0.1); border: 1px solid rgba(139,26,42,0.3); border-radius: 8px; padding: 12px 14px; }
+  .achievement-card .ac-icon { font-size: 20px; margin-bottom: 4px; display: block; }
+  .achievement-card .ac-title { font-size: 13px; font-weight: bold; color: var(--parchment); margin-bottom: 4px; }
+  .achievement-card .ac-desc { font-size: 12px; color: var(--parchment-dark); font-family: Arial, sans-serif; line-height: 1.5; }
+  .discussion-questions { background: rgba(42,74,26,0.15); border: 1px solid var(--forest); border-radius: 8px; padding: 14px 16px; margin-bottom: 1.25rem; }
+  .discussion-questions h4 { font-size: 12px; font-weight: bold; color: var(--forest-light); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 10px; }
+  .discussion-questions p { font-size: 13px; color: #B0D898; line-height: 1.7; font-family: Arial, sans-serif; margin-bottom: 8px; }
+  .dbq-box { background: rgba(168,122,0,0.12); border: 1.5px solid var(--gold); border-radius: 10px; padding: 16px 18px; margin-bottom: 1.25rem; }
+  .dbq-box h4 { font-size: 13px; font-weight: bold; color: var(--gold-light); text-transform: uppercase; letter-spacing: 0.06em; font-family: Arial, sans-serif; margin-bottom: 8px; }
+  .dbq-box p { font-size: 14px; color: var(--gold-light); line-height: 1.7; font-family: Arial, sans-serif; margin-bottom: 8px; }
+  .btn { background: var(--stone); color: var(--parchment); border: none; border-radius: 8px; padding: 11px 22px; font-size: 14px; font-weight: bold; cursor: pointer; font-family: Arial, sans-serif; transition: background 0.15s; margin-right: 8px; margin-bottom: 8px; }
+  .btn:hover { background: #3A3020; }
+  .btn-crimson { background: var(--crimson); color: white; }
+  .btn-crimson:hover { background: #6B1018; }
+  .btn-secondary { background: transparent; color: var(--crimson-light); border: 1.5px solid var(--crimson); }
+  .btn-secondary:hover { background: var(--crimson-glow); }
+  @media (max-width: 500px) { .role-grid { grid-template-columns: 1fr; } .stats-row { grid-template-columns: repeat(2, 1fr); } .achievements-grid { grid-template-columns: 1fr; } }
+</style>
+</head>
+<body>
+<div id="app">
+  <div class="site-header">
+    <div class="campaign-tag">The Story of Us · Campaign 7</div>
+    <h1>THE MIDDLE AGES</h1>
+    <h2>When Rome Fell, Who Filled the Vacuum? · c. 500 – 1350 CE</h2>
+  </div>
+  <div id="content"></div>
+</div>
+<script>
+// ══════════════════════════════════════════════════════════════
+//  ROLES
+// ══════════════════════════════════════════════════════════════
+const ROLES = [
+  { id:"knight", name:"Knight / Lord", icon:"⚔️",
+    desc:"You hold land granted by a lord above you, in exchange for military service. You are trained from childhood to fight, to pray, and to follow the chivalric code.",
+    own:"Land, a castle or manor, armed retainers, and the military training of a lifetime.",
+    fear:"Dishonor. Losing your land. A world where castles and cavalry no longer determine power.",
+    want:"A just lord, a worthy enemy, land to pass to your heirs, and to live and die with honor.",
+    ctx:{ ch1:"You begin not as a knight but as a page — a boy of seven sent to a lord's household to begin training. You learn to serve at table, to care for horses, to handle weapons, and to understand the chivalric code: loyalty, courage, courtesy, and Christian service. The training that will make you a knight begins here.",
+      ch2:"At fourteen you become a squire — a knight's personal assistant and apprentice. You carry his shield, care for his armor, fight at his side, and learn poetry alongside swordsmanship. The chivalric code requires both. A knight who cannot compose a verse is as incomplete as one who cannot fight.",
+      ch3:"You are a knight now — dubbed by your lord, sworn to the Church, bound by your oath of fealty upward and your obligation to protect downward. The Church that blessed your sword also tells you when to use it. The Pope's authority and your lord's authority do not always agree.",
+      ch4:"Pope Urban II has called for a Crusade to reclaim Jerusalem. As a knight sworn to Christian service, the call is directed at you. The promise: your sins will be forgiven, and you will fight for God. The reality is more complicated.",
+      ch5:"The world you were trained for is changing. Towns are growing. Merchants are becoming wealthy without holding land. The Magna Carta constrains kings — and by extension lords like you. At Crécy and Agincourt, English longbowmen destroy mounted knights from a distance. What is a knight for in a world that no longer needs cavalry charges?",
+      ch6:"The Plague arrives. It kills one in three. Your castle walls protect you from enemy armies. They do not protect you from a disease that travels on the air." }
+  },
+  { id:"serf", name:"Serf / Peasant", icon:"🌾",
+    desc:"You are bound to the land — not quite enslaved, but not free. You owe your lord labor, a share of your harvest, and your presence on his manor.",
+    own:"A strip of land to farm, a small home, your family, and the knowledge of how to grow food in this specific soil.",
+    fear:"A bad harvest, a lord who increases your obligations, dying before you see your children grown.",
+    want:"A harvest that leaves your family fed after the lord takes his share, enough peace to plant and grow.",
+    ctx:{ ch1:"When Rome fell, the roads stopped being safe. Feudalism offered something: a lord's military protection in exchange for your labor and a portion of your harvest. The deal is unfair. It is also better than the alternative — unprotected in a world with no functioning government.",
+      ch2:"The manor is your entire world. You farm the lord's fields three days a week without pay. You farm your own strip the other days. You owe fees for using the lord's mill, oven, and press. You cannot leave without permission. The security feudalism provides costs everything.",
+      ch3:"The Church is the one institution that sees you as more than labor. The priest knows your name. Saints' days give you rest from work. The cathedral — built partly by your labor — promises that your suffering in this life will be rewarded in the next.",
+      ch4:"The Crusade takes your lord and some of his knights away. Fewer armed men means less protection from bandits. It also means, with fewer mouths to feed in the castle, some demands on your labor ease temporarily.",
+      ch5:"Something is changing. Towns are growing and they need workers. Some serfs are running to towns where the rule is: live there for a year and a day, and you are free. The Magna Carta doesn't specifically help serfs — it's about barons' rights. But the idea that even a king must follow written law is a seed.",
+      ch6:"The Plague comes. It kills your neighbor, then your cousin, then your child. And when it passes — so many serfs have died that the ones who survive are suddenly valuable. For the first time in centuries, you can demand better wages and better conditions. The Plague is catastrophe and the beginning of freedom simultaneously." }
+  },
+  { id:"monk", name:"Monk / Church Official", icon:"✝️",
+    desc:"You serve God through prayer, scholarship, and the administration of the Church — the institution that fills every vacuum Rome left behind.",
+    own:"The monastery's lands, literacy in a world of illiteracy, the authority to administer sacraments, and access to the most important libraries in Europe.",
+    fear:"A Church corrupted by wealth and political power. The faith becoming a tool of those who use it for power rather than service.",
+    want:"A Church that genuinely serves God and the people — and a world organized around Christian principles of justice and mercy.",
+    ctx:{ ch1:"When Rome fell, the Church was the only institution with the organizational capacity to hold Western Europe together. Monasteries preserved literacy, agricultural knowledge, and Roman administrative practices. The Church did not plan to fill Rome's vacuum. It was simply the only institution capable of doing so.",
+      ch2:"The monastery is simultaneously a center of prayer, scholarship, agricultural production, hospitality, and medical care. Your day is organized around the canonical hours — prayers from dawn to midnight. Between prayers: copying manuscripts, farming, caring for the sick, educating children. The monastery is the Middle Ages' university, hospital, and library simultaneously.",
+      ch3:"The Church's power is at its height — and its most dangerous moment. The Pope claims authority over kings. The wealth flowing into the Church creates the very corruption that reformers within it have always feared.",
+      ch4:"The Crusade is the Church's greatest exercise of power — and its most complicated legacy. Pope Urban II promises spiritual reward to those who fight. The actual Crusades produce violence, commercial opportunity, cultural exchange, and long-term damage to Christian-Muslim relations simultaneously.",
+      ch5:"The power struggle between Pope and King reaches its crisis points. Pope Gregory VII and Emperor Henry IV. Thomas Becket and Henry II. The Church that commands kings also serves the poorest serfs. Both are true. The institution holding both together is under increasing strain.",
+      ch6:"The Plague kills monks in extraordinary numbers — they die because they care for the sick. The Church that promised to explain God's plan for humanity cannot explain why God would send this. The faith survives. The institution is shaken in ways that will produce, eventually, the Reformation." }
+  },
+  { id:"merchant", name:"Merchant / Townsperson", icon:"⚖️",
+    desc:"You live and trade in a growing town — part of a new commercial class that fits awkwardly into the feudal world's neat categories.",
+    own:"A shop, trading connections, money — and the growing sense that the feudal system was not built for people like you.",
+    fear:"Church taxes that consume profits, lords who seize merchant goods, roads made unsafe by feudal conflict.",
+    want:"Safe roads, fair markets, town charters that protect commercial rights, and a world that recognizes that trade creates value.",
+    ctx:{ ch1:"The early Middle Ages nearly destroyed long-distance trade. Roman roads fell into disrepair. Viking raids disrupted coastal commerce. The feudal system was organized around land, not markets. But slowly, trade began to revive — along river routes, at monastery gates, at the crossroads where pilgrims and merchants shared the same roads.",
+      ch2:"The manor system has no place for you. You don't fit the feudal categories of knight, serf, or cleric. Towns growing outside castle walls create a new kind of community — organized around commerce rather than military obligation or religious service. The guild system emerges to organize and protect artisans and merchants.",
+      ch3:"The Church taxes your commerce. The prohibition on usury complicates every commercial relationship. And yet the Church also provides the stable institutional framework that makes commercial contracts meaningful. You navigate both.",
+      ch4:"The Crusades are commercially significant. The Italian city-states that supply and finance the Crusades build the commercial networks that will eventually fund the Renaissance. The routes opened by Crusaders become trade routes. War and trade follow the same roads.",
+      ch5:"Towns are rising. The Magna Carta includes commercial protections — standard weights and measures, protection of merchant rights. The guilds organizing your commerce are becoming political forces. The feudal world that had no place for you is beginning to need you.",
+      ch6:"The Plague collapses demand overnight. Half your customers are dead. But then something unexpected — the survivors need goods, and there are far fewer merchants to supply them. Your prices rise. Your skilled workers demand better wages. The catastrophe is also, if you survive it, an opportunity." }
+  },
+  { id:"scholar", name:"Muslim Scholar / Physician", icon:"📜",
+    desc:"You work in one of the great cities of the Islamic world — Baghdad, Cairo, or Córdoba. Your civilization preserves and expands the knowledge that Western Europe has largely lost.",
+    own:"Access to libraries containing Aristotle, Plato, Galen, and the mathematical and astronomical work of scholars your European contemporaries have never heard of.",
+    fear:"That the Crusaders will destroy what took centuries to build. That political instability will disrupt the scholarly networks that make your work possible.",
+    want:"To advance human knowledge — in medicine, mathematics, astronomy, philosophy — and to live in a civilization that values inquiry as highly as faith.",
+    ctx:{ ch1:"While Western Europe was losing the works of ancient Greece and Rome, Islamic scholars were translating, preserving, and expanding them. The House of Wisdom in Baghdad collected manuscripts from across the known world. The algebra of Al-Khwarizmi, the medicine of Ibn Sina — this is the scholarship your civilization is producing while Europe organizes itself around castles and manors.",
+      ch2:"The Islamic Golden Age is not separate from daily life. The hospitals of Baghdad and Cairo are the most sophisticated medical institutions in the world. Faith and inquiry are not opposites in your tradition. They reinforce each other.",
+      ch3:"The great philosopher Ibn Rushd — whom Europeans will call Averroes — is reintroducing Aristotle to the world through your scholarly networks. The translation movement carries your civilization's intellectual achievements into the universities beginning to form in Paris, Oxford, and Bologna.",
+      ch4:"The Crusaders arrive in the lands your civilization inhabits. The First Crusade captures Jerusalem in 1099 with violence that shocks the Islamic world. But European scholars who encounter Islamic libraries begin to understand what they have been missing. Your knowledge travels west even as armies travel east.",
+      ch5:"The Crusades are ending — neither side fully victorious, both sides changed. The knowledge your libraries preserved will eventually produce the Renaissance. The Islamic world under Saladin and his successors eventually expels the Crusaders from the Holy Land by 1291.",
+      ch6:"The Plague does not spare the Islamic world. It moves along the same trade routes that carry goods and scholarship. Ibn al-Khatib will eventually write the first account of contagion theory, correctly identifying that the Plague spreads through contact. The knowledge survives even when the people who carry it do not." }
+  },
+  { id:"woman", name:"Peasant Woman", icon:"🌿",
+    desc:"You live and work in the medieval world from the position the feudal system and the Church assign to you — essential to everything, credited for almost nothing.",
+    own:"Knowledge of the household economy, herbal medicine, the rhythms of agricultural life, and the community networks that sustain your village.",
+    fear:"A bad harvest that starves your children. A husband who does not return from the Crusade. A Church that sometimes supports your dignity and sometimes denies it.",
+    want:"To feed your family, maintain your community, and someday — something more than what the medieval world has assigned you.",
+    ctx:{ ch1:"The feudal world assigns you a specific place: wife, mother, keeper of the household economy. But in a world where most people live at subsistence level, the household economy is survival itself. You know which plants heal fevers, how to preserve food through winter, how to manage what little the lord leaves you. This knowledge is not recorded. It is essential.",
+      ch2:"The manor system shapes your days as completely as it shapes your husband's. You spin, weave, cook, preserve food, tend the household garden, care for the sick, and raise children who will do the same. The Church teaches that your highest calling is service — to your husband, your children, your community, and God. You serve all four simultaneously, every day.",
+      ch3:"The Church offers you something the feudal system does not — a spiritual equality the earthly hierarchy denies. The Virgin Mary is the most powerful intercessory in heaven. Female saints performed miracles. The convent offers education and authority to women who enter it. Outside the convent, the Church also enforces restrictions on women's public roles. Both are the Church.",
+      ch4:"Your husband has gone on Crusade. You do not know if he will return. You manage the household, the strips of land, the children, and the lord's continued demands without the help you had before. Some women whose husbands do not return discover something unexpected — that they are capable of managing more than anyone expected.",
+      ch5:"The world is shifting. Towns offer a kind of life the manor does not — more possibilities, more dangers. Some women in growing towns find roles in guilds that the rigid feudal manor would never have allowed. The cracks in the system create openings.",
+      ch6:"The Plague comes for your village. You nurse the sick because someone must. You bury the dead. You keep the children alive through the worst of it. When it passes, the labor shortage means your work is suddenly more valuable than it was. You cannot yet name what is changing. But something is." }
+  }
+];
+
+// ══════════════════════════════════════════════════════════════
+//  CHAPTERS
+// ══════════════════════════════════════════════════════════════
+const CHAPTERS = [
+  { id:"ch1", number:1,
+    title:"Chapter 1 — Into the Vacuum",
+    subtitle:"Rome Falls, the Franks Rise, and Vikings Appear at the Edge",
+    scene:"It is approximately 500 CE. The Western Roman Empire has been gone for a generation. The roads are deteriorating. The markets are failing. The armies that kept order are disbanded. In their place: local strongmen offering protection in exchange for loyalty and labor. The Franks under Clovis are consolidating power in what was Roman Gaul. At the coasts and rivers, Viking raiders from Scandinavia are beginning to appear. In this chaos, something new is taking shape — a system that will organize European life for the next thousand years.",
+    historyNote:"<strong>The Vacuum After Rome:</strong> When Rome fell, it left behind roads, aqueducts, legal traditions, and a Church — but no functioning government. The Franks under Clovis and later Charlemagne briefly unified much of Western Europe before fragmenting. Viking raids beginning in the late 700s disrupted coastal and river trade. Feudalism — land grants in exchange for military service — emerged as the primary response to the need for local security in the absence of central power.",
+    journalPrompt:"Feudalism offered protection in exchange for labor and loyalty. Was that a fair trade — and who decided whether it was fair?",
+    poisonRoles:["serf","woman"], discussAfter:false,
+    choices:{
+      knight:[
+        { text:"Accept the feudal oath — swear loyalty to a lord above you in exchange for land and the right to protect those below", hint:"Enter the chain of obligation", outcome:"good", result:"The oath is sworn. You hold land — not because you own it but because your lord granted it in exchange for military service. You are seven years old, sent to your lord's household to begin as a page. You learn to serve at table, care for horses, handle a sword, and memorize the chivalric virtues — loyalty, courage, courtesy, largesse, and service to God. The knight who cannot compose a verse is as incomplete as one who cannot fight. You begin learning both.", statChange:{food:10,faith:15,wealth:10,standing:20} },
+        { text:"Begin training as a page — learn the foundations of chivalry before you learn to fight", hint:"Start at the beginning of the knightly education", outcome:"good", result:"The page's education covers swordsmanship, horsemanship, courtesy, prayer, and poetry. The chivalric code requires all of them. A knight serves God, his lord, and those who cannot protect themselves. Fifteen years of training lie ahead. It begins today with carrying a lord's banner and learning not to spill the wine.", statChange:{food:5,faith:20,wealth:5,standing:15} },
+        { text:"Help defend the manor against a Viking raid — your training is immediately tested", hint:"Early military experience", outcome:"good", result:"The longships appear on the river before dawn. The alarm is raised. You are old enough to carry a spear and young enough to be terrified. The defense holds — the Vikings move on to easier targets. Your lord notices your steadiness. The experience accelerates your training. You understand now why feudalism exists — without armed men organized under a lord, that village would have been burned.", statChange:{food:5,faith:10,wealth:5,standing:20} }
+      ],
+      serf:[
+        { text:"Accept the lord's protection in exchange for labor obligations — the deal is unfair but the alternative is worse", hint:"Practical acceptance of feudal obligation", outcome:"neutral", result:"You accept. The lord's armed men are the only thing between your village and the Vikings, the bandits, and the rival lords who would take what little you have. The price — three days of unpaid labor on the lord's fields each week, fees for using the lord's mill, permission required to marry or leave — is high. You pay it. The calculation that makes feudalism work is not justice. It is: this, or nothing.", statChange:{food:10,faith:5,wealth:-5,standing:5}, poison:true },
+        { text:"Try to negotiate better terms before accepting — you have skills the lord needs", hint:"Bargain from what little leverage you have", outcome:"bad", result:"The negotiation fails. The lord does not negotiate with serfs — he sets terms and you accept them or you leave, which means leaving with nothing and going nowhere safe. Your attempt to bargain marks you as difficult. The lord's overseer watches you more carefully than before. In a world organized by military power, the person without a sword negotiates from nothing.", statChange:{food:-5,faith:5,wealth:-10,standing:-10}, poison:true, isPoison:true },
+        { text:"Seek the Church's protection — the monastery offers an alternative structure", hint:"Alternative to the lord's deal", outcome:"neutral", result:"The monastery takes some of your family's labor in exchange for spiritual protection and access to the monastery's mill and medical care. The deal is not much better than the lord's — but the monastery's abbot is bound by Church law to treat you with a baseline of Christian dignity that secular lords sometimes ignore. You have found the slightly less bad option.", statChange:{food:5,faith:20,wealth:-5,standing:5}, poison:true }
+      ],
+      serf_retry:[
+        { text:"Move to the edge of the lord's territory where oversight is weaker — find practical breathing room", hint:"Find the gaps in the system", outcome:"neutral", result:"The marginal land at the forest edge is harder to farm and less watched by the lord's overseer. You clear a small additional plot. The extra food is yours. The extra work is also yours. It is not freedom. It is a slightly larger cage.", statChange:{food:10,faith:5,wealth:5,standing:5} },
+        { text:"Become the most reliable worker on the manor — earn small privileges through demonstrated value", hint:"Work toward marginal advantage", outcome:"good", result:"The lord's overseer begins trusting you with better equipment and slightly more responsibility. You receive small privileges — first access to the mill, a slightly better strip of land. The privileges do not change the system. They make your place in it marginally more bearable.", statChange:{food:10,faith:5,wealth:5,standing:10} },
+        { text:"Build community with other serfs — shared knowledge and mutual support reduce individual vulnerability", hint:"Community as protection", outcome:"good", result:"The village community that forms around shared work, shared celebration, and shared survival is the one thing feudalism does not own. Your neighbors know which mushrooms are safe, how to get water from the frozen stream, which lord's overseer can be reasoned with. The knowledge your community holds together is worth more than anything the lord grants.", statChange:{food:10,faith:10,wealth:5,standing:10} }
+      ],
+      monk:[
+        { text:"Open the monastery to refugees from Viking raids — the Church must serve in the crisis", hint:"Active service in the emergency", outcome:"good", result:"The refugees arrive hungry and terrified. The care you provide — food, shelter, basic medical attention — is what the Church is supposed to be. The refugees' gratitude becomes the monastery's reputation. The reputation becomes land grants and donations. Service and institutional survival are, in this case, the same thing.", statChange:{food:-5,faith:25,wealth:5,standing:20} },
+        { text:"Preserve the monastery's manuscript collection — move the books to the crypt before the raid", hint:"Protect the knowledge", outcome:"good", result:"The manuscripts survive. The ancient texts — Virgil, Augustine, Boethius, the Gospels — exist in Europe partly because monks in this period made exactly this choice. The knowledge your monastery preserves will eventually feed the Renaissance. You do not know this. You know the books are irreplaceable.", statChange:{food:0,faith:20,wealth:5,standing:15} },
+        { text:"Ally with the Frankish king — the Church needs military protection, the king needs religious legitimacy", hint:"Church-state alliance", outcome:"good", result:"The alliance between Clovis's successors and the Church creates the framework for medieval European civilization. The king protects the Church with soldiers. The Church legitimizes the king with God's blessing. Both institutions grow stronger. The arrangement also, over centuries, creates the conditions for the power struggle between Pope and King that will nearly tear Europe apart.", statChange:{food:5,faith:15,wealth:15,standing:20} }
+      ],
+      merchant:[
+        { text:"Establish a trading post at the crossroads between two manors — fill the gap the feudal system creates", hint:"Find the commercial opportunity in the chaos", outcome:"good", result:"The crossroads market is small at first. Gradually it becomes regular. The serfs need to trade surplus goods. The lords need goods their manors don't produce. The monastery needs supplies it can't grow. You are the person who connects them. The feudal system didn't plan for you. It needs you anyway.", statChange:{food:5,faith:5,wealth:20,standing:10} },
+        { text:"Travel with a pilgrim group — safer roads through religious legitimacy", hint:"Use religion for commercial protection", outcome:"good", result:"Pilgrims travel under Church protection — attacking pilgrims risks excommunication. You join the group ostensibly for spiritual reasons and actually for the safety. The roads are still dangerous but measurably less so under the pilgrim's cross. The contacts you make along the way are worth more than the goods you carry.", statChange:{food:5,faith:10,wealth:15,standing:10} },
+        { text:"Supply Viking traders rather than flee from Viking raiders — some Vikings trade as much as they raid", hint:"Commercial pragmatism", outcome:"neutral", result:"The Vikings who raid coastal villages also trade amber, furs, and goods at inland markets. Your willingness to deal with them commercially earns you access to goods unavailable elsewhere. It also earns you the suspicion of neighbors who lost family members to Viking raids. Commerce and morality are not always the same calculation.", statChange:{food:5,faith:-10,wealth:20,standing:-5} }
+      ],
+      scholar:[
+        { text:"Document the chaos in Western Europe — your civilization's libraries contain records of what Rome built and what replaced it", hint:"Scholarly observation of European collapse", outcome:"good", result:"Your accounts of Western European political fragmentation reach scholars in Baghdad and Cairo. The contrast with the Islamic world's sophisticated urban civilization is striking. The documentation you produce will eventually help European historians understand their own middle period.", statChange:{food:5,faith:10,wealth:5,standing:15} },
+        { text:"Expand the House of Wisdom's collection — acquire texts from every available source", hint:"Preserve knowledge from all sources", outcome:"good", result:"European monasteries hold fragments of classical texts that Islamic libraries want to complete. The scholarly exchange — manuscripts traveling east in exchange for copies traveling west — is the beginning of the translation movement that will eventually carry Islamic scholarship back into Europe.", statChange:{food:5,faith:10,wealth:10,standing:20} },
+        { text:"Advance medical knowledge — Ibn Sina's Canon of Medicine is being developed in your lifetime", hint:"Medical scholarship", outcome:"good", result:"The Canon of Medicine — a comprehensive medical encyclopedia that will be used in European universities for centuries — is being compiled and refined by scholars in your tradition. European physicians will eventually study your work without knowing your name.", statChange:{food:5,faith:10,wealth:5,standing:20} }
+      ],
+      woman:[
+        { text:"Build the household economy that sustains your family through the chaos — practical knowledge is survival", hint:"Household as foundation of survival", outcome:"neutral", result:"You know which plants treat fever and which treat wounds. You know how to preserve food through winter. The feudal system organized everything around military power and did not notice that its survival depended on exactly this knowledge — the household knowledge that women held and transmitted across generations without anyone recording it.", statChange:{food:10,faith:10,wealth:5,standing:5}, poison:true },
+        { text:"Seek a position in a convent — the Church offers education and some authority to women who enter it", hint:"Find the institutional space available to women", outcome:"good", result:"The convent is the medieval world's most significant space of female authority. The abbess manages an institution, its lands, and its people. The nuns who copy manuscripts are among the few literate women in Europe. You enter with what little you have. You find something more than you expected.", statChange:{food:5,faith:25,wealth:5,standing:15}, poison:false },
+        { text:"Maintain the village's communal knowledge — herb lore, food preservation, community networks", hint:"Community knowledge as power", outcome:"neutral", result:"The knowledge you hold and transmit exists only in the community of women who teach it to each other and to their daughters. The feudal system is organized around what men do. The feudal system survives because of what you do. Neither the lord nor the Church fully acknowledges this. The knowledge persists anyway.", statChange:{food:10,faith:10,wealth:5,standing:5}, poison:true }
+      ],
+      woman_retry:[
+        { text:"Find allies among the village women — mutual support reduces individual vulnerability", hint:"Community as protection", outcome:"good", result:"The network of women who support each other through illness, harvest, childbirth, and loss is the actual social fabric of the medieval village. The lord manages the legal and military structure. You manage everything that keeps people alive and connected within that structure.", statChange:{food:10,faith:15,wealth:5,standing:10} },
+        { text:"Learn to read from a sympathetic priest — literacy is power even in small doses", hint:"Access knowledge through available channels", outcome:"good", result:"The priest teaches you enough Latin to read the psalms. It is a fraction of what the monks know. It is more than almost any woman outside a convent possesses. The small literacy you gain changes what you can do — you can read a contract, follow the Church's written guidance, teach your children letters. Small advantages compound.", statChange:{food:5,faith:20,wealth:5,standing:10} },
+        { text:"Manage the household with exceptional skill — demonstrate competence the system cannot ignore", hint:"Excellence within the available space", outcome:"neutral", result:"Your household management is extraordinary. The lord's wife notices and relies on your counsel for the manor's domestic management. The recognition is real and constrained simultaneously. You have made yourself indispensable within a system that will not formally credit what you contribute.", statChange:{food:10,faith:10,wealth:5,standing:10} }
+      ]
+    }
+  },
+  { id:"ch2", number:2,
+    title:"Chapter 2 — Life on the Manor",
+    subtitle:"The Feudal System Working as Designed — and Its Costs",
+    scene:"It is approximately 900 CE. The feudal system has solidified across Western Europe. Life is organized around the manor — the lord's estate, with its castle, its church, its mill, its fields divided into strips, its forest reserved for the lord's hunting. The hierarchy is clear: king to barons, barons to knights, knights to lesser lords. At the bottom, the serfs who cannot leave, cannot marry without permission, and owe labor, fees, and a portion of every harvest to the lord above them. The system provides security. The price of that security is paid overwhelmingly by those at the bottom.",
+    historyNote:"<strong>The Manor System:</strong> The medieval manor was a self-sufficient economic unit. Serfs owed the lord labor service — typically 3 days per week on the lord's fields — various fees, and a portion of their harvest. In return the lord provided military protection and access to the manor's facilities. The system was largely stable for centuries — which meant its injustices were also stable for centuries.",
+    journalPrompt:"The knight's training takes fifteen years and includes learning poetry alongside swordsmanship. The serf's labor is a lifetime of work without any formal recognition. What does the difference in how medieval society invested in different people tell you about what it valued?",
+    poisonRoles:["serf","woman"], discussAfter:false,
+    choices:{
+      knight:[
+        { text:"Complete the transition from squire to knight — be dubbed in the ceremony that marks your full entrance into chivalry", hint:"The dubbing ceremony", outcome:"good", result:"The night before your dubbing you spend in the chapel in prayer — the vigil that consecrates your sword to God's service. In the morning your lord strikes your shoulder and speaks the words that make you a knight. The ceremony is Christian as much as military — your sword is blessed, your spurs fixed, and you are reminded that chivalry requires service to God, to your lord, and to those who cannot protect themselves. You are, at last, what fifteen years of training prepared you to be.", statChange:{food:5,faith:20,wealth:10,standing:25} },
+        { text:"Practice the full range of knightly arts — tournament combat, poetry, courtesy, and Christian devotion", hint:"Chivalric excellence", outcome:"good", result:"The tournament is where knights display and develop their skills — and where you discover that the poetry you learned alongside swordsmanship is valued as highly as your lance work. A knight who can compose a verse to a lady, speak courteously to an enemy, and demonstrate Christian mercy to a defeated opponent embodies the chivalric ideal. The code requires all of it.", statChange:{food:5,faith:15,wealth:10,standing:20} },
+        { text:"Manage your manor justly — the knight's obligation runs downward to those who depend on him", hint:"Downward obligation of chivalry", outcome:"good", result:"The chivalric code that governs your relationship with your lord also governs your relationship with those you protect. You reduce the fees your serfs pay. You ensure the harvest left after your share is sufficient for winter. You are not generous — you are fulfilling an obligation the code places on you. The serfs on your manor are marginally better off than those on neighboring estates. This is noted.", statChange:{food:10,faith:20,wealth:-5,standing:20} }
+      ],
+      serf:[
+        { text:"Work the lord's fields and your own with everything you have — survival requires both", hint:"The serf's fundamental obligation", outcome:"neutral", result:"Three days on the lord's fields, three days on your own strip, one day of rest that is never quite rest. The rhythm of the agricultural year organizes everything. Plow in spring. Weed in summer. Harvest in autumn. Hope the winter stores are enough. Pay the lord his tithe. Pay the priest his tithe. Keep what remains, which is not enough, and manage anyway.", statChange:{food:10,faith:5,wealth:-5,standing:5}, poison:true },
+        { text:"Develop a specialized skill the manor needs — become the best at something that earns small privileges", hint:"Skill as marginal advantage", outcome:"good", result:"You become the best blacksmith on the manor. Or the best at reading weather patterns. Or the person who manages the draft animals better than anyone else. The specialization earns you small advantages — slightly better food rations, reduced labor days, the lord's overseer treating you with something approaching respect.", statChange:{food:10,faith:5,wealth:10,standing:10} },
+        { text:"Organize a quiet work slowdown with neighboring serfs — collective resistance to unreasonable demands", hint:"Collective action", outcome:"bad", result:"The slowdown is noticed. The lord's overseer identifies the organizers. The punishment is economic — increased fees, reduced access to the mill, the worst strips of land reassigned to your family. Collective resistance requires more unity and protection than the manor system allows for. The attempt was reasonable. The timing was wrong.", statChange:{food:-10,faith:5,wealth:-15,standing:-10}, isPoison:true }
+      ],
+      serf_retry:[
+        { text:"Focus on what you can control — your family's food stores and community relationships", hint:"Stability through what's available", outcome:"good", result:"The winter stores are carefully managed. The relationships with neighbors who have different strengths are maintained. The small garden behind the house that the lord doesn't quite notice produces food that doesn't appear in the tithe calculation. Small margins kept carefully are what keep a serf family alive.", statChange:{food:15,faith:10,wealth:5,standing:10} },
+        { text:"Appeal to the priest for mediation — the Church sometimes constrains lords' worst impulses", hint:"Use Church protection", outcome:"neutral", result:"The priest intercedes with the lord on your behalf. The result is partial — some additional fees are reduced, others maintained. The lord resents the intercession. The priest has spent some of his limited influence on your case. The result is better than nothing and worse than justice.", statChange:{food:5,faith:15,wealth:5,standing:5} },
+        { text:"Document your obligations carefully — know exactly what the lord can legally demand", hint:"Knowledge of your legal position", outcome:"good", result:"The customary law of the manor specifies what lords can demand. Most serfs don't know their obligations precisely — lords exploit that uncertainty. You learn your rights exactly. When the overseer demands more than custom allows, you cite the custom. The lord doesn't like it. He backs down. Knowledge of the law is limited protection. It is protection.", statChange:{food:5,faith:5,wealth:5,standing:15} }
+      ],
+      monk:[
+        { text:"Organize the monastery's day around the canonical hours — prayer giving structure to work and scholarship", hint:"The Rule of Benedict as organizational genius", outcome:"good", result:"The Rule of Benedict — pray, work, study — produces an institution of extraordinary stability and productivity. The monastery farms its lands, copies its manuscripts, cares for its sick, educates its students, and prays its seven daily offices. Every monastery that follows the Rule becomes a small center of civilization.", statChange:{food:10,faith:25,wealth:10,standing:20} },
+        { text:"Copy manuscripts — preserve the texts that connect the medieval world to its ancient past", hint:"Scholarship as sacred duty", outcome:"good", result:"The scriptorium produces the illuminated manuscripts that are both the Middle Ages' most beautiful art form and its most important technology. Every page copied by hand — decorated with elaborate borders, illustrated with scenes from scripture and daily life — is knowledge preserved for generations that cannot yet imagine the printing press. The book you copy today may be the only copy in existence.", statChange:{food:5,faith:20,wealth:5,standing:20} },
+        { text:"Care for the sick and poor — the monastery as hospital and refuge", hint:"Charity as Christian obligation", outcome:"good", result:"The monastery's infirmary treats those the feudal system ignores — the sick poor, the injured peasant, the old woman with no family. The herbal garden produces medicines representing centuries of accumulated knowledge. The care you provide is imperfect, limited by what the medieval world knows about disease, and genuinely life-saving for people who would otherwise have nothing.", statChange:{food:-5,faith:25,wealth:-5,standing:20} }
+      ],
+      merchant:[
+        { text:"Join a guild — the organized system of craft and merchant associations protects commercial interests", hint:"Institutional protection through collective organization", outcome:"good", result:"The guild sets quality standards, regulates prices, trains apprentices, and provides mutual support to members. The guild your father's generation invented is becoming a serious political force in the growing towns.", statChange:{food:5,faith:10,wealth:20,standing:20} },
+        { text:"Pursue a town charter — get the lord or king to grant legal protections for your town's commerce", hint:"Legal protection for commercial activity", outcome:"good", result:"The town charter is the commercial equivalent of Magna Carta — a written document specifying what merchants can do and what lords cannot take from them. Winning a charter requires negotiation and payment. The charter that results is genuinely valuable — legal protection for commerce in a world organized around military power.", statChange:{food:5,faith:5,wealth:15,standing:20} },
+        { text:"Develop the fair system — regular markets that attract merchants from across the region", hint:"Commercial infrastructure", outcome:"good", result:"Regular regional fairs create the commercial infrastructure that the feudal system never built. Merchants from different regions trading under the fair's rules of commercial neutrality. The commercial networks you build at these fairs will eventually finance everything from cathedrals to Crusades to the Renaissance.", statChange:{food:5,faith:5,wealth:20,standing:15} }
+      ],
+      scholar:[
+        { text:"Develop algebra and astronomical calculations — mathematics as both practical and philosophical inquiry", hint:"Mathematical advancement", outcome:"good", result:"Al-Khwarizmi's algebra is transforming what mathematics can do. The astronomical calculations helping determine prayer times are also producing the most accurate star charts in history. The practical and theoretical reinforce each other in your tradition in ways that will eventually produce navigation advances that European explorers will use centuries from now.", statChange:{food:5,faith:10,wealth:5,standing:20} },
+        { text:"Practice medicine using Ibn Sina's encyclopedic approach — the most advanced techniques available", hint:"Medical excellence", outcome:"good", result:"Your hospital treats patients using the most sophisticated medical knowledge in the world. The surgical techniques, the pharmacological knowledge, the diagnostic methods your tradition has developed are generations ahead of what European physicians practice. The gap will narrow as your texts travel west through translation.", statChange:{food:5,faith:10,wealth:10,standing:20} },
+        { text:"Engage with philosophers across traditions — Islamic, Jewish, and ancient Greek thought in dialogue", hint:"Intellectual synthesis", outcome:"good", result:"The philosophical tradition you participate in is genuinely cosmopolitan — engaging with Aristotle in Arabic translation, with Jewish philosophers like Maimonides, with the Sufi mystical tradition. Ibn Rushd's commentaries on Aristotle will become the lens through which European universities encounter Greek philosophy.", statChange:{food:5,faith:15,wealth:5,standing:20} }
+      ],
+      woman:[
+        { text:"Manage the household economy with the skill that keeps your family alive — invisible essential work", hint:"Household management as survival", outcome:"neutral", result:"The household economy you manage — food preservation, medicinal herbs, textile production, child-rearing, community networks — is the actual foundation of medieval village life. The feudal system's records note the lord's land, the knight's service, the monk's prayers. They do not note what you do. What you do is why everyone else can do what they do.", statChange:{food:10,faith:10,wealth:5,standing:5}, poison:true },
+        { text:"Learn the herbal medicine your community depends on — become the person your village calls in crisis", hint:"Medical knowledge as community role", outcome:"good", result:"The knowledge of which plants treat which conditions — passed from mother to daughter, from wise woman to apprentice — is the primary medical resource available to most medieval people. The monastery has its infirmary. The castle has its physician. The village has you. The knowledge you carry is not recorded in any manuscript. It saves lives every season.", statChange:{food:5,faith:15,wealth:5,standing:15}, poison:false },
+        { text:"Find what dignity the Church offers — the Virgin Mary, female saints, and spiritual equality", hint:"Faith as source of dignity", outcome:"neutral", result:"The Church that restricts your public role also offers something the feudal system does not — the assertion that your soul matters equally before God. The Virgin Mary is the most powerful intercessory in heaven. The spiritual equality doesn't translate into earthly equality. It sustains you anyway.", statChange:{food:5,faith:25,wealth:5,standing:10}, poison:true }
+      ],
+      woman_retry:[
+        { text:"Build alliances with women of higher social standing — access their protection and resources", hint:"Cross-class female networks", outcome:"good", result:"The lord's wife manages the castle household with authority the feudal system formally grants to her husband but practically requires her to exercise. Your usefulness to her — your knowledge of village conditions, your skill with medicinal herbs, your reliable network — earns you her protection. It is not equality. It is influence within the available structure.", statChange:{food:10,faith:10,wealth:10,standing:15} },
+        { text:"Raise your children with the knowledge and values that survive no matter what the system does", hint:"Generational investment", outcome:"good", result:"The children you raise will outlast the lord, the manor, and perhaps the feudal system itself. The values you teach — mutual care, practical knowledge, dignity in difficult circumstances — are not recorded in any feudal charter. They are more durable than any charter.", statChange:{food:5,faith:20,wealth:5,standing:10} },
+        { text:"Document your herbal knowledge — teach others so the knowledge survives beyond you", hint:"Knowledge preservation", outcome:"good", result:"You teach your daughters, your neighbors' daughters, and eventually a novice from the nearby convent interested in practical medicine. The knowledge that existed only in your memory begins to exist in other minds. When you die, it does not die with you. This is a small immortality.", statChange:{food:5,faith:15,wealth:5,standing:15} }
+      ]
+    }
+  },
+  { id:"ch3", number:3,
+    title:"Chapter 3 — God, Gold, and Governance",
+    subtitle:"The Church at the Center of Everything",
+    scene:"It is approximately 1100 CE. The Church is the most powerful institution in Western Europe. Every person in Europe is baptized into it, married in it, and buried from it. The Church owns perhaps one third of all European land. Its bishops control hospitals, schools, and courts. The Pope can excommunicate kings — cut them off from the sacraments and theoretically release their subjects from their oaths of loyalty. The great Gothic cathedrals are rising across Europe, built by communities that spent generations and enormous resources to create something they would never see completed.",
+    historyNote:"<strong>Church Power in the Middle Ages:</strong> At its height the medieval Church claimed authority over spiritual AND temporal matters — the Investiture Controversy (1076-1122) nearly destroyed the Holy Roman Empire over who could appoint bishops. Pope Innocent III exercised more political authority than any previous Pope. Gothic cathedrals — built over decades or centuries — required extraordinary community investment and represented the highest architectural achievement of the era.",
+    journalPrompt:"The same Church built Gothic cathedrals of extraordinary beauty, provided the only medical care available to most people, and used its power to control kings and accumulate wealth. Can an institution be genuinely good and genuinely corrupt at the same time?",
+    poisonRoles:["merchant","knight"], discussAfter:true,
+    discussPrompt:"Your table just experienced the Church's power from one role's perspective. The table next to you experienced the same Church from a completely different position. Before you continue — spend 90 seconds comparing: What did the Church give your role? What did it take?",
+    discussPairs:"Knight pairs with Serf · Monk pairs with Merchant · Muslim Scholar pairs with Peasant Woman",
+    choices:{
+      knight:[
+        { text:"Accept Church authority over your military service — the Pope can direct your sword as well as your soul", hint:"Knightly submission to Church authority", outcome:"neutral", result:"The Church's claim to direct knights' military service — the Peace of God, the Truce of God, and eventually the Crusade — is the most significant extension of papal authority into secular life. You accept it. The tension between your oath to your lord and the Pope's claim on your service will eventually produce a conflict you cannot avoid.", statChange:{food:5,faith:20,wealth:5,standing:10} },
+        { text:"Resist the Pope's interference in your lord's appointment of bishops — lords should control Church appointments in their territory", hint:"Investiture controversy", outcome:"neutral", result:"The investiture controversy puts you between your lord's interests and the Pope's claims. You support your lord. The Pope threatens excommunication. The political conflict has genuine spiritual stakes. You navigate it uneasily.", statChange:{food:0,faith:-10,wealth:5,standing:10}, isPoison:true },
+        { text:"Fund the construction of a chapel on your manor — private piety that also demonstrates your status", hint:"Religious patronage", outcome:"good", result:"The chapel you fund serves your manor's serfs and demonstrates your Christian devotion publicly. The priest who serves it is under your patronage — giving you more influence over local religious life than the Church's official hierarchy prefers. The chapel is genuinely pious and genuinely political simultaneously.", statChange:{food:5,faith:20,wealth:-10,standing:20} }
+      ],
+      knight_retry:[
+        { text:"Find the balance — serve Church and lord without triggering a crisis between them", hint:"Navigate the competing authorities", outcome:"good", result:"The knight who manages to serve both his lord and the Church without forcing a direct conflict between them is genuinely skilled. You develop the diplomatic capacity to honor both obligations without making explicit the moments when they conflict. Most medieval knights live in exactly this ambiguity.", statChange:{food:5,faith:15,wealth:5,standing:15} },
+        { text:"Focus on Crusade preparation — military service that satisfies both lord and Church simultaneously", hint:"Find the overlap", outcome:"good", result:"The Crusade is the moment when military service and Church service point in exactly the same direction. You dedicate yourself to preparation for it. Both your lord and the Pope approve. The tension between their competing claims dissolves temporarily in shared purpose.", statChange:{food:5,faith:20,wealth:5,standing:15} },
+        { text:"Appeal to the local bishop to mediate — Church officials often prefer negotiated solutions", hint:"Use institutional channels", outcome:"neutral", result:"The bishop mediates. The solution is imperfect — some appointments remain contested, some are resolved. The mediation prevents the conflict from escalating to excommunication. The underlying tension between Church and secular authority is not resolved. It is managed.", statChange:{food:5,faith:10,wealth:5,standing:10} }
+      ],
+      serf:[
+        { text:"Find meaning and rest in the Church's calendar — saints' days are the only breaks in the agricultural year", hint:"Religion as practical relief", outcome:"good", result:"The Church calendar gives you something feudalism does not — mandatory rest. Saints' days when work is forbidden. The rhythms of Advent, Christmas, Lent, Easter — each marking a pause in the agricultural labor. The spiritual meaning is real. The practical value of forced rest in a life of continuous labor is also real.", statChange:{food:5,faith:20,wealth:5,standing:10} },
+        { text:"Go on pilgrimage — the one journey a serf can take that a lord cannot easily forbid", hint:"Religious travel as escape", outcome:"neutral", result:"The pilgrimage to a nearby saint's shrine is the one form of travel the feudal system permits a serf. The lord cannot easily refuse a request made in the saint's name. The journey is hard, briefly liberating, and ends with your return to the same manor and the same obligations. What you carry back — the experience of a world beyond the manor's edges — is not nothing.", statChange:{food:-5,faith:25,wealth:-5,standing:10} },
+        { text:"Build the cathedral — contribute labor to something that will outlast the feudal system", hint:"Participation in a larger legacy", outcome:"good", result:"The cathedral being built in the nearest town requires unskilled laborers who dig foundations, haul stone, and mix mortar. You work on it. The building will stand for centuries. Your contribution is anonymous. The result is one of the most beautiful buildings in human history.", statChange:{food:-5,faith:20,wealth:5,standing:10} }
+      ],
+      monk:[
+        { text:"Participate in the cathedral's construction — the Church's greatest architectural achievement", hint:"Art as theology", outcome:"good", result:"The Gothic cathedral reaches toward heaven, floods its interior with colored light filtered through stained glass, and tells the entire biblical story in stone and glass for the illiterate majority who cannot read it in books. Your monastery's resources and scholarly expertise contribute to its design. The building that results will outlast everyone who built it.", statChange:{food:5,faith:25,wealth:-10,standing:20} },
+        { text:"Advocate for Church reform from within — the corruption of Church wealth is a genuine theological problem", hint:"Internal reform", outcome:"good", result:"The monastic reform movements — Cluny, the Cistercians, the Franciscans and Dominicans who are coming — all begin with exactly this conviction: the Church that has accumulated enormous wealth has compromised its spiritual mission. Your advocacy for reform is theologically serious and politically dangerous. You proceed carefully.", statChange:{food:5,faith:25,wealth:-5,standing:15} },
+        { text:"Navigate the investiture controversy — which side does the Church's actual mission require?", hint:"The core Church-state question", outcome:"neutral", result:"If kings appoint bishops, the Church becomes an instrument of political power. If the Pope appoints bishops, the Church accumulates political power that distorts its spiritual mission. Both options corrupt. You support papal authority as the less bad option — independence from secular control seems more consistent with the Church's mission, even if it makes the Church itself a political actor.", statChange:{food:0,faith:15,wealth:5,standing:10} }
+      ],
+      merchant:[
+        { text:"Pay the Church's tithes without complaint — the institutional stability the Church provides is worth the cost", hint:"Pragmatic acceptance", outcome:"neutral", result:"The tithe flows to the Church. The Church uses it to fund hospitals, schools, legal systems, and the political stability that makes commerce possible. You pay and note that the Church's institutional stability is part of what makes your contracts enforceable and your roads relatively safe.", statChange:{food:5,faith:10,wealth:-10,standing:10} },
+        { text:"Challenge the prohibition on usury — lending at interest is how commerce works, whatever the Church says", hint:"Commercial necessity versus Church law", outcome:"bad", result:"Your challenge to the prohibition attracts Church attention. The result is a fine, a public penance, and increased scrutiny of your commercial practices. The prohibition will not change until the commercial revolution makes it impossible to enforce.", statChange:{food:-5,faith:-15,wealth:-15,standing:-10}, isPoison:true },
+        { text:"Fund a chapel in your town — buy the Church's goodwill through patronage", hint:"Commercial investment in religious legitimacy", outcome:"good", result:"The chapel you fund earns you the Church's goodwill and your community's respect. The moral legitimacy the Church's endorsement provides is commercially valuable — customers and partners trust a merchant who is visibly pious. Faith and commerce are entangled in the medieval world.", statChange:{food:5,faith:20,wealth:-10,standing:20} }
+      ],
+      merchant_retry:[
+        { text:"Work within the Church's commercial restrictions — find arrangements the Church tolerates", hint:"Navigate the restrictions", outcome:"good", result:"The Church permits certain commercial arrangements that function like lending without being called usury — the commenda partnership, the bill of exchange, the letter of credit. You develop expertise in these instruments. The Church looks the other way. Commerce continues.", statChange:{food:5,faith:10,wealth:15,standing:15} },
+        { text:"Partner with Church institutions — monasteries need commercial agents to manage their assets", hint:"Church as commercial partner", outcome:"good", result:"The monasteries that own one third of European land need merchants to sell their agricultural surplus, buy what they cannot produce, manage commercial relationships the monks cannot handle themselves. You become the commercial agent for several monasteries. The relationship is mutually beneficial and religiously sanctioned.", statChange:{food:5,faith:15,wealth:20,standing:15} },
+        { text:"Support reform movements financially — reformers who challenge Church corruption often support merchant interests", hint:"Align commercial and reform interests", outcome:"neutral", result:"The reform movements that challenge Church corruption also tend to challenge Church economic privileges. Your financial support for reform is both sincere and self-interested. The reformers you support do not fully share your commercial values. The alliance is useful and partial.", statChange:{food:5,faith:15,wealth:10,standing:10} }
+      ],
+      scholar:[
+        { text:"Observe the cathedral construction — what does it reveal about Christian Europe's priorities?", hint:"Scholarly observation", outcome:"good", result:"The Gothic cathedral is extraordinary by any standard. From your position in the Islamic world, it represents both an impressive achievement and a revealing set of priorities — a civilization that will spend a century building one church is a civilization organized around a particular vision of what matters.", statChange:{food:5,faith:10,wealth:5,standing:15} },
+        { text:"Continue translating classical texts — the knowledge pipeline between your world and Europe is critical", hint:"Translation as cultural bridge", outcome:"good", result:"The translation movement carries your civilization's intellectual achievements into European universities. Aristotle in Arabic translation, Euclid's geometry, Ibn Sina's medicine, Al-Khwarizmi's algebra — all traveling west. The European scholars who study these texts will not always know they came from your world. The knowledge travels anyway.", statChange:{food:5,faith:10,wealth:5,standing:20} },
+        { text:"Engage with Jewish scholars — the Abrahamic traditions in dialogue produce insights none achieves alone", hint:"Cross-tradition intellectual exchange", outcome:"good", result:"The Jewish philosophical tradition — Maimonides reasoning about faith and reason in Arabic — is in genuine dialogue with Islamic philosophy. The conversations your tradition has with Jewish scholars about faith and reason produce arguments that will eventually enter Christian theology through translation.", statChange:{food:5,faith:15,wealth:5,standing:20} }
+      ],
+      woman:[
+        { text:"Find the Church's genuine gifts to women — the Virgin Mary, female saints, the convent's possibilities", hint:"The Church's real offerings to women", outcome:"good", result:"Hildegard of Bingen composes music, writes theology, practices medicine, and advises popes — all from within a convent. Julian of Norwich writes theological reflections that will be read for centuries. The Church that restricts most women also creates, in the convent, a space where some women achieve extraordinary things.", statChange:{food:5,faith:25,wealth:5,standing:15} },
+        { text:"Participate in building the cathedral — contribute what you can to something that will outlast everyone", hint:"Communal participation in greatness", outcome:"good", result:"The cathedral being built in the nearest town is genuinely a community project. Your contribution is small. The result — a building that will stand for centuries — is not small. You are part of it.", statChange:{food:0,faith:20,wealth:-5,standing:10} },
+        { text:"Navigate the Church's contradictory teachings about women — divine dignity and earthly restriction", hint:"Living with theological contradiction", outcome:"neutral", result:"The Church teaches simultaneously that your soul is equal before God and that your earthly role is subordinate to men. The theological equality is real and sustaining. The earthly restriction shapes every day of your life. Living with that contradiction is what medieval women do.", statChange:{food:5,faith:15,wealth:5,standing:5} }
+      ]
+    }
+  },
+  { id:"ch4", number:4,
+    title:"Chapter 4 — The Crusades",
+    subtitle:"The Same Events, Six Completely Different Experiences",
+    scene:"It is 1095 CE. Pope Urban II has called for a military expedition to reclaim Jerusalem. 'God wills it!' the crowd shouts. Over the next two centuries, eight major Crusades will move armies from Western Europe into the eastern Mediterranean. The First Crusade captures Jerusalem in 1099. Subsequent Crusades achieve less. The Crusades produce violence, cultural contact, commercial opportunity, and lasting damage to Christian-Muslim relations simultaneously. Every role experiences them — but not the same way.",
+    historyNote:"<strong>The Crusades (1095-1291):</strong> Pope Urban II called the First Crusade at the Council of Clermont in 1095. Jerusalem fell to the Crusaders in 1099. Saladin recaptured Jerusalem in 1187. The Fourth Crusade (1204) notoriously sacked Constantinople — a Christian city — instead of reaching the Holy Land. The Islamic world eventually expelled the Crusaders by 1291. The Crusades permanently damaged Christian-Muslim relations and accelerated commercial contact between Europe and the Middle East.",
+    journalPrompt:"The Crusades were called in the name of God. Every role experienced them differently. What does that tell you about how large historical events affect different people — and who gets to decide what an event 'means'?",
+    poisonRoles:["scholar","woman"], discussAfter:true,
+    discussPrompt:"Your table just experienced the Crusades from your role's perspective. The table next to you experienced the same events from a completely different position. Spend 90 seconds comparing: What did the Crusades mean for your role? What did they mean for your partner table?",
+    discussPairs:"Knight pairs with Muslim Scholar · Serf pairs with Peasant Woman · Monk pairs with Merchant",
+    discussPrompt2:"Now turn to a DIFFERENT table. Spend 90 seconds comparing your experience of the Crusades with this new perspective. What surprises you about how the same events affected different roles so differently?",
+    discussPairs2:"Knight pairs with Monk · Serf pairs with Merchant · Muslim Scholar pairs with Peasant Woman",
+    choices:{
+      knight:[
+        { text:"Answer the Pope's call — take the cross and join the First Crusade", hint:"Religious military service", outcome:"neutral", result:"You take the cross. The journey is longer and harder than anyone described. The battles are brutal. Jerusalem falls in 1099. The Crusaders' victory includes violence that you try not to remember clearly. You establish yourself in the Crusader states. The military achievement is real. What was done in God's name during the conquest is also real. Both accompany you home.", statChange:{food:-5,faith:15,wealth:5,standing:20} },
+        { text:"Go on Crusade and return changed — the encounter with Islamic civilization is surprising", hint:"Cultural contact through military conflict", outcome:"good", result:"The Islamic civilization you encounter is not what the Pope's sermons described. The cities are larger, cleaner, and more sophisticated than any in Western Europe. The scholars you meet know things your civilization has forgotten. The medicine practiced in Islamic hospitals is better than anything at home. You return with questions your faith doesn't fully answer and knowledge your culture desperately needs.", statChange:{food:5,faith:10,wealth:10,standing:15} },
+        { text:"Stay home — your lord needs military defense here, and the Crusade's cause is less clear than the Pope claims", hint:"Fulfill local obligation instead", outcome:"neutral", result:"You choose local obligation over papal command. Your lord approves. The Pope's representatives disapprove. The Crusade goes without you. You protect your manor, maintain your obligations, and watch from a distance as the Crusades produce the mixed results you suspected they would.", statChange:{food:10,faith:5,wealth:5,standing:10} }
+      ],
+      serf:[
+        { text:"Watch your lord leave for the Crusade and manage with reduced protection", hint:"The Crusade's effect on those left behind", outcome:"neutral", result:"The lord's departure reduces the manor's military protection and temporarily eases some of its demands. The threat from bandits and rival lords increases. The opportunity to work your own land more freely also increases. Whether the lord returns — and in what condition — will determine whether the temporary change becomes permanent.", statChange:{food:5,faith:10,wealth:5,standing:5} },
+        { text:"Join the People's Crusade — the spontaneous crusade of the poor that preceded the official one", hint:"The people's crusade", outcome:"bad", result:"The People's Crusade promises plenary indulgence and land in the Holy Land. You join. The People's Crusade reaches Hungary before being destroyed — by disease, starvation, and eventually a Turkish army. The survivors who make it back describe something between catastrophe and pilgrimage. You are among them, barely.", statChange:{food:-15,faith:10,wealth:-10,standing:-5} },
+        { text:"Stay and farm — the Crusade is not your war, and your family needs the harvest", hint:"Practical non-participation", outcome:"good", result:"The Crusade passes through your region like a storm — armies demanding food and supplies, religious fervor disrupting the agricultural calendar. You keep your head down, protect your harvest as best you can, and wait for the storm to pass.", statChange:{food:10,faith:5,wealth:5,standing:5} }
+      ],
+      monk:[
+        { text:"Support the Crusade theologically — write the sermons and texts that give it spiritual legitimacy", hint:"Church intellectual support", outcome:"neutral", result:"The theological case for the Crusade — just war theory, the spiritual merit of fighting for the Holy Land — requires careful construction. You contribute to it. The theological framework you help build is used to justify what happens in Jerusalem. Whether what happens there was what God willed is a question you will spend years with.", statChange:{food:5,faith:10,wealth:5,standing:15} },
+        { text:"Question the Crusade's methods — violence done in God's name requires theological scrutiny", hint:"Prophetic challenge", outcome:"good", result:"Francis of Assisi will eventually try to convert the Sultan through peaceful dialogue rather than military conquest. You are not Francis — but you share his discomfort with violence consecrated by Church authority. Your written questions about whether God wills the killing of civilians in Jerusalem are not welcomed. They are theologically necessary.", statChange:{food:0,faith:20,wealth:0,standing:5} },
+        { text:"Use the Crusade's commercial routes to acquire manuscripts from Islamic libraries", hint:"Scholarly appropriation through conflict", outcome:"good", result:"The Crusader states create commercial and diplomatic contacts that monastery networks can use. Manuscripts from Islamic libraries become available through commercial channels the Crusade opens. The knowledge your civilization gains from this contact will eventually produce the Renaissance. The method of acquisition is morally complicated.", statChange:{food:5,faith:10,wealth:5,standing:15} }
+      ],
+      merchant:[
+        { text:"Supply the Crusaders — the Italian city-states that finance the Crusades become the wealthiest entities in Europe", hint:"Commercial opportunity in holy war", outcome:"good", result:"The logistics of moving armies to the Holy Land require commercial infrastructure at a scale Europe has never seen. The Venetians, Genoese, and Pisans who provide ships, supplies, and financing build commercial empires from Crusade contracts. Your participation at a smaller scale positions you for the commercial expansion that follows.", statChange:{food:5,faith:5,wealth:25,standing:15} },
+        { text:"Establish trading relationships with Islamic merchants through Crusader-state commercial zones", hint:"Commercial contact across religious conflict", outcome:"good", result:"The Crusader states become, paradoxically, zones of commercial contact between Christian and Islamic merchants. Goods from across the Islamic world — spices, silk, sugar, cotton — move through Crusader ports into European markets. Islamic goods and commercial practices enter Europe through the same military conflict that was supposed to separate the two civilizations.", statChange:{food:5,faith:-5,wealth:25,standing:15} },
+        { text:"Trade across religious lines — the Islamic merchants you deal with are more sophisticated than many European partners", hint:"Pragmatic commercial cosmopolitanism", outcome:"good", result:"The Islamic merchants you encounter are more sophisticated and more reliable than many European trading partners. Their commercial practices — the bill of exchange, the commenda partnership, the systematic use of credit — are more advanced than anything in European commercial law. You adopt their practices. The goods and the methods both travel west.", statChange:{food:5,faith:-10,wealth:20,standing:10} }
+      ],
+      scholar:[
+        { text:"Document the Crusade's impact on your civilization — bear witness to what is happening", hint:"Scholarly witness", outcome:"neutral", result:"The Crusaders' arrival is a shock. You document what you see: the sack of Jerusalem, the destruction of libraries, the disruption of scholarly networks that connected your world. The documentation survives when the events themselves are debated.", statChange:{food:5,faith:10,wealth:5,standing:10}, poison:true },
+        { text:"Engage diplomatically — Saladin's chivalrous treatment of prisoners as a statement about your civilization's values", hint:"Diplomatic response", outcome:"good", result:"Saladin's recapture of Jerusalem in 1187 and his chivalrous treatment of the city's Christian inhabitants — allowing them to leave safely rather than massacring them — becomes a statement about what your civilization values. The contrast with the First Crusade's violence is noted in both worlds.", statChange:{food:5,faith:15,wealth:5,standing:20} },
+        { text:"Protect the libraries — ensure the knowledge your civilization preserves survives the military disruption", hint:"Knowledge preservation during crisis", outcome:"good", result:"The manuscripts your libraries hold must be moved, copied, and distributed so no single attack can destroy them. The redundancy of knowledge is its protection. You organize the copying and distribution of critical texts. The knowledge survives. This is what matters most.", statChange:{food:5,faith:10,wealth:-5,standing:20}, poison:false }
+      ],
+      scholar_retry:[
+        { text:"Find the genuine cultural exchange happening alongside the military conflict", hint:"Contact beneath conflict", outcome:"good", result:"Beneath the military conflict, genuine cultural exchange is happening. European scholars in Crusader territories encounter Islamic scholarship. Islamic physicians treat wounded soldiers from both sides. The Crusades that were supposed to separate two civilizations also, inadvertently, connect them.", statChange:{food:5,faith:10,wealth:10,standing:15} },
+        { text:"Write the medical and philosophical treatises that will eventually travel west through translation", hint:"Long-term intellectual contribution", outcome:"good", result:"The texts your tradition produces during this period will travel west through the translation movement, reaching European universities through Toledo and Sicily. The knowledge your civilization preserves and advances during the Crusade period will contribute to the European Renaissance.", statChange:{food:5,faith:10,wealth:5,standing:20} },
+        { text:"Build the coalition that eventually expels the Crusaders — diplomatic as well as military", hint:"Political response to occupation", outcome:"good", result:"The political coalition that Saladin builds — unifying the fragmented Islamic political landscape well enough to retake Jerusalem — is as much a diplomatic achievement as a military one. Your scholarly tradition contributes to the political theory and diplomatic practice that makes this coordination possible.", statChange:{food:5,faith:15,wealth:5,standing:20} }
+      ],
+      woman:[
+        { text:"Manage the household while your husband is on Crusade — discover what you are capable of when you have to", hint:"Necessity revealing competence", outcome:"neutral", result:"Your husband is gone. He may not return. You manage the household, the strips of land, the children, and the lord's continued demands without the help you had before. What you discover about your own capacity is not acknowledged by the feudal system when your husband returns — if he returns.", statChange:{food:5,faith:10,wealth:5,standing:5}, poison:true },
+        { text:"Use your husband's absence to demonstrate competence the manor cannot ignore", hint:"Opportunity within crisis", outcome:"good", result:"The household you manage in your husband's absence runs better than the lord expected. The lord's overseer reports your household is among the best-managed on the manor. When your husband returns, the changed situation is not formalized — the feudal system has no mechanism for formalizing it. But it is noticed.", statChange:{food:10,faith:10,wealth:10,standing:15}, poison:false },
+        { text:"Pray for your husband's return — and prepare for the possibility that he will not", hint:"Faith and practical preparation", outcome:"neutral", result:"You pray. You also quietly learn what rights a widow holds that a wife does not. You make connections with other women whose husbands are away. The network you build is insurance against the worst possibility. The prayer is sincere. The practical preparation is also sincere. Both are how you survive.", statChange:{food:5,faith:20,wealth:5,standing:10}, poison:true }
+      ],
+      woman_retry:[
+        { text:"Build the community networks that sustain the village without its men", hint:"Community organizing in crisis", outcome:"good", result:"The village with its men on Crusade is run by the women left behind. The agricultural calendar does not pause. The women who organize collectively — sharing labor, childcare, knowledge — produce a village that functions. The organization you build is dismantled when the men return. The knowledge that you could build it stays.", statChange:{food:10,faith:15,wealth:10,standing:15} },
+        { text:"Petition the Church for protection during your husband's absence", hint:"Institutional protection", outcome:"neutral", result:"The Church's canon law provides some protections for Crusaders' wives and their property. Your petition produces partial protection — enough to prevent the worst exploitation, not enough to give you real security. The Church that sent your husband away provides limited care for what he left behind.", statChange:{food:5,faith:15,wealth:5,standing:10} },
+        { text:"Use the disruption to learn skills and gain knowledge usually reserved for men", hint:"Expand what you know", outcome:"good", result:"The absence of men who would normally perform certain tasks means someone must learn to do them. You learn. The skills you acquire — managing accounts, negotiating with suppliers, making decisions never supposed to be yours — do not disappear when your husband returns. What you know cannot be taken back.", statChange:{food:5,faith:10,wealth:10,standing:15} }
+      ]
+    }
+  },
+  { id:"ch5", number:5,
+    title:"Chapter 5 — Cracks in the System",
+    subtitle:"William the Conqueror, Magna Carta, and the World Feudalism Didn't Plan For",
+    scene:"It is 1215 CE. At Runnymede, on the Thames River, King John of England has been forced by his barons to sign the Magna Carta — the Great Charter. The document establishes that even the king must follow the law. No free person can be imprisoned or punished except by the law of the land. The principle that power must be constrained by written law — which Rome established and which the Magna Carta reasserts — is being written into English law. Meanwhile towns are growing, the Hundred Years War is beginning to disrupt France and England, and the world the feudal system was designed for is changing faster than the system can adapt.",
+    historyNote:"<strong>Magna Carta (1215) and William the Conqueror (1066):</strong> King John's conflicts with his barons produced the Magna Carta — establishing that no one, not even the king, is above written law. The document primarily protected barons' rights — serfs were not 'free persons' in its legal sense. But the principle was genuinely revolutionary. William the Conqueror's 1066 conquest of England unified Norman and Anglo-Saxon legal traditions in ways that eventually made Magna Carta possible and powerful.",
+    journalPrompt:"Magna Carta established that even the king must follow written law — that no one is above the rules. Where have you encountered this idea before in this year's campaigns? What does it tell you that humans keep having to fight for the same principles?",
+    poisonRoles:["knight","serf"], discussAfter:false,
+    choices:{
+      knight:[
+        { text:"Support Magna Carta — even knights benefit from written limits on royal power", hint:"Self-interest in constitutional limits", outcome:"good", result:"The Magna Carta that constrains the king also constrains his ability to seize your land arbitrarily or demand military service beyond your obligation. Your support is self-interested — the barons who forced John to sign it are protecting their own rights. Both can be true. The document is genuinely important because it was signed for self-interested reasons by people who didn't fully understand what they were creating.", statChange:{food:5,faith:10,wealth:10,standing:20} },
+        { text:"Confront the changing military reality — longbows and mercenaries are replacing the mounted knight", hint:"The knight's obsolescence begins", outcome:"neutral", result:"At Crécy and Agincourt, English longbowmen destroy French cavalry armies. The mounted knight in plate armor — the most expensive weapon in medieval warfare — is being killed from a distance by common soldiers. The military transformation is not yet complete, but the trajectory is clear. The world you were trained for is changing.", statChange:{food:5,faith:5,wealth:-5,standing:10}, isPoison:true },
+        { text:"Adapt — become a military administrator rather than just a cavalry fighter", hint:"Find the knight's new role", outcome:"good", result:"The knight who survives the military revolution is not the one who insists on cavalry charges against longbowmen. It is the one who learns to manage infantry, plan logistics, understand the new tactical realities. The chivalric code still applies. Its military expression is changing. You change with it.", statChange:{food:5,faith:10,wealth:5,standing:15} }
+      ],
+      knight_retry:[
+        { text:"Find honor in the changed military role — service remains even when tactics change", hint:"Chivalry adapts", outcome:"good", result:"The chivalric code is not a set of cavalry tactics. It is a set of values — loyalty, courage, courtesy, service. Those values translate into the new military reality even when the lance and destrier do not. The knight who carries the code into the changed world is not diminished by the change.", statChange:{food:5,faith:15,wealth:5,standing:15} },
+        { text:"Invest in the new military technologies — field artillery and professional infantry are the future", hint:"Embrace military change", outcome:"good", result:"The lord who understands that the future belongs to professional infantry and logistical competence rather than cavalry alone is better positioned than the one who insists on the old forms. Your investment in new military capacity is practically sound even when it feels like a betrayal of what you trained for.", statChange:{food:5,faith:5,wealth:5,standing:15} },
+        { text:"Focus on estate management — the lord's economic role outlasts the knight's military role", hint:"Economic adaptation", outcome:"good", result:"The administrative and economic functions of the knightly class — managing land, enforcing law, administering justice on the manor — continue even as the cavalry charge becomes obsolete. The knight who is also a capable administrator survives the military revolution by being more than a military figure.", statChange:{food:10,faith:5,wealth:15,standing:15} }
+      ],
+      serf:[
+        { text:"Note that Magna Carta doesn't help serfs — it's a document about barons' rights", hint:"Honest assessment", outcome:"neutral", result:"The Magna Carta's 'free persons' are not serfs. The document that establishes even the king must follow law does not establish that serfs have rights the lord must respect. The principle is genuinely important. Its application to you specifically is absent. You watch the barons celebrate a document that protects them and note the difference between principle and practice.", statChange:{food:5,faith:5,wealth:5,standing:5}, poison:true },
+        { text:"Run to a town — the rule that a serf who lives in a town for a year and a day is free", hint:"Find the escape route", outcome:"good", result:"The growing towns need workers. The rule that a serf who lives in a town for a year and a day becomes free — out of reach of the feudal lord — is the escape route your people have been looking for. The town is dangerous and uncertain. It is also free. You make the run.", statChange:{food:-10,faith:5,wealth:5,standing:20} },
+        { text:"Survive the Hundred Years War's disruptions — wars between kings are disasters for farmers", hint:"Navigate the war's impact", outcome:"neutral", result:"The Hundred Years War is fought on French farmland. Armies of both sides take food, labor, and lives. You are not a soldier in this war. You are a resource it consumes. The disruption hits the people at the bottom hardest.", statChange:{food:-5,faith:5,wealth:-5,standing:5}, isPoison:true }
+      ],
+      serf_retry:[
+        { text:"Build the case for improved conditions — use the labor shortage from wars and plague preparation", hint:"Leverage scarcity", outcome:"good", result:"The Hundred Years War's disruptions, combined with the labor shortages developing, give your labor more value than it had before. You begin to demand — quietly, carefully — slightly better conditions. Some lords, desperate for workers, accept. The balance of power is shifting at the margins.", statChange:{food:10,faith:5,wealth:10,standing:15} },
+        { text:"Participate in the grain market as a small seller — the growing towns need food", hint:"Commercial participation", outcome:"good", result:"The growing towns need grain. You produce grain. The commercial connection between rural producer and urban consumer creates a relationship outside the purely feudal one. The small surplus you sell at market earns you money. Money is a form of freedom.", statChange:{food:5,faith:5,wealth:15,standing:10} },
+        { text:"Connect with the merchant networks — become part of the commercial economy alongside feudalism", hint:"Economic diversification", outcome:"good", result:"The commercial economy growing in the towns needs supply chains that reach into the countryside. Your participation — selling surplus goods, providing labor to merchants, developing relationships with townspeople — connects you to an economic world the feudal system did not intend to create.", statChange:{food:5,faith:5,wealth:15,standing:15} }
+      ],
+      monk:[
+        { text:"Support Magna Carta's principle — even Church authority must be constrained by law", hint:"Church endorsement of constitutional limits", outcome:"good", result:"The Church that claimed authority over kings also recognizes that authority constrained by law is more stable than authority asserted by force alone. The principle Magna Carta establishes — that even the most powerful must follow written rules — is consistent with canon law's own foundational claims. You support it.", statChange:{food:5,faith:20,wealth:5,standing:20} },
+        { text:"Engage with the emerging universities — Paris, Oxford, Bologna are producing a new kind of scholarship", hint:"The university movement", outcome:"good", result:"The universities emerging in the 12th and 13th centuries represent the institutionalization of the scholarly tradition your monastery has sustained. Theology, law, medicine, philosophy — all being taught in settings that combine monastery discipline with intellectual openness. The knowledge you preserved is becoming the curriculum.", statChange:{food:5,faith:20,wealth:5,standing:20} },
+        { text:"Reform — the mendicant orders of Francis and Dominic represent what the Church should be", hint:"Internal renewal", outcome:"good", result:"The Franciscans and Dominicans emerge as reform movements — friars who live in poverty among the people rather than in wealthy monasteries, who preach in vernacular languages rather than Latin. You align with the reform spirit. The Church that needs reform is also capable of producing Francis of Assisi. Both are the Church.", statChange:{food:-5,faith:25,wealth:-10,standing:15} }
+      ],
+      merchant:[
+        { text:"Celebrate Magna Carta's commercial protections — standard weights and measures, merchant rights", hint:"Commercial benefit from constitutional limits", outcome:"good", result:"Magna Carta includes specific commercial protections — standard weights and measures across England, protection of merchant rights, limitation on arbitrary seizure of goods. The document that barons signed to protect their political rights also, almost accidentally, establishes commercial protections your class has been fighting for.", statChange:{food:5,faith:10,wealth:20,standing:20} },
+        { text:"Invest in the Hundred Years War's supply chains — wars require merchants as much as soldiers", hint:"War as commercial opportunity", outcome:"good", result:"The Hundred Years War requires continuous supply of arms, food, horses, and materials to armies operating across the Channel. The merchants who build supply chains that sustain these armies make fortunes. The war that devastates the French countryside enriches the commercial networks that service it.", statChange:{food:5,faith:-5,wealth:25,standing:15} },
+        { text:"Develop the banking systems that will fund the next era — bills of exchange, letters of credit", hint:"Financial innovation", outcome:"good", result:"The commercial revolution requires financial innovation — ways to move money across distances without transporting coin, ways to extend credit without calling it usury. The instruments you develop — bills of exchange, letters of credit — will eventually become the foundation of modern finance.", statChange:{food:5,faith:-5,wealth:25,standing:15} }
+      ],
+      scholar:[
+        { text:"Note Magna Carta's similarity to Islamic legal traditions of constraining ruler authority", hint:"Comparative legal scholarship", outcome:"good", result:"The Islamic legal tradition has long maintained that even the caliph is bound by sharia and cannot act arbitrarily. Magna Carta's establishment that even the king must follow written law parallels principles your tradition has developed for centuries. European legal scholars have been studying Islamic jurisprudence through the translation movement.", statChange:{food:5,faith:10,wealth:5,standing:20} },
+        { text:"Contribute to the university curriculum — Aristotle reaches Paris through your tradition", hint:"The translation movement's culmination", outcome:"good", result:"The University of Paris's curriculum is being transformed by Aristotle — in Latin translation from Arabic, with your tradition's commentary. Thomas Aquinas will synthesize Aristotelian philosophy with Christian theology using tools your scholars developed. The intellectual heritage of ancient Greece reached medieval Europe through your civilization's libraries.", statChange:{food:5,faith:10,wealth:5,standing:20} },
+        { text:"Document the commercial contacts between Islamic and European merchants", hint:"Commercial anthropology", outcome:"good", result:"The commercial contacts between Islamic and European merchants — in Crusader ports, in Sicilian markets, in Spanish border zones — are producing cultural exchange no military conflict could achieve. Your documentation of this exchange preserves the record of how civilizations actually influence each other.", statChange:{food:5,faith:5,wealth:10,standing:15} }
+      ],
+      woman:[
+        { text:"Note that Magna Carta's 'free persons' include some women — widows have legal standing", hint:"Find the small opening", outcome:"neutral", result:"The Magna Carta's protections extend to 'free persons' — a category that technically includes free women, particularly widows managing estates. The legal standing is narrow, unequally enforced, and significantly less than men's. It is also more than existed before. You note it precisely. Small openings in unjust systems are worth tracking.", statChange:{food:5,faith:10,wealth:10,standing:10} },
+        { text:"Take advantage of the growing towns' opportunities — urban life offers more than the manor did", hint:"Urbanization as opening", outcome:"good", result:"The growing towns offer women more economic opportunities than the manor — as brewers, cloth workers, small traders, healers. The guild system sometimes admits women in certain trades. The urban economy is not equal. It is more varied than the manor's rigid assignments. You move toward it.", statChange:{food:5,faith:10,wealth:15,standing:15} },
+        { text:"Participate in the emerging vernacular literary culture — women are both subjects and authors", hint:"Cultural participation", outcome:"good", result:"Christine de Pizan is writing. Margery Kempe is writing. The cultural space opening up in vernacular literature — outside the Latin scholarly tradition that excluded women — is one where women's voices are beginning to appear. You participate in it.", statChange:{food:5,faith:15,wealth:5,standing:15} }
+      ]
+    }
+  },
+  { id:"ch6", number:6,
+    title:"Chapter 6 — The Black Death",
+    subtitle:"When the System Has No Answer",
+    scene:"It is 1347. Ships arriving in Sicilian ports carry sailors who are dead or dying of a disease unlike anything Europe has seen — swollen lymph nodes, black patches on the skin, death within days. The Plague — which Europeans will call the Black Death — has traveled from Central Asia along trade routes, reaching the Middle East, North Africa, and now Europe. Over the next four years it will kill perhaps one third of Europe's population. The feudal system that promised security has no answer for this. The Church that promised God's protection has no answer for this. Every role faces the same catastrophe — with no good choices, only less bad ones.",
+    historyNote:"<strong>The Black Death (1347-1351):</strong> The bubonic plague killed an estimated 30-60% of Europe's population in its initial outbreak. It returned repeatedly through the late 14th and 15th centuries. The labor shortage that resulted dramatically improved conditions for surviving serfs — wages rose, land became available, and lords lost the ability to enforce feudal obligations as strictly as before. The Church suffered catastrophic loss of authority when it could neither explain nor prevent the Plague. The social disruptions the Plague caused contributed to the end of the medieval world and the beginning of the Renaissance.",
+    journalPrompt:"The medieval system — feudalism, the Church's authority, the manor economy — existed to provide security, meaning, and order. The Plague killed one third of Europe in four years. After everything your role experienced across six chapters — was the medieval system strong enough to survive this? What would need to change?",
+    poisonRoles:["knight","monk","scholar","woman"], discussAfter:false,
+    choices:{
+      knight:[
+        { text:"Seal the castle — restrict entry to protect your household from infection", hint:"Military instinct applied to disease", outcome:"neutral", result:"The castle is sealed. Some infection gets through anyway — a servant, a supply delivery, a rat in the grain store. The walls that protect you from armies have no defense against a disease that travels invisibly. Some of your household survive. Some do not. The military logic that has organized your entire life has no application here. This is the most helpless you have ever felt.", statChange:{food:10,faith:5,wealth:5,standing:5}, poison:true },
+        { text:"Continue administering your manor — maintain order when the system is failing", hint:"Duty above fear", outcome:"neutral", result:"You continue. The serfs need someone to maintain order when everything else is collapsing. The courts still function, barely. The agricultural calendar continues. You manage the impossible task of governing a manor where one in three people will die. The duty that defined your life continues to demand fulfillment even when fulfilling it is genuinely dangerous.", statChange:{food:5,faith:10,wealth:5,standing:15}, poison:true },
+        { text:"Ride to neighboring manors — help coordinate a regional response", hint:"Leadership beyond your own estate", outcome:"good", result:"The region needs coordination that individual manors cannot provide. You ride. Several of the lords you contact are already dead. Some are willing to work together. A rough system of information sharing — which villages are affected, where grain stores are intact, where help is needed — develops. It saves some lives. It does not save enough.", statChange:{food:5,faith:15,wealth:5,standing:20} }
+      ],
+      serf:[
+        { text:"Nurse your sick neighbors — community care is the only medicine available", hint:"Care as survival strategy", outcome:"neutral", result:"You nurse the sick. Some recover. Most do not. The care you provide — water, food, human presence — is the only medicine available and is not enough. You survive. Whether you survive because of your care or in spite of it — spending time with the infected — is a question medieval medicine cannot answer and you cannot afford to think about.", statChange:{food:5,faith:15,wealth:5,standing:10} },
+        { text:"Flee the village — put distance between yourself and the infection", hint:"Survival through distance", outcome:"neutral", result:"You flee. The Plague follows, eventually, because it travels with people and goods and rats and you cannot outrun a disease you don't understand. You survive longer than your neighbors who stayed. Whether you survive the Plague entirely depends on factors you cannot control and cannot predict. Survival, in 1348, is largely luck.", statChange:{food:-5,faith:5,wealth:-5,standing:5} },
+        { text:"Recognize the opportunity in survival — demand better conditions from a lord who now needs workers desperately", hint:"Labor scarcity as leverage", outcome:"good", result:"Your lord has lost half his serfs. The ones who survive are suddenly valuable in a way they have never been before. You demand reduced labor days, the right to move to better land, reduced fees for the mill. The lord — desperate for workers — accepts some of your demands. The Plague that killed your neighbors has given you something feudalism never provided: bargaining power.", statChange:{food:15,faith:5,wealth:20,standing:20} }
+      ],
+      monk:[
+        { text:"Care for the sick and dying — this is what the Church is for, regardless of the personal risk", hint:"Christian service at personal cost", outcome:"neutral", result:"You care for the sick. The Plague kills monks in extraordinary numbers — they die because they care for the sick. You may be among them. The vow of service that brought you to the monastery means you stay when others flee. The Church loses an enormous proportion of its clergy to the Plague. Their deaths — in service — are the Church's most genuine moment of this era.", statChange:{food:-10,faith:25,wealth:5,standing:15}, poison:true },
+        { text:"Try to explain the Plague theologically — the Church must have an answer", hint:"Institutional explanation", outcome:"bad", result:"The answers the Church offers — that the Plague is God's punishment for sin, that prayer and penance will end it, that flagellant processions will appease God's wrath — are theologically earnest and practically useless. The Plague does not distinguish between the penitent and the unrepentant. The Church's inability to explain or prevent the Plague damages its authority in ways that will not fully heal for a century.", statChange:{food:5,faith:-15,wealth:5,standing:-10}, isPoison:true },
+        { text:"Preserve the records — ensure that what is happening is documented for the future", hint:"Documentation as duty", outcome:"good", result:"The Plague must be recorded — who died, when, how the disease progressed, what was tried and what failed. The records you keep will be among the primary sources future physicians use to understand what happened. The documentation does not save anyone in 1348. It will save people in future centuries who learn from it.", statChange:{food:5,faith:15,wealth:5,standing:15} }
+      ],
+      merchant:[
+        { text:"Keep trading — the Plague creates supply shortages that need filling", hint:"Commerce in catastrophe", outcome:"good", result:"The supply chains that delivered food, goods, and materials across Europe are collapsing as producers die. The merchant who keeps moving — carefully, with modified routes that avoid the worst-affected areas — fills the gaps. The profit is significant. The moral complexity of profiting from catastrophe is also significant. Both accompany you.", statChange:{food:10,faith:-5,wealth:25,standing:10} },
+        { text:"Diversify supply chains — the Plague reveals how fragile the existing networks are", hint:"Commercial adaptation", outcome:"good", result:"The supply chains that depended on specific towns, specific producers, specific routes are collapsing as the Plague moves through them. You rapidly build alternative sources — different producers, different routes, different goods. The merchant who adapts fastest survives best. The commercial network you build through this crisis is more resilient than the one that preceded it.", statChange:{food:10,faith:5,wealth:20,standing:15} },
+        { text:"Flee to a less affected region — protect the commercial network's human capital", hint:"Strategic withdrawal", outcome:"neutral", result:"You relocate to a region the Plague has not yet reached. The commercial network you built over years contracts to what you can manage from a safer distance. You survive. The commercial relationships in the affected regions survive partially. What you lose in immediate business you gain in survival. Commerce can be rebuilt. Dead merchants cannot build anything.", statChange:{food:10,faith:5,wealth:5,standing:5} }
+      ],
+      scholar:[
+        { text:"Apply your medical knowledge — Ibn al-Khatib's contagion theory is the best available explanation", hint:"Medical response", outcome:"good", result:"Ibn al-Khatib's account of the Plague — correctly identifying that it spreads through contact and proposing isolation as the primary defense — is the most scientifically accurate analysis of the Black Death produced by any civilization. Your medical tradition's response to the Plague is better than Europe's. It is not enough. But it saves some lives that would otherwise be lost.", statChange:{food:5,faith:10,wealth:5,standing:20} },
+        { text:"Document the Plague's spread — the trade routes that carried your knowledge also carried the disease", hint:"Scholarly witness to catastrophe", outcome:"neutral", result:"The routes that carried silk and spices and manuscripts from Central Asia to Europe also carried the Plague. The global commercial network your civilization helped build is the disease vector. The scholar who documented the benefits of trade must also document the cost. Both are true. The documentation of both is necessary.", statChange:{food:5,faith:10,wealth:5,standing:15}, poison:true },
+        { text:"Maintain the libraries through the crisis — knowledge must survive even when people do not", hint:"Institutional preservation", outcome:"good", result:"The libraries must be maintained. The scholars who die must be replaced by students who can continue the work. The knowledge that took centuries to accumulate must not be lost to a generation of catastrophe. You dedicate yourself to continuity — training new scholars, copying critical texts, maintaining the institutional infrastructure of learning through the worst years.", statChange:{food:5,faith:10,wealth:5,standing:20}, poison:false }
+      ],
+      woman:[
+        { text:"Nurse your family and neighbors through the Plague — this is your role and your choice", hint:"Care in catastrophe", outcome:"neutral", result:"You nurse the sick. Your knowledge of herbal medicine — which plants reduce fever, which ease pain, which support recovery — is the only medical resource your village has. It is not enough for the Plague. Some of your patients survive. Most do not. You are among those who survive — whether because of something you did or because of luck you cannot separate from grace.", statChange:{food:5,faith:20,wealth:5,standing:15}, poison:true },
+        { text:"Organize the village's response — when institutions fail, community fills the gap", hint:"Community leadership", outcome:"good", result:"The lord is sealed in his castle. The priest is dying. The village needs someone to organize — who is sick, who can help, where the food stores are, how to bury the dead safely. You organize. The authority no one has formally given you fills the vacuum left by the authorities who have retreated or died. When the Plague passes, the village remembers who held it together.", statChange:{food:10,faith:15,wealth:10,standing:20} },
+        { text:"Survive — for your children, for the future, for the world that will need rebuilding", hint:"Survival as purpose", outcome:"neutral", result:"You survive. Your children survive. The Plague that kills one in three spares your family — whether through your care, your location, your constitution, or something you cannot explain. When it passes, the village is changed. You are changed. The world you knew before 1347 does not exist anymore. The world that needs building after 1351 will be built by the people who survived. You are one of them.", statChange:{food:10,faith:15,wealth:5,standing:10}, poison:true }
+      ]
+    }
+  }
+];
+
+// ══════════════════════════════════════════════════════════════
+// ══════════════════════════════════════════════════════════════
+//  STATE
+// ══════════════════════════════════════════════════════════════
+let state = {
+  screen:"art_open", role:null, chapterIndex:0,
+  pendingOutcome:null, isRetry:false, retryCount:0,
+  stats:{food:50,faith:50,wealth:50,standing:50},
+  discussPhase:0, timerInterval:null
+};
+
+// ══════════════════════════════════════════════════════════════
+//  HELPERS
+// ══════════════════════════════════════════════════════════════
+function go(s){state.screen=s;render();window.scrollTo({top:0,behavior:"smooth"});}
+function getRole(){return ROLES.find(r=>r.id===state.role);}
+function clamp(v){return Math.max(0,Math.min(100,v));}
+function applyStats(ch){if(!ch)return;for(let k in ch){if(state.stats[k]!==undefined)state.stats[k]=clamp(state.stats[k]+ch[k]);}}
+function statColor(v){return v>=60?"#6ABF6A":v>=35?"#E8C840":"#E05050";}
+function isDead(){return state.stats.food<=0;}
+
+function getChoices(){
+  const ch=CHAPTERS[state.chapterIndex];
+  const rid=state.role;
+  if(state.isRetry){
+    const retryKey=rid+"_retry";
+    if(ch.choices[retryKey])return ch.choices[retryKey];
+  }
+  return ch.choices[rid]||[];
+}
+
+function faithResult(v){
+  if(v>=75)return{icon:"✝️",title:"Steadfast Faith",text:"Your choices reflected genuine faith lived out in action — not just professed in words. The medieval world organized itself around faith as its primary source of meaning, authority, and community. Your role found in that faith something real and sustaining, even within a system that was also deeply imperfect."};
+  if(v>=50)return{icon:"⚖️",title:"Faith Tested",text:"Your choices navigated the medieval world's complicated relationship between faith as genuine belief and faith as institutional power. Most medieval people lived exactly this way — believing genuinely while navigating an institution that sometimes served and sometimes exploited that belief."};
+  if(v>=25)return{icon:"🏰",title:"Faith Strained",text:"Your choices often put practical survival or material interest ahead of faith's demands. The medieval world would have recognized this — human nature was not expected to achieve perfection. But the gap between what faith required and what you chose is a gap worth examining."};
+  return{icon:"🌑",title:"Faith Lost",text:"The medieval system organized itself around faith. When faith is lost — not just personally but institutionally — the system loses its organizing principle. The Plague and the Reformation that follows will both ask the same question your choices raise: what holds a civilization together when the faith that organized it can no longer answer the hardest questions?"};}
+
+function renderStats(){
+  const defs=[{key:"food",label:"Food",icon:"🌾"},{key:"faith",label:"Faith",icon:"✝️"},{key:"wealth",label:"Wealth",icon:"⚖️"},{key:"standing",label:"Standing",icon:"🏰"}];
+  return`<div class="stats-row">${defs.map(d=>{const v=state.stats[d.key];return`<div class="stat-box"><span class="stat-icon">${d.icon}</span><div class="stat-label">${d.label}</div><div class="stat-value" style="color:${statColor(v)}">${Math.round(v)}</div><div class="stat-track"><div class="stat-fill" style="width:${v}%;background:${statColor(v)}"></div></div></div>`;}).join("")}</div>`;}
+
+function renderProgress(){
+  const dots=CHAPTERS.map((c,i)=>`<div class="prog-dot ${i<state.chapterIndex?"done":i===state.chapterIndex?"active":""}"></div>`).join("");
+  return`<div class="progress-row">${dots}<span class="prog-label">Chapter ${state.chapterIndex+1} of ${CHAPTERS.length}</span></div>`;}
+
+// ══════════════════════════════════════════════════════════════
+//  SCREENS
+// ══════════════════════════════════════════════════════════════
+function screenArtOpen(){return`
+  <div class="screen-label">Before we begin — look closely</div>
+  <div class="screen-heading">The Très Riches Heures du Duc de Berry<br><span style="font-size:16px;color:var(--crimson-light)">January · c. 1412-1416 CE</span></div>
+  <div class="art-frame">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/8/8a/Les_Tr%C3%A8s_Riches_Heures_du_duc_de_Berry_Janvier.jpg" alt="Très Riches Heures du Duc de Berry — January feast scene" onerror="this.style.display='none';document.getElementById('art-fallback').style.display='block'" />
+    <div id="art-fallback" style="display:none;padding:2rem;text-align:center;color:var(--crimson-light);font-family:Arial,sans-serif;font-size:13px">[Très Riches Heures — search "Tres Riches Heures January feast" to view]</div>
+    <div class="art-caption">Très Riches Heures du Duc de Berry · January feast scene · Painted by the Limbourg Brothers · c. 1412-1416 CE · Musée Condé, Chantilly · Public Domain<br><em>Every mark on this page — every line, every color, every letter — was made by hand with a quill pen and natural pigments.</em></div>
+  </div>
+  <div class="scene-text">This image was painted approximately 600 years ago — by hand, on vellum (treated animal skin), using pigments ground from minerals and plants. Before the printing press existed, every book, every document, every page of art like this one was made this way. One page at a time. Before you begin your story in the Middle Ages, look closely. Take 30 seconds of silence first. Then answer the three prompts in your field journal:</div>
+  <div class="art-prompts">
+    <div class="art-prompt-box"><div class="apt-label">Prompt 1</div><div class="apt-q">One thing I find interesting...</div></div>
+    <div class="art-prompt-box"><div class="apt-label">Prompt 2</div><div class="apt-q">One thing that puzzles me...</div></div>
+    <div class="art-prompt-box"><div class="apt-label">Prompt 3</div><div class="apt-q">One question I have for the creator...</div></div>
+  </div>
+  <div class="history-note"><strong>Answer in your field journal.</strong> When your teacher gives the signal, continue.</div>
+  <button class="btn btn-crimson" onclick="go('role_select')">Enter the Middle Ages →</button>`;}
+
+function screenRoleSelect(){
+  return`<div class="screen-label">Choose your role — your table decides together</div>
+  <div class="screen-heading">Who are you in the Middle Ages?</div>
+  <div class="scene-text">Every person at your table plays the same role. Each role will experience the same events — feudalism, the Church's power, the Crusades, and the Plague — from a completely different position. This campaign covers roughly 850 years of European history. The central question runs through every chapter: <em>When Rome fell, who filled the vacuum — and at what cost to ordinary people?</em> Choose together.</div>
+  <div class="role-grid">${ROLES.map(r=>`<div class="role-card" onclick="selectRole('${r.id}')"><span class="rc-icon">${r.icon}</span><div class="rc-name">${r.name}</div><div class="rc-own"><strong>You control:</strong> ${r.own}</div><div class="rc-fear">⚠ You fear: ${r.fear}</div></div>`).join("")}</div>`;}
+
+function screenChapter(){
+  const ch=CHAPTERS[state.chapterIndex];
+  const role=getRole();
+  const choices=getChoices();
+  const isPoison=ch.poisonRoles.includes(state.role);
+  return`${renderProgress()}${renderStats()}
+  <div class="role-badge"><span class="rb-icon">${role.icon}</span><div><div class="rb-name">${role.name}</div><div class="rb-desc">${role.desc}</div></div></div>
+  <div class="screen-label">${ch.title}</div>
+  <div class="screen-heading" style="font-size:18px">${ch.subtitle}</div>
+  <div class="scene-text">${ch.scene}</div>
+  <div class="role-context">${role.ctx[ch.id]}</div>
+  ${isPoison?`<div class="poison-note">⚠ There may be no good option for your role in this chapter. Choose the least difficult path — and notice what the available options reveal.</div>`:""}
+  <div class="history-note">${ch.historyNote}</div>
+  ${state.isRetry?`<div class="history-note" style="border-color:var(--crimson);color:var(--crimson-light)"><strong>Try a different path</strong> — the same historical reality, new choices through it.</div>`:""}
+  <div class="choices-label">Discuss with your table — then choose:</div>
+  <div class="choices">${choices.map((c,i)=>`<button class="choice-btn" onclick="makeChoice(${i})"><div class="choice-text">${c.text}</div><div class="choice-hint">${c.hint}</div></button>`).join("")}</div>`;}
+
+function screenOutcome(){
+  const ch=CHAPTERS[state.chapterIndex];
+  const o=state.pendingOutcome;
+  const isPoison=o.isPoison||o.poison;
+  const outcomeClass=isPoison?"outcome-poison":`outcome-${o.outcome}`;
+  const outcomeLabel=o.outcome==="good"?"✓ What happened":o.outcome==="bad"?"✗ What happened":isPoison?"⚠ The constrained choice":"→ What happened";
+  const canRetry=o.isPoison&&state.retryCount<1;
+  return`${renderProgress()}${renderStats()}
+  <div class="outcome-box ${outcomeClass}"><div class="outcome-label">${outcomeLabel}</div>${o.result}</div>
+  ${canRetry?`<div class="history-note" style="border-color:var(--crimson);color:var(--crimson-light)">Your role faced a poison pill — a situation with no good option. You can try again with entirely new choices, or continue to the journal prompt.</div>
+  <button class="btn btn-crimson" onclick="retryChapter()">Try different choices →</button>
+  <button class="btn btn-secondary" onclick="proceedFromOutcome()">Continue with this outcome →</button>`:
+  ch.discussAfter?`<button class="btn btn-crimson" onclick="startDiscussion()">Continue to table discussion →</button>`:
+  `<div class="journal-prompt"><strong>✏ Field Journal Prompt —</strong> answer before your teacher signals to continue:<br><br>${ch.journalPrompt}</div>
+  <button class="btn btn-crimson" onclick="advanceChapter()">${state.chapterIndex<CHAPTERS.length-1?"Continue →":"See how your story ends →"}</button>`}`;
+}
+
+function screenDiscussion(){
+  const ch=CHAPTERS[state.chapterIndex];
+  const phase=state.discussPhase;
+  const prompt=phase===0?ch.discussPrompt:(ch.discussPrompt2||ch.discussPrompt);
+  const pairs=phase===0?ch.discussPairs:(ch.discussPairs2||ch.discussPairs);
+  clearInterval(state.timerInterval);
+  setTimeout(()=>{
+    let secs=90;
+    state.timerInterval=setInterval(()=>{
+      secs--;
+      const el=document.getElementById("timer-display");
+      const fill=document.getElementById("timer-fill");
+      const btn=document.getElementById("cont-btn");
+      if(el)el.textContent=`${Math.floor(secs/60)}:${String(secs%60).padStart(2,"0")}`;
+      if(fill)fill.style.width=`${(secs/90)*100}%`;
+      if(secs<=0){clearInterval(state.timerInterval);if(btn)btn.classList.add("ready");}
+    },1000);
+  },100);
+  const hasSecondDiscussion=ch.discussPrompt2&&phase===0;
+  return`${renderProgress()}
+  <div class="discussion-box">
+    <div class="disc-header">⏱ Table Discussion ${ch.discussPrompt2?`(${phase+1} of 2)`:""} — 90 seconds</div>
+    <div class="disc-prompt">${prompt}</div>
+    <div class="disc-pairs">📋 Pairings: ${pairs}</div>
+    <div class="timer-row">
+      <div class="timer-display" id="timer-display">1:30</div>
+      <div class="timer-track"><div class="timer-fill" id="timer-fill" style="width:100%"></div></div>
+      <button class="continue-btn" id="cont-btn" onclick="afterDiscussion(${hasSecondDiscussion})">Continue →</button>
+    </div>
+  </div>
+  <div class="journal-prompt"><strong>✏ Field Journal Prompt —</strong> write your response while the timer runs:<br><br>${ch.journalPrompt}</div>`;}
+
+function screenGameOver(){
+  return`<div style="text-align:center;padding:2rem 1rem">
+    <div style="font-size:48px;margin-bottom:1rem">🌾</div>
+    <div class="screen-heading">Your story in the Middle Ages ends here</div>
+    ${renderStats()}
+    <div class="history-note" style="text-align:left;margin-bottom:1.25rem">Even within the feudal system's elaborate structure of obligation and protection — even within the Church's promise of divine care — the most basic requirement of survival was food. The manor system, the Crusades, the Plague — all of them ultimately depended on whether enough people could be fed.</div>
+    <div class="journal-prompt" style="text-align:left">What does a food crisis in the medieval world reveal about which of the system's promises were real?</div><br>
+    <button class="btn btn-crimson" onclick="restart()">Start again as a different role</button>
+  </div>`;}
+
+function screenArtClose(){
+  return`<div class="screen-label">Closing — one more image</div>
+  <div class="screen-heading">Chartres Cathedral<br><span style="font-size:16px;color:var(--crimson-light)">Built 1194-1220 CE · Chartres, France</span></div>
+  <div class="art-frame">
+    <img src="https://upload.wikimedia.org/wikipedia/commons/d/dc/Cath%C3%A9drale_Notre-Dame_de_Chartres_-_A.jpg" alt="Chartres Cathedral exterior" onerror="this.style.display='none';document.getElementById('chartres-fallback').style.display='block'" />
+    <div id="chartres-fallback" style="display:none;padding:2rem;text-align:center;color:var(--crimson-light);font-family:Arial,sans-serif;font-size:13px">[Chartres Cathedral — search "Chartres Cathedral exterior" to view]</div>
+    <div class="art-caption">Cathédrale Notre-Dame de Chartres · Chartres, France · Built primarily 1194-1220 CE · UNESCO World Heritage Site · Public Domain<br><em>Built over 26 years after a fire destroyed the previous cathedral. Funded by kings, nobles, guilds, and ordinary people across France.</em></div>
+  </div>
+  <div class="scene-text">You opened this campaign with a small, intimate illuminated manuscript page — one person's hand making one mark at a time. Now look at this: a building that took 26 years to construct, that required the coordinated effort of thousands of people across all of medieval society's roles, that rises 115 feet above the ground using engineering techniques that had never been attempted before. Use your three prompts in your field journal:</div>
+  <div class="art-prompts">
+    <div class="art-prompt-box"><div class="apt-label">Prompt 1</div><div class="apt-q">One thing I find interesting...</div></div>
+    <div class="art-prompt-box"><div class="apt-label">Prompt 2</div><div class="apt-q">One thing that puzzles me...</div></div>
+    <div class="art-prompt-box"><div class="apt-label">Prompt 3</div><div class="apt-q">One question I have for the creator...</div></div>
+  </div>
+  <div class="journal-prompt"><strong>Year-long comparison question:</strong> You opened this year with cave paintings made by one person with pigment on stone. Now you are looking at a cathedral built by thousands of people over 26 years. Both are humans trying to create something that expresses what they believe and who they are. What changed between the cave painting and the cathedral — and what, looking at both, stayed the same?</div>
+  <button class="btn btn-crimson" onclick="go('ending')">See what your story revealed →</button>`;}
+
+function screenEnding(){
+  const role=getRole();
+  const f=faithResult(state.stats.faith);
+  return`<div class="screen-label">End of the Middle Ages Campaign</div>
+  <div class="screen-heading" style="font-size:18px">${role.name} — Your Story Through the Middle Ages</div>
+  ${renderStats()}
+  <div class="faith-result"><span class="fr-icon">${f.icon}</span><div class="fr-label">Faith Assessment</div><div class="fr-title">${f.title}</div><div class="fr-text">${f.text}</div></div>
+  <div class="history-note"><strong>What this campaign covered:</strong><br>The fall of Rome and the rise of the Franks · Viking raids and the need for feudal protection · The manor system and feudal life · The page-squire-knight training chain and chivalric code · The Church at the center of medieval life — its genuine service and its institutional power · Pope vs. King — the investiture controversy · The Crusades and their impact on every role in medieval society · The Islamic Golden Age and preservation of classical knowledge · William the Conqueror and the Magna Carta · The Black Death and the end of the medieval world</div>
+  <div style="margin-bottom:1.25rem">
+    <div class="screen-label" style="margin-bottom:8px">The Middle Ages — What Was Built and What It Cost</div>
+    <div class="achievements-grid">
+      <div class="achievement-card"><span class="ac-icon">⚔️</span><div class="ac-title">The Chivalric Code</div><div class="ac-desc">Loyalty, courage, courtesy, Christian service — and the page-squire-knight training chain that produced it. The model your DBQ will compare to Bushido.</div></div>
+      <div class="achievement-card"><span class="ac-icon">⛪</span><div class="ac-title">Gothic Architecture</div><div class="ac-desc">The flying buttress, the ribbed vault, the rose window — engineering innovations that produced the most ambitious buildings in Western history.</div></div>
+      <div class="achievement-card"><span class="ac-icon">📜</span><div class="ac-title">Magna Carta</div><div class="ac-desc">Even the king must follow written law. No one is above the rules. A principle that Rome established, the Middle Ages rediscovered, and the American Founders will build on.</div></div>
+      <div class="achievement-card"><span class="ac-icon">📚</span><div class="ac-title">Preserved Classical Knowledge</div><div class="ac-desc">Islamic monasteries and scholars preserved Aristotle, Plato, Galen, and Euclid while Europe reorganized itself around castles and manors. The Renaissance could not happen without this.</div></div>
+      <div class="achievement-card"><span class="ac-icon">🏙️</span><div class="ac-title">The Rise of Towns</div><div class="ac-desc">Commerce, guilds, town charters, and the growing merchant class that the feudal system never planned for — and could not survive without.</div></div>
+      <div class="achievement-card"><span class="ac-icon">☠️</span><div class="ac-title">The Black Death's Legacy</div><div class="ac-desc">One third of Europe dead in four years. Labor scarce enough that surviving serfs could demand better conditions. The Church's authority shaken. The medieval world broken open for what comes next.</div></div>
+    </div>
+  </div>
+  <div class="dbq-box">
+    <h4>Your DBQ is coming — you are ready for it</h4>
+    <p>The question you will examine: <strong>Were the similarities between knights and samurai greater than the differences?</strong></p>
+    <p>The Knight role's experience — the page-squire-knight training chain, the chivalric code's combination of military skill and Christian devotion and courtesy, the relationship between military service and land — gives you the experiential knowledge to engage with the samurai's parallel system of training and the Bushido code's relationship to Buddhism and reincarnation.</p>
+    <p>The primary sources in your DBQ will give you evidence. This campaign gave you context. Use both.</p>
+  </div>
+  <div class="discussion-questions">
+    <h4>Class Discussion Questions</h4>
+    <p>1. When Rome fell, the Church filled the vacuum. What does it tell you about the relationship between political power and religious authority that an institution originally focused on faith ended up also running hospitals, schools, courts, and diplomatic relations between kingdoms?</p>
+    <p>2. The Magna Carta established that even the king must follow written law. Where else this year have you seen humans fighting for this same principle — and why do you think it keeps having to be re-won?</p>
+    <p>3. The Crusades were experienced completely differently by every role in this campaign. What does that tell you about how the same historical event can mean completely different things to different people?</p>
+    <p>4. The Black Death killed one third of Europe. The surviving serfs gained bargaining power for the first time in centuries. Can a catastrophe also be a turning point — and does that make the catastrophe less terrible?</p>
+    <p>5. The medieval system — feudalism, the Church, the manor — was built to provide security, meaning, and order. The Plague overwhelmed all three simultaneously. What would need to change after something like this — and does that change have a name?</p>
+  </div>
+  <button class="btn btn-crimson" onclick="restart()">Play again as a different role</button>
+  <button class="btn btn-secondary" onclick="restart()">Return to start</button>`;}
+
+// ══════════════════════════════════════════════════════════════
+//  ACTIONS
+// ══════════════════════════════════════════════════════════════
+function selectRole(id){state.role=id;state.chapterIndex=0;state.isRetry=false;state.retryCount=0;go("chapter");}
+
+function makeChoice(i){
+  const choices=getChoices();
+  const choice=choices[i];
+  if(!choice.isPoison){applyStats(choice.statChange);}
+  state.pendingOutcome=choice;
+  if(isDead()){go("gameover");return;}
+  go("outcome");
+}
+
+function retryChapter(){
+  state.isRetry=true;
+  state.retryCount++;
+  state.pendingOutcome=null;
+  go("chapter");
+}
+
+function proceedFromOutcome(){
+  const ch=CHAPTERS[state.chapterIndex];
+  state.isRetry=false;
+  state.retryCount=0;
+  if(ch.discussAfter){startDiscussion();}
+  else{advanceChapter();}
+}
+
+function startDiscussion(){
+  state.discussPhase=0;
+  go("discussion");
+}
+
+function afterDiscussion(hasSecond){
+  clearInterval(state.timerInterval);
+  if(hasSecond&&state.discussPhase===0){
+    state.discussPhase=1;
+    go("discussion");
+  } else {
+    state.discussPhase=0;
+    advanceChapter();
+  }
+}
+
+function advanceChapter(){
+  state.pendingOutcome=null;
+  state.isRetry=false;
+  state.retryCount=0;
+  if(state.chapterIndex<CHAPTERS.length-1){state.chapterIndex++;go("chapter");}
+  else{go("art_close");}
+}
+
+function restart(){
+  clearInterval(state.timerInterval);
+  state={screen:"art_open",role:null,chapterIndex:0,pendingOutcome:null,isRetry:false,retryCount:0,stats:{food:50,faith:50,wealth:50,standing:50},discussPhase:0,timerInterval:null};
+  render();window.scrollTo({top:0,behavior:"smooth"});
+}
+
+// ══════════════════════════════════════════════════════════════
+//  RENDER
+// ══════════════════════════════════════════════════════════════
+function render(){
+  const el=document.getElementById("content");
+  const screens={art_open:screenArtOpen,role_select:screenRoleSelect,chapter:screenChapter,outcome:screenOutcome,discussion:screenDiscussion,gameover:screenGameOver,art_close:screenArtClose,ending:screenEnding};
+  el.innerHTML=(screens[state.screen]||(() => "<p>Loading...</p>"))();
+}
+render();
