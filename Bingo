@@ -1,0 +1,410 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Bravery & Compassion Bingo Generator</title>
+    <!-- Tailwind CSS -->
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        @import url('https://fonts.googleapis.com/css2?family=Fredoka:wght@400;600;700&family=Inter:wght@400;600;700&display=swap');
+
+        body {
+            font-family: 'Inter', sans-serif;
+        }
+
+        .font-display {
+            font-family: 'Fredoka', cursive, sans-serif;
+        }
+
+        /* Print Specific Styles */
+        @media print {
+            .no-print {
+                display: none !important;
+            }
+            body {
+                background-color: white !important;
+                padding: 0 !important;
+                margin: 0 !important;
+            }
+            .page-break {
+                page-break-after: always;
+                break-after: page;
+            }
+            .bingo-card {
+                box-shadow: none !important;
+                border: 3px solid #000 !important;
+                width: 100% !important;
+                max-width: 100% !important;
+                height: 98vh !important;
+                margin: 0 auto !important;
+                padding: 1rem !important;
+                display: flex !important;
+                flex-direction: column !important;
+                justify-content: space-between !important;
+            }
+            .bingo-grid {
+                gap: 4px !important;
+                flex-grow: 1 !important;
+            }
+            .bingo-square {
+                border: 2px solid #333 !important;
+            }
+        }
+
+        /* Custom styling for standard grid sizing */
+        .bingo-square {
+            aspect-ratio: 1 / 1;
+        }
+    </style>
+</head>
+<body class="bg-slate-100 text-slate-800 min-h-screen">
+
+    <!-- TOP CONTROL BAR (Hidden during printing) -->
+    <header class="no-print bg-indigo-600 text-white shadow-lg sticky top-0 z-50">
+        <div class="max-w-7xl mx-auto px-4 py-4 sm:px-6 lg:px-8 flex flex-col sm:flex-row justify-between items-center gap-4">
+            <div class="flex items-center gap-3">
+                <span class="text-3xl">🦁</span>
+                <div>
+                    <h1 class="font-display text-2xl font-bold leading-tight">Bravery & Compassion Bingo</h1>
+                    <p class="text-xs text-indigo-200">50 Printable Cards for Kids (Ages K-6)</p>
+                </div>
+            </div>
+
+            <div class="flex flex-wrap items-center gap-2">
+                <button onclick="showTab('caller')" id="tab-caller" class="px-4 py-2 rounded-lg font-semibold bg-indigo-700 hover:bg-indigo-800 text-white transition text-sm flex items-center gap-2">
+                    📋 Caller Sheet
+                </button>
+                <button onclick="showTab('cards')" id="tab-cards" class="px-4 py-2 rounded-lg font-semibold bg-indigo-800 hover:bg-indigo-900 text-white transition text-sm flex items-center gap-2">
+                    🎴 Player Cards (50)
+                </button>
+                <button onclick="window.print()" class="px-5 py-2 rounded-lg font-bold bg-amber-400 hover:bg-amber-300 text-slate-900 shadow transition text-sm flex items-center gap-2">
+                    🖨️ Print / Save as PDF
+                </button>
+            </div>
+        </div>
+    </header>
+
+    <!-- MAIN CONTAINER -->
+    <main class="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+
+        <!-- VIEW 1: CALLER MASTER SHEET & GAME ENGINE -->
+        <section id="view-caller" class="space-y-6">
+            <div class="no-print bg-white rounded-2xl p-6 shadow-md border border-slate-200">
+                <div class="flex flex-col md:flex-row justify-between items-start md:items-center gap-4 mb-6">
+                    <div>
+                        <h2 class="font-display text-2xl font-bold text-indigo-900">Game Caller Console</h2>
+                        <p class="text-slate-600 text-sm">Use this tool while playing to draw random phrases or mark off items as you call them.</p>
+                    </div>
+                    <div class="flex gap-2">
+                        <button onclick="drawRandomPhrase()" class="bg-emerald-600 hover:bg-emerald-700 text-white font-bold px-4 py-2 rounded-lg shadow text-sm transition">
+                            🎲 Draw Random Phrase
+                        </button>
+                        <button onclick="resetCallerSheet()" class="bg-slate-200 hover:bg-slate-300 text-slate-700 font-semibold px-4 py-2 rounded-lg text-sm transition">
+                            🔄 Reset Sheet
+                        </button>
+                    </div>
+                </div>
+
+                <!-- Randomly Drawn Phrase Display -->
+                <div id="drawn-display" class="hidden bg-gradient-to-r from-amber-50 to-orange-50 border-2 border-amber-300 rounded-xl p-6 text-center shadow-inner mb-6">
+                    <span class="text-xs font-bold uppercase tracking-wider text-amber-700">Just Called:</span>
+                    <div id="drawn-emoji" class="text-6xl my-2">🌟</div>
+                    <div id="drawn-text" class="font-display text-2xl font-bold text-slate-800">Ready to play!</div>
+                </div>
+
+                <div class="text-xs text-slate-500 flex items-center gap-4">
+                    <span>💡 <b>Tip:</b> When printing, selecting "Caller Sheet" tab will print only the checklist.</span>
+                </div>
+            </div>
+
+            <!-- Master Checklist Section (Printable) -->
+            <div id="printable-caller-sheet" class="bg-white rounded-2xl p-8 shadow-md border border-slate-200">
+                <div class="border-b-2 border-indigo-100 pb-4 mb-6 flex justify-between items-center">
+                    <div>
+                        <h2 class="font-display text-3xl font-bold text-indigo-900">Master Caller Sheet</h2>
+                        <p class="text-slate-500 font-medium text-sm">Bravery & Compassion Bingo - Total Phrases: <span id="total-phrases-count">0</span></p>
+                    </div>
+                    <div class="hidden print:block text-right text-xs text-slate-400">
+                        Check off squares as they are drawn.
+                    </div>
+                </div>
+
+                <div id="caller-grid" class="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-3">
+                    <!-- Dynamic Checklist Items inserted by JavaScript -->
+                </div>
+            </div>
+        </section>
+
+        <!-- VIEW 2: PLAYER CARDS LIST -->
+        <section id="view-cards" class="hidden space-y-8">
+            <div class="no-print bg-white rounded-2xl p-6 shadow-md border border-slate-200 flex flex-col sm:flex-row justify-between items-center gap-4">
+                <div>
+                    <h2 class="font-display text-xl font-bold text-slate-800">Bingo Player Cards Overview</h2>
+                    <p class="text-slate-600 text-sm">Below are 50 randomized player cards. Each card will print on its own page.</p>
+                </div>
+                <div class="flex items-center gap-3">
+                    <label for="card-selector" class="text-sm font-semibold text-slate-700">Jump to Card:</label>
+                    <select id="card-selector" onchange="scrollToCard(this.value)" class="border border-slate-300 rounded-lg px-3 py-1.5 text-sm bg-slate-50">
+                        <!-- Populated by JS -->
+                    </select>
+                </div>
+            </div>
+
+            <!-- Cards Container -->
+            <div id="cards-container" class="space-y-12">
+                <!-- 50 Cards will be dynamically generated here -->
+            </div>
+        </section>
+
+    </main>
+
+    <script>
+        // MASTER ITEM LIST: 48 items combining Bravery (🦁) and Compassion (💖)
+        const bingoItems = [
+            // Compassion & Kindness
+            { emoji: "🤝", text: "Sharing a toy" },
+            { emoji: "👂", text: "Listening carefully" },
+            { emoji: "💛", text: "Helping a friend" },
+            { emoji: "😊", text: "Smiling at someone" },
+            { emoji: "🫂", text: "Giving a hug" },
+            { emoji: "🎁", text: "Making a homemade gift" },
+            { emoji: "💬", text: "Saying 'Thank you'" },
+            { emoji: "🧹", text: "Cleaning up a mess" },
+            { emoji: "🐶", text: "Being gentle with pets" },
+            { emoji: "🥪", text: "Sharing lunch or snacks" },
+            { emoji: "🌟", text: "Cheering for a classmate" },
+            { emoji: "🎨", text: "Including someone in play" },
+            { emoji: "🪴", text: "Watering plants or helping outdoors" },
+            { emoji: "🚪", text: "Holding the door open" },
+            { emoji: "💌", text: "Writing a nice note" },
+            { emoji: "🩹", text: "Comforting someone who is sad" },
+            { emoji: "👋", text: "Saying hello to someone new" },
+            { emoji: "👂", text: "Waiting your turn patiently" },
+            { emoji: "🧩", text: "Helping solve a problem" },
+            { emoji: "🌺", text: "Saying something kind" },
+            { emoji: "🙌", text: "Celebrating a friend's win" },
+            { emoji: "🧃", text: "Offering help without being asked" },
+            { emoji: "🪑", text: "Saving a seat for a classmate" },
+            { emoji: "☀️", text: "Brightening someone's day" },
+
+            // Bravery & Courage
+            { emoji: "🦁", text: "Trying something new" },
+            { emoji: "🛡️", text: "Standing up for a friend" },
+            { emoji: "🙋", text: "Raising your hand in class" },
+            { emoji: "🎤", text: "Speaking up when nervous" },
+            { emoji: "🩺", text: "Visiting the doctor calmly" },
+            { emoji: "🚲", text: "Getting back up after falling" },
+            { emoji: "🌊", text: "Trying a challenging activity" },
+            { emoji: "💡", text: "Asking for help when stuck" },
+            { emoji: "🧘", text: "Taking deep breaths when angry" },
+            { emoji: "🤐", text: "Telling the truth even when hard" },
+            { emoji: "👟", text: "Tying shoes by yourself" },
+            { emoji: "🌙", text: "Sleeping in your own room" },
+            { emoji: "🚀", text: "Admitting a mistake" },
+            { emoji: "🥦", text: "Trying a new food" },
+            { emoji: "🎒", text: "First day at a new place" },
+            { emoji: "🕷️", text: "Facing a small fear" },
+            { emoji: "🎨", text: "Sharing your creative artwork" },
+            { emoji: "🤝", text: "Apologizing when you are wrong" },
+            { emoji: "🧗", text: "Climbing high at the playground" },
+            { emoji: "📖", text: "Reading aloud to others" },
+            { emoji: "⛈️", text: "Staying calm during a storm" },
+            { emoji: "🧩", text: "Not giving up on a hard puzzle" },
+            { emoji: "🎭", text: "Performing on stage" },
+            { emoji: "🛑", text: "Saying 'No' to bad choices" }
+        ];
+
+        // Seeded / Shuffle Utility
+        function shuffleArray(array) {
+            const arr = [...array];
+            for (let i = arr.length - 1; i > 0; i--) {
+                const j = Math.floor(Math.random() * (i + 1));
+                [arr[i], arr[j]] = [arr[j], arr[i]];
+            }
+            return arr;
+        }
+
+        // Initialize Application
+        document.addEventListener("DOMContentLoaded", () => {
+            renderCallerSheet();
+            generatePlayerCards(50);
+            populateCardSelector(50);
+        });
+
+        // Tab Switching
+        function showTab(tab) {
+            const callerSec = document.getElementById("view-caller");
+            const cardsSec = document.getElementById("view-cards");
+            const tabCallerBtn = document.getElementById("tab-caller");
+            const tabCardsBtn = document.getElementById("tab-cards");
+
+            if (tab === "caller") {
+                callerSec.classList.remove("hidden");
+                cardsSec.classList.add("hidden");
+                tabCallerBtn.className = "px-4 py-2 rounded-lg font-semibold bg-indigo-800 text-white text-sm shadow-inner";
+                tabCardsBtn.className = "px-4 py-2 rounded-lg font-semibold bg-indigo-700 hover:bg-indigo-800 text-white text-sm";
+            } else {
+                callerSec.classList.add("hidden");
+                cardsSec.classList.remove("hidden");
+                tabCardsBtn.className = "px-4 py-2 rounded-lg font-semibold bg-indigo-800 text-white text-sm shadow-inner";
+                tabCallerBtn.className = "px-4 py-2 rounded-lg font-semibold bg-indigo-700 hover:bg-indigo-800 text-white text-sm";
+            }
+        }
+
+        // Render Caller Sheet Checklist
+        function renderCallerSheet() {
+            const grid = document.getElementById("caller-grid");
+            document.getElementById("total-phrases-count").textContent = bingoItems.length;
+            grid.innerHTML = "";
+
+            bingoItems.forEach((item, index) => {
+                const itemEl = document.createElement("label");
+                itemEl.className = "flex items-center gap-3 p-3 bg-slate-50 hover:bg-indigo-50/50 rounded-xl border border-slate-200 cursor-pointer transition select-none";
+                itemEl.innerHTML = `
+                    <input type="checkbox" id="call-check-${index}" class="w-5 h-5 rounded border-slate-300 text-indigo-600 focus:ring-indigo-500 accent-indigo-600">
+                    <span class="text-2xl">${item.emoji}</span>
+                    <span class="font-medium text-slate-700 text-sm leading-tight">${item.text}</span>
+                `;
+                grid.appendChild(itemEl);
+            });
+        }
+
+        // Interactive Call Phrase Logic
+        let drawnIndices = [];
+        function drawRandomPhrase() {
+            if (drawnIndices.length >= bingoItems.length) {
+                alert("All phrases have been drawn!");
+                return;
+            }
+
+            let randomIndex;
+            do {
+                randomIndex = Math.floor(Math.random() * bingoItems.length);
+            } while (drawnIndices.includes(randomIndex));
+
+            drawnIndices.push(randomIndex);
+            const item = bingoItems[randomIndex];
+
+            // Update caller display
+            const display = document.getElementById("drawn-display");
+            display.classList.remove("hidden");
+            document.getElementById("drawn-emoji").textContent = item.emoji;
+            document.getElementById("drawn-text").textContent = item.text;
+
+            // Check corresponding box in caller sheet
+            const checkbox = document.getElementById(`call-check-${randomIndex}`);
+            if (checkbox) checkbox.checked = true;
+        }
+
+        function resetCallerSheet() {
+            drawnIndices = [];
+            document.getElementById("drawn-display").classList.add("hidden");
+            bingoItems.forEach((_, index) => {
+                const cb = document.getElementById(`call-check-${index}`);
+                if (cb) cb.checked = false;
+            });
+        }
+
+        // Generate 50 Unique Bingo Player Cards
+        function generatePlayerCards(count) {
+            const container = document.getElementById("cards-container");
+            container.innerHTML = "";
+
+            const bHeaderColors = ['bg-rose-500', 'bg-amber-500', 'bg-emerald-500', 'bg-sky-500', 'bg-purple-500'];
+
+            for (let c = 1; c <= count; c++) {
+                // Shuffle items for this card
+                const shuffled = shuffleArray(bingoItems);
+                
+                // Select 24 items (center space is Free)
+                const cardItems = shuffled.slice(0, 24);
+
+                // Insert Free Space at index 12 (row 3, col 3)
+                const fullGrid = [
+                    ...cardItems.slice(0, 12),
+                    { emoji: "🌟", text: "FREE SPACE", isFree: true },
+                    ...cardItems.slice(12, 24)
+                ];
+
+                // Build HTML Card
+                const cardWrapper = document.createElement("div");
+                cardWrapper.id = `player-card-${c}`;
+                cardWrapper.className = "page-break bingo-card bg-white rounded-2xl p-6 shadow-md border-2 border-slate-200 max-w-2xl mx-auto";
+
+                let gridSquaresHtml = "";
+                fullGrid.forEach((item) => {
+                    if (item.isFree) {
+                        gridSquaresHtml += `
+                            <div class="bingo-square flex flex-col items-center justify-center bg-amber-100 border-2 border-amber-400 rounded-xl p-1 text-center font-bold text-amber-900 shadow-inner">
+                                <span class="text-3xl sm:text-4xl animate-bounce">🌟</span>
+                                <span class="text-xs sm:text-sm font-display uppercase tracking-wider mt-1">FREE SPACE</span>
+                            </div>
+                        `;
+                    } else {
+                        gridSquaresHtml += `
+                            <div class="bingo-square flex flex-col items-center justify-center bg-slate-50 border border-slate-300 rounded-xl p-1 text-center hover:bg-indigo-50/30 transition">
+                                <span class="text-2xl sm:text-3xl mb-1">${item.emoji}</span>
+                                <span class="text-[10px] sm:text-xs font-semibold text-slate-700 leading-tight line-clamp-3">${item.text}</span>
+                            </div>
+                        `;
+                    }
+                });
+
+                cardWrapper.innerHTML = `
+                    <!-- Card Header -->
+                    <div class="flex justify-between items-end mb-3">
+                        <div>
+                            <span class="text-xs font-bold text-indigo-600 tracking-wider uppercase">Bravery & Compassion</span>
+                            <h3 class="font-display text-2xl font-bold text-slate-800 leading-none">BINGO CARD #${c}</h3>
+                        </div>
+                        <div class="text-right">
+                            <span class="text-xs text-slate-400">Name: _________________</span>
+                        </div>
+                    </div>
+
+                    <!-- B-I-N-G-O Columns -->
+                    <div class="grid grid-cols-5 gap-2 mb-2 text-center font-display text-lg sm:text-2xl font-bold text-white">
+                        <div class="${bHeaderColors[0]} rounded-lg py-1 shadow-sm">B</div>
+                        <div class="${bHeaderColors[1]} rounded-lg py-1 shadow-sm">I</div>
+                        <div class="${bHeaderColors[2]} rounded-lg py-1 shadow-sm">N</div>
+                        <div class="${bHeaderColors[3]} rounded-lg py-1 shadow-sm">G</div>
+                        <div class="${bHeaderColors[4]} rounded-lg py-1 shadow-sm">O</div>
+                    </div>
+
+                    <!-- 5x5 Grid -->
+                    <div class="bingo-grid grid grid-cols-5 gap-2">
+                        ${gridSquaresHtml}
+                    </div>
+
+                    <!-- Footer Note -->
+                    <div class="mt-3 text-center text-[11px] text-slate-400 font-medium">
+                        Look for acts of courage and kindness! 💛 5 in a row wins Bingo!
+                    </div>
+                `;
+
+                container.appendChild(cardWrapper);
+            }
+        }
+
+        // Populate Dropdown Navigation
+        function populateCardSelector(count) {
+            const selector = document.getElementById("card-selector");
+            selector.innerHTML = "";
+            for (let i = 1; i <= count; i++) {
+                const opt = document.createElement("option");
+                opt.value = `player-card-${i}`;
+                opt.textContent = `Card #${i}`;
+                selector.appendChild(opt);
+            }
+        }
+
+        function scrollToCard(cardId) {
+            const el = document.getElementById(cardId);
+            if (el) {
+                el.scrollIntoView({ behavior: 'smooth', block: 'start' });
+            }
+        }
+    </script>
+</body>
+</html>
